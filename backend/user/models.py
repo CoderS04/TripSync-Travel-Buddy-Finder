@@ -5,7 +5,11 @@ import uuid
 from werkzeug.utils import secure_filename
 import os
 
-from extensions import db
+from flask_mail import Message
+
+from random import randint
+
+from extensions import db,mail
 
 class User:
 
@@ -16,7 +20,6 @@ class User:
 
     def start_session(self, user):
         del user['password']
-        print("Starting session.")
         session['logged_in'] = True
         session['user'] = user
         return jsonify(user), 200
@@ -73,10 +76,77 @@ class User:
             "agreed_to_terms": True
         }
 
-        if users.insert_one(user):
-            return self.start_session(user)
+        otp = str(randint(100000, 999999))
+        session['pending_user'] = {
+            "data": user,
+            "otp": otp,
+            "email": email
+        }
 
-        return jsonify({"error": "Signup failed"}), 400
+        msg = Message("Your TripSync Verification Code 🔐", recipients=[email])
+        msg.body = f"""
+        Hi {first_name},
+
+        Your One-Time Password (OTP) for verifying your TripSync account is:
+
+        🔑 {otp}
+
+        This code is valid for the next 10 minutes.
+        Please do not share it with anyone.
+
+        If you didn’t request this, feel free to ignore this email.
+
+        Safe travels,
+        The TripSync Team 🌍
+        """
+        mail.send(msg)
+
+        return redirect('/user/verify-otp')
+    
+    def verifyOTP(self, otp):
+
+        pending = session.get("pending_user")
+
+        if not pending:
+            return "Session expired. Please sign up again.", 400
+
+        if str(otp) == pending["otp"]:
+            users = db["users"]
+            user = pending['data']
+            
+            users.insert_one(user)
+
+            msg = Message("Welcome to TripSync – Your Journey Starts Here! 🌍✈️", recipients=[user['email']])
+            msg.body = f"""Hi {user['first_name']} {user['last_name']},
+
+            Welcome to TripSync – we're thrilled to have you on board! 🌟
+            Whether you're planning your next big adventure or looking to meet like-minded travel buddies, you're in the right place.
+
+            Here’s what you can do next:
+
+            ✨ Create or join amazing trips
+
+            🤝 Find travel partners who match your vibe
+
+            📍 Explore destinations based on your interests
+
+            We’re all about making travel more fun, meaningful, and connected. So go ahead, complete your profile, and start exploring the world with companions who truly get you.
+
+            Need help getting started? Just reply to this message—we’re always here for you.
+
+            Happy travels,
+            The TripSync Team 🌍"""
+            
+            mail.send(msg)
+
+            session.pop("pending_user")
+            
+            self.start_session(user)
+            
+            return redirect("/login")
+
+        return "Invalid OTP. Try again.", 400
+
 
     def login(self):
         users = db["users"]

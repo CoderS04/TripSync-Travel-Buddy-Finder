@@ -671,9 +671,12 @@
                             <div class="done-trip-info">
                                 <div class="done-trip-name">{{ trip.title }}</div>
                                 <div class="done-trip-details">{{ trip.startDate }} • {{ trip.endDate }}</div>
+                                <a href="#">Companions</a>
+                                <a href="#">Chatroom</a>
+                                <a href="#">Trip Settings</a>
+                                <a href="/trip/{{trip._id}}/requests">Requests</a>
                             </div>
                             <div class="done-trip-stats">{{ trip.endDate - trip.startDate }}</div>
-                            <a href="/trip/{{trip._id}}/requests">Requests</a>
                         </div>
                     {% else %}
                         <div class="done-trip-name">

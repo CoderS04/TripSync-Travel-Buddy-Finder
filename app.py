@@ -18,6 +18,7 @@ app.register_blueprint(api_bp)
 # Upload configuration
 app.config['UPLOAD_FOLDER_TRIPS'] = 'static/uploads/trips/'
 app.config['UPLOAD_FOLDER_USERS'] = 'static/uploads/users/'
+app.config['UPLOAD_FOLDER_IDPROOFS'] = 'static/uploads/idProof/'
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB max
 
 def login_required(f):

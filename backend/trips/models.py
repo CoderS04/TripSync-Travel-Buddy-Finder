@@ -151,22 +151,40 @@ class Trip:
 
         return jsonify(results)
 
-    def joinTrip(self, tripId, userId):
-        trip = self.getTripById(tripId)
-        
-        if not trip:
-            return jsonify({ "error":"Trip not found" }), 404
-        
-        if userId in trip.get('joinedUsers', []):
-            return jsonify({ "message":"You already joined this trip!" }), 200
-        
+    def joinTripRequest(self, tripId):
+        user_id = session['user']['_id']
+        file = request.files.get("idProof")
+
+        if not file:
+            return jsonify({"error": "No ID proof uploaded"}), 400
+
+        filename = secure_filename(f"{user_id}_{file.filename}")
+        proof_path = os.path.join(current_app.config["UPLOAD_FOLDER_IDPROOFS"], filename)
+        os.makedirs(os.path.dirname(proof_path), exist_ok=True)
+        file.save(proof_path)
+
+        request_entry = {
+            "userId": user_id,
+            "idProofPath": f"/{proof_path}",
+            "status": "pending"
+        }
+
         db.trips.update_one(
-            {"_id":tripId},
-            {"$addToSet": {"joinedUsers":userId}}
+            {"_id": tripId},
+            {"$addToSet": {"joinRequests": request_entry}}
         )
 
-        return jsonify({ "success": "Successfully joined the trip!" }), 200
+        return jsonify({"message": "Join request submitted. Awaiting host approval."})
 
+    def approveRequest(self, tripId, userId):
+        db.trips.update_one(
+            {"_id": tripId, "joinRequests.userId": userId},
+            {
+                "$set": {"joinRequests.$.status": "approved"},
+                "$addToSet": {"joinedUsers": userId}
+            }
+        )
+        return "Approved", 200
 
     def getTripById(self, tripId):
         return db.trips.find_one({'_id':tripId})

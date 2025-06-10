@@ -673,6 +673,7 @@
                                 <div class="done-trip-details">{{ trip.startDate }} • {{ trip.endDate }}</div>
                             </div>
                             <div class="done-trip-stats">{{ trip.endDate - trip.startDate }}</div>
+                            <a href="/trip/{{trip._id}}/requests">Requests</a>
                         </div>
                     {% else %}
                         <div class="done-trip-name">

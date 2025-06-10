@@ -3,79 +3,574 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{{ trip.title }} - Trip Details</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ trip.title }} - Trip Details | TripSync</title>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000000;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #000000;
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo span {
+            color: #9600ff;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 2px solid white;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #9600ff;
+            border-color: #9600ff;
+        }
+
+        /* Main content */
+        main {
+            padding-top: 80px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+        }
+
+        .trip-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Trip header */
+        .trip-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .trip-title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #9600ff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .host-info {
+            font-size: 1.2rem;
+            color: #bbb;
+            margin-bottom: 2rem;
+        }
+
+        .host-name {
+            color: #9600ff;
+            font-weight: bold;
+        }
+
+        /* Trip image */
+        .trip-image {
+            width: 100%;
+            height: 400px;
+            border-radius: 20px;
+            object-fit: cover;
+            box-shadow: 0 20px 40px rgba(150, 0, 255, 0.3);
+            margin-bottom: 3rem;
+        }
+
+        /* Trip content */
+        .trip-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .trip-details {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .trip-sidebar {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: fit-content;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background-color: #9600ff;
+            border-radius: 2px;
+        }
+
+        .description {
+            color: #bbb;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .detail-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-label {
+            color: #9600ff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            color: #ddd;
+            font-size: 1rem;
+        }
+
+        .activities-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .activities-list li {
+            background: rgba(150, 0, 255, 0.1);
+            color: #ddd;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 25px;
+            border-left: 3px solid #9600ff;
+        }
+
+        /* Sidebar stats */
+        .trip-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(150, 0, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(150, 0, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #9600ff;
+            display: block;
+        }
+
+        .stat-label {
+            color: #bbb;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Action buttons */
+        .action-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .join-btn {
+            background: linear-gradient(45deg, #9600ff, #00d4ff);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(150, 0, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .join-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(150, 0, 255, 0.6);
+        }
+
+        .join-btn:active {
+            transform: translateY(-1px);
+        }
+
+        #join-msg {
+            margin-top: 1rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .success-msg {
+            background: rgba(0, 255, 100, 0.1);
+            color: #00ff64;
+            border: 1px solid rgba(0, 255, 100, 0.3);
+        }
+
+        .error-msg {
+            background: rgba(255, 0, 100, 0.1);
+            color: #ff0064;
+            border: 1px solid rgba(255, 0, 100, 0.3);
+        }
+
+        /* Floating elements */
+        .floating-element {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.1;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 60%;
+            right: 10%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .trip-container {
+                padding: 1rem;
+            }
+
+            .trip-title {
+                font-size: 2rem;
+            }
+
+            .trip-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .trip-details,
+            .trip-sidebar {
+                padding: 1.5rem;
+            }
+
+            .back-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #9600ff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Floating decorative elements -->
+    <div class="floating-element">✈️</div>
+    <div class="floating-element">🌍</div>
+
+    <!-- Header -->
     <header>
-        <h1>{{ trip.title }}</h1>
-        <p>Hosted by: {{ host.first_name }} {{ host.last_name }}</p>
+        <a href="/" class="logo">Trip<span>Sync</span></a>
+        <a href="/find-trips" class="back-btn">← Back to Trips</a>
     </header>
 
+    <!-- Main content -->
     <main>
-        <img src="{{ trip.image }}" alt="Trip Image" style="width:100%; max-height:400px; object-fit:cover;">
+        <div class="trip-container">
+            <!-- Trip header -->
+            <div class="trip-header">
+                <h1 class="trip-title">{{ trip.title }}</h1>
+                <p class="host-info">Hosted by: <span class="host-name">{{ host.first_name }} {{ host.last_name
+                        }}</span></p>
+            </div>
 
-        <section>
-            <h2>Description</h2>
-            <p>{{ trip.description }}</p>
+            <!-- Trip image -->
+            <img src="{{ trip.image }}" alt="Trip Image" class="trip-image">
 
-            <h3>Location:</h3>
-            <p>{{ trip.specificLocation }} ({{ trip.destination }})</p>
+            <!-- Trip content -->
+            <div class="trip-content">
+                <!-- Trip details -->
+                <div class="trip-details">
+                    <h2 class="section-title">📝 Trip Description</h2>
+                    <p class="description">{{ trip.description }}</p>
 
-            <h3>Activities:</h3>
-            <ul>
-                {% for activity in trip.travelPreferences.activities %}
-                <li>{{ activity }}</li>
-                {% endfor %}
-            </ul>
+                    <div class="detail-item">
+                        <div class="detail-label">📍 Location</div>
+                        <div class="detail-value">{{ trip.specificLocation }} ({{ trip.destination }})</div>
+                    </div>
 
-            <h3>Budget:</h3>
-            <p>{{ trip.travelPreferences.budget }}</p>
+                    <div class="detail-item">
+                        <div class="detail-label">🎯 Activities</div>
+                        <ul class="activities-list">
+                            {% for activity in trip.travelPreferences.activities %}
+                            <li>{{ activity }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
 
-            <h3>Travel Style:</h3>
-            <p>{{ trip.travelPreferences.travelStyle }}</p>
+                    <div class="detail-item">
+                        <div class="detail-label">💰 Budget</div>
+                        <div class="detail-value">{{ trip.travelPreferences.budget }}</div>
+                    </div>
 
-            <h3>Group Size:</h3>
-            <p>{{ trip.companionPreferences.groupSize }}</p>
+                    <div class="detail-item">
+                        <div class="detail-label">🎒 Travel Style</div>
+                        <div class="detail-value">{{ trip.travelPreferences.travelStyle }}</div>
+                    </div>
+                </div>
 
-            <p><strong>Participants:</strong> {{ trip.joinedUsers|length }}</p>
-        </section>
+                <!-- Trip sidebar -->
+                <div class="trip-sidebar">
+                    <h2 class="section-title">📊 Trip Stats</h2>
+                    <div class="trip-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">{{ trip.companionPreferences.groupSize }}</span>
+                            <span class="stat-label">Group Size</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ trip.joinedUsers|length }}</span>
+                            <span class="stat-label">Participants</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ (trip.companionPreferences.groupSize|int -
+                                trip.joinedUsers|length) }}</span>
+                            <span class="stat-label">Spots Left</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <a href="/find-trips" class="btn">← Back to Trips</a><br>
+            <!-- Action section -->
+            <div class="action-section">
+                <button class="join-btn" onclick="openJoinModal()">Request to Join</button>
 
-        <button class="join-btn" id="join-trip-btn" data-trip-id="{{ trip._id }}">Join Trip</button>
-        <div id="join-msg" style="margin-top:10px; color: green;"></div>
+                <div id="join-modal" style="display:none;">
+                    <form id="join-request-form" enctype="multipart/form-data">
+                        <label>Upload Identity Proof (PDF/JPG/PNG):</label>
+                        <input type="file" name="idProof" accept=".pdf, .jpg, .jpeg, .png" required>
+                        <input type="hidden" name="tripId" value="{{ trip._id }}">
+                        <button type="submit">Submit Request</button>
+                    </form>
+                </div>
 
+                <!-- <button class="join-btn" id="join-trip-btn" data-trip-id="{{ trip._id }}">
+                    Join This Adventure
+                </button> -->
+
+                <div id="join-msg"></div>
+            </div>
+        </div>
     </main>
-</body>
 
-<script>
-    document.getElementById("join-trip-btn").addEventListener("click", async function () {
-        const tripId = this.getAttribute("data-trip-id");
+    <script>
+        // document.getElementById("join-trip-btn").addEventListener("click", async function () {
+        //     const button = this;
+        //     const tripId = button.getAttribute("data-trip-id");
+        //     const msgBox = document.getElementById("join-msg");
 
-        const res = await fetch(`/trip/${tripId}/join`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" }
-        });
+        //     // Add loading state
+        //     button.classList.add("loading");
+        //     button.disabled = true;
+        //     button.textContent = "Joining...";
 
-        const result = await res.json();
+        //     try {
+        //         const res = await fetch(`/trip/${tripId}/join`, {
+        //             method: "POST",
+        //             headers: { "Content-Type": "application/json" }
+        //         });
 
-        const msgBox = document.getElementById("join-msg");
+        //         const result = await res.json();
 
-        console.log(res.status)
+        //         // Show message box
+        //         msgBox.style.display = "block";
 
-        if (res.status === 401) {
-            alert(result.error + ". Please login to join the trip.");
-            window.location.href = "/login";
-            return;
+        //         if (res.status === 401) {
+        //             alert(result.error + ". Please login to join the trip.");
+        //             window.location.href = "/login";
+        //             return;
+        //         }
+
+        //         if (res.ok) {
+        //             msgBox.className = "success-msg";
+        //             msgBox.textContent = result.message || result.success || "Successfully joined the trip!";
+        //             button.textContent = "Joined ✓";
+        //             button.style.background = "linear-gradient(45deg, #00ff64, #00d4ff)";
+
+        //             // Update participant count
+        //             const participantStat = document.querySelector('.stat-item:nth-child(2) .stat-number');
+        //             const spotsLeftStat = document.querySelector('.stat-item:nth-child(3) .stat-number');
+        //             if (participantStat && spotsLeftStat) {
+        //                 const currentParticipants = parseInt(participantStat.textContent);
+        //                 const currentSpotsLeft = parseInt(spotsLeftStat.textContent);
+        //                 participantStat.textContent = currentParticipants + 1;
+        //                 spotsLeftStat.textContent = Math.max(0, currentSpotsLeft - 1);
+        //             }
+        //         } else {
+        //             msgBox.className = "error-msg";
+        //             msgBox.textContent = result.error || "Failed to join the trip. Please try again.";
+        //             button.textContent = "Join This Adventure";
+        //             button.disabled = false;
+        //         }
+        //     } catch (error) {
+        //         msgBox.style.display = "block";
+        //         msgBox.className = "error-msg";
+        //         msgBox.textContent = "Network error. Please check your connection and try again.";
+        //         button.textContent = "Join This Adventure";
+        //         button.disabled = false;
+        //     }
+
+        //     // Remove loading state
+        //     button.classList.remove("loading");
+
+        //     if (!res.ok) {
+        //         button.disabled = false;
+        //     }
+        // });
+
+        function openJoinModal() {
+            document.getElementById('join-modal').style.display = 'block';
         }
 
-        msgBox.style.color = res.ok ? "green" : "red";
-        msgBox.textContent = result.message || result.success || result.error || "Unexpected error";
+        document.getElementById("join-request-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-    });
-</script>
+            const form = e.target;
+            const formData = new FormData(form);
+            const tripId = formData.get("tripId");
 
+            const res = await fetch(`/trip/${tripId}/join_request`, {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await res.json();
+            alert(result.message || result.error);
+        });
+
+
+        // Add smooth scrolling animation on page load
+        window.addEventListener('load', function () {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease-in-out';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // Add interactive hover effects to stat items
+        document.querySelectorAll('.stat-item').forEach(item => {
+            item.addEventListener('mouseenter', function () {
+                this.style.transform = 'scale(1.05)';
+                this.style.transition = 'transform 0.3s ease';
+            });
+
+            item.addEventListener('mouseleave', function () {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
 
 </html>

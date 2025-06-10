@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripSync - Sign Up</title>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            color: #333;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #000000;
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: #9600ff;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #9600ff;
+        }
+
+        /* Signup container */
+        .signup-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .signup-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 650px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .signup-header {
+            margin-bottom: 2rem;
+        }
+
+        .signup-header h2 {
+            font-size: 2rem;
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .signup-header p {
+            color: #666;
+        }
+
+        .signup-form {
+            text-align: left;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #9600ff;
+            outline: none;
+        }
+
+        .form-separator {
+            text-align: center;
+            position: relative;
+            margin: 1.5rem 0;
+        }
+
+        .form-separator span {
+            background: white;
+            padding: 0 10px;
+            position: relative;
+            z-index: 1;
+            color: #666;
+        }
+
+        .form-separator:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #eee;
+        }
+
+        .interest-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .interest-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .interest-tag {
+            padding: 0.5rem 1rem;
+            background: #f5f5f5;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #ddd;
+        }
+
+        .interest-tag.selected {
+            background: #9600ff;
+            color: white;
+            border-color: #9600ff;
+        }
+
+        .interest-tag:hover {
+            background: #eee;
+        }
+
+        .interest-tag.selected:hover {
+            background: #8400e3;
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .terms-checkbox input {
+            margin-right: 0.5rem;
+            margin-top: 0.3rem;
+        }
+
+        .terms-checkbox a {
+            color: #9600ff;
+            text-decoration: none;
+        }
+
+        .terms-checkbox a:hover {
+            text-decoration: underline;
+        }
+
+        .signup-btn {
+            width: 100%;
+            background-color: #000000;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .signup-btn:hover {
+            background-color: #9600ff;
+        }
+
+        .social-signup {
+            margin-top: 2rem;
+            border-top: 1px solid #eee;
+            padding-top: 2rem;
+        }
+
+        .social-signup p {
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-btn {
+            flex: 1;
+            max-width: 150px;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 500;
+        }
+
+        .social-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        .login-link {
+            margin-top: 2rem;
+        }
+
+        .login-link a {
+            color: #9600ff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Background image effect */
+        .page-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/1600/900');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #000000;
+            color: white;
+            padding: 1rem 5%;
+            text-align: center;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .signup-box {
+                padding: 1.5rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">Trip<span>Sync</span></div>
+        <nav class="nav-links">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#popular-destinations">Destinations</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Background Image -->
+    <div class="page-background"></div>
+
+    <!-- Signup Container -->
+    <div class="signup-container">
+        <div class="signup-box">
+            <div class="signup-header">
+                <h2>Create Your Account</h2>
+                <p>Join TripSync and find your perfect travel companion</p>
+            </div>
+
+            <form class="signup-form" name="signup-form" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first-name">First Name</label>
+                        <input type="text" id="first-name" name="first-name" placeholder="Enter your first name"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last-name">Last Name</label>
+                        <input type="text" id="last-name" name="last-name" placeholder="Enter your last name" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Create a password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input type="password" id="confirm-password" name="confirm-password"
+                            placeholder="Confirm your password" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="country">Country/Region</label>
+                        <select id="country" name="country" required>
+                            <option value="" disabled selected>Select your country</option>
+                            <option value="us">United States</option>
+                            <option value="ca">Canada</option>
+                            <option value="uk">United Kingdom</option>
+                            <option value="au">Australia</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="birthdate">Birth Date</label>
+                        <input type="date" id="birthdate" name="birthdate" required>
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <!-- <div class="form-group"> -->
+                    <label for="gender">Gender</label>
+                    <label><input type="radio" id="gender" name="gender" value="male" required> Male</label>
+                    <label><input type="radio" id="gender" name="gender" value="female" required> Female</label>
+                    <!-- </div> -->
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="userImage">Upload your photo:</label>
+                        <input type="file" name="userImage" id="userImage" accept="image/*" required>
+                    </div>
+                </div>
+
+
+                <div class="form-separator">
+                    <span>Travel Preferences</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="travel-style">Your Travel Style</label>
+                    <select id="travel-style" name="travel-style" required>
+                        <option value="" disabled selected>Select your travel style</option>
+                        <option value="adventure">Adventure Seeker</option>
+                        <option value="relaxation">Relaxation Enthusiast</option>
+                        <option value="culture">Cultural Explorer</option>
+                        <option value="budget">Budget Traveler</option>
+                        <option value="luxury">Luxury Traveler</option>
+                    </select>
+                </div>
+
+                <div class="interest-section">
+                    <h3>Travel Interests (Select all that apply)</h3>
+                    <div class="interest-tags">
+                        <div class="interest-tag" data-value="hiking">Hiking</div>
+                        <div class="interest-tag" data-value="beaches">Beach</div>
+                        <div class="interest-tag" data-value="cities">Cities</div>
+                        <div class="interest-tag" data-value="food">Food</div>
+                        <div class="interest-tag" data-value="photography">Photography</div>
+                        <div class="interest-tag" data-value="art">Art</div>
+                        <div class="interest-tag" data-value="nightlife">Nightlife</div>
+                        <div class="interest-tag" data-value="shopping">Shopping</div>
+                        <div class="interest-tag" data-value="wildlife">Wildlife</div>
+                        <div class="interest-tag" data-value="museums">Museums</div>
+                        <div class="interest-tag" data-value="adventure-sports">Adventure Sports</div>
+                    </div>
+                </div>
+
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">I agree to TripSync's <a href="#">Terms of Service</a> and <a href="#">Privacy
+                            Policy</a>, and I'm at least 18 years old.</label>
+                </div>
+
+                <input type="submit" value="Create Account" class="signup-btn">
+
+            </form>
+
+            <div class="login-link">
+                <p>Already have an account? <a href="/login">Log In</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 TripSync. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // // Simple toggle function for interest tags
+        // document.querySelectorAll('.interest-tag').forEach(tag => {
+        //     tag.addEventListener('click', function () {
+        //         this.classList.toggle('selected');
+        //     });
+        // });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const interestTags = document.querySelectorAll(".interest-tag");
+
+            interestTags.forEach(tag => {
+                tag.addEventListener("click", () => {
+                    tag.classList.toggle("selected");
+                    updateHiddenInput();
+                });
+            });
+
+            function updateHiddenInput() {
+                const selectedTags = document.querySelectorAll(".interest-tag.selected");
+                const selectedValues = Array.from(selectedTags).map(tag => tag.getAttribute("data-value").trim());
+
+                // Remove any existing hidden inputs
+                document.querySelectorAll("input[name='interests[]']").forEach(e => e.remove());
+
+                // Add new hidden inputs for selected interests
+                const form = document.querySelector(".signup-form");
+                selectedValues.forEach(value => {
+                    const input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = "interests[]";
+                    input.value = value;
+                    form.appendChild(input);
+                });
+            }
+        });
+
+    </script>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/static/js/script.js"></script>
+
+</html>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripSync - Find Your Perfect Travel Companion</title>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header styles */
+        header {
+            background-color: #000000;
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .logo span {
+            color: #9600ff;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 2rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #9600ff;
+        }
+        
+        .auth-buttons a {
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-left: 1rem;
+        }
+        
+        .login {
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .login:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .signup {
+            background-color: #9600ff;
+            color: white;
+        }
+        
+        .signup:hover {
+            background-color: #9600ff;
+        }
+        
+        /* Hero section */
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../static/images/img\ 1.jpg");
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin-bottom: 2rem;
+        }
+        
+        .search-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+        }
+        
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .search-input {
+            flex: 1 0 200px;
+            margin: 0.5rem;
+        }
+        
+        .search-input select, .search-input input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .search-btn {
+            flex: 1 0 200px;
+            background-color: #000000;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 0.5rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .search-btn:hover {
+            background-color: #9600ff;
+        }
+        
+        /* How it works section */
+        .how-it-works {
+            padding: 5rem 10%;
+            text-align: center;
+            background-color: black;
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            color: white;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background-color: #9600ff;
+        }
+        
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+        
+        .step {
+            flex: 1 0 280px;
+            max-width: 350px;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            background-color: white;
+        }
+        
+        .step:hover {
+            transform: translateY(-10px);
+        }
+        
+        .step-icon {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+        
+        .step h3 {
+            margin-bottom: 1rem;
+        }
+        
+        /* Popular destinations */
+        .popular-destinations {
+            padding: 5rem 10%;
+            background-color: #000000;
+            text-align: center;
+        }
+        
+        .destinations {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .destination {
+            flex: 1 0 280px;
+            max-width: 350px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .destination:hover {
+            transform: translateY(-10px);
+        }
+        
+        .destination-img {
+            height: 284px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .destination-info {
+            padding: 1.5rem;
+        }
+        
+        .destination-info h3 {
+            margin-bottom: 0.5rem;
+            color: antiquewhite;
+        }
+        
+        .travelers {
+            color: #bfbfbf;
+            margin-bottom: 1rem;
+        }
+        
+        .view-btn {
+            display: inline-block;
+            background-color: #9600ff;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+/*         
+        .view-btn:hover {
+            background-color: #2980b9;
+        } */
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 5rem 10%;
+            text-align: center;
+            background-color: black;
+        }
+        
+        .testimonial-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 2rem;
+            padding: 2rem 0;
+            scroll-snap-type: x mandatory;
+        }
+        
+        .testimonial {
+            flex: 0 0 350px;
+            scroll-snap-align: start;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            justify-content: space-around;
+        }
+        
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-pic {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        }
+        
+        .testimonial-name {
+            font-weight: bold;
+            color: antiquewhite;
+        }
+        
+        .testimonial-location {
+            color: #bfbfbf;
+        }
+        
+        .testimonial-stars {
+            color: #f1c40f;
+            margin-top: 0.5rem;
+        }
+        
+        /* CTA section */
+        .cta {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("../static/images/img\ 2.jpg");
+            background-size: cover;
+            background-position: center;
+            padding: 5rem 10%;
+            text-align: center;
+            color: white;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .cta-btn {
+            display: inline-block;
+            background-color: #000000;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .cta-btn:hover {
+            background-color: #9600ff;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #000000;
+            color: white;
+            padding: 3rem 10% 1rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section {
+            flex: 1 0 200px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-section ul li a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section ul li a:hover {
+            color: #9600ff;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: #9600ff;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bbb;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .search-container {
+                padding: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .step, .destination, .testimonial {
+                flex: 0 0 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">Trip<span>Sync</span></div>
+        <nav class="nav-links">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#popular-destinations">Destinations</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="auth-buttons">
+            <a href="/login" class="login">Log In</a>
+            <a href="/signup" class="signup">Sign Up</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Find Your Perfect Travel Companion</h1>
+        <p>Connect with like-minded travelers, share experiences, and explore the world together.</p>
+        
+        <div class="search-container">
+            <form class="search-form">
+                <div class="search-input">
+                    <select>
+                        <option value="" disabled selected>Where to?</option>
+                        <option value="europe">Europe</option>
+                        <option value="asia">Asia</option>
+                        <option value="africa">Africa</option>
+                        <option value="north-america">North America</option>
+                        <option value="south-america">South America</option>
+                        <option value="oceania">Oceania</option>
+                    </select>
+                </div>
+                <div class="search-input">
+                    <input type="date" placeholder="When?">
+                </div>
+                <div class="search-input">
+                    <select>
+                        <option value="" disabled selected>Travel Style</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="relaxation">Relaxation</option>
+                        <option value="culture">Cultural</option>
+                        <option value="budget">Budget</option>
+                        <option value="luxury">Luxury</option>
+                    </select>
+                </div>
+                <button type="submit" class="search-btn">Find Travel Buddies</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <h2 class="section-title">How It Works</h2>
+        
+        <div class="steps">
+            <div class="step">
+                <div class="step-icon">📝</div>
+                <h3>Create Your Profile</h3>
+                <p>Sign up and build your traveler profile. Share your interests, travel style, and upcoming trips.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">🔍</div>
+                <h3>Find Companions</h3>
+                <p>Search for like-minded travelers based on destination, dates, interests, and compatibility.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">💬</div>
+                <h3>Connect & Plan</h3>
+                <p>Message potential travel buddies, get to know each other, and plan your adventure together.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">✈️</div>
+                <h3>Travel Together</h3>
+                <p>Meet up and enjoy your journey with a companion who shares your travel vision.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Destinations -->
+    <section class="popular-destinations" id="popular-destinations">
+        <h2 class="section-title">Popular Destinations</h2>
+        
+        <div class="destinations">
+            <div class="destination">
+                <div class="destination-img" style="background-image: url('../static/images/bali.jpg');"></div>
+                <div class="destination-info">
+                    <h3>Bali, Indonesia</h3>
+                    <p class="travelers">238 travelers looking for companions</p>
+                    <a href="#" class="view-btn">View Travelers</a>
+                </div>
+            </div>
+            <div class="destination">
+                <div class="destination-img" style="background-image: url('../static/images/barcelona.jpg');"></div>
+                <div class="destination-info">
+                    <h3>Barcelona, Spain</h3>
+                    <p class="travelers">186 travelers looking for companions</p>
+                    <a href="#" class="view-btn">View Travelers</a>
+                </div>
+            </div>
+            <div class="destination">
+                <div class="destination-img" style="background-image: url('../static/images/tokyo.jpg');"></div>
+                <div class="destination-info">
+                    <h3>Tokyo, Japan</h3>
+                    <p class="travelers">157 travelers looking for companions</p>
+                    <a href="#" class="view-btn">View Travelers</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <h2 class="section-title">Success Stories</h2>
+        
+        <div class="testimonial-container">
+            <div class="testimonial">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">
+                        <img class="profile-pic" src="../static/images/person1.jpg" alt="Profile Pictures">
+                    </div>
+                    <div>
+                        <div class="testimonial-name">Sarah Johnson</div>
+                        <div class="testimonial-location">London, UK</div>
+                        <div class="testimonial-stars">★★★★★</div>
+                    </div>
+                </div>
+                <p style="color: #bfbfbf;">"I was nervous about traveling solo to Thailand but found Alex on TripSync. We had an amazing time exploring Bangkok and the islands together. Made a lifelong friend!"</p>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">
+                        <img class="profile-pic" src="../static/images/person2.jpg" alt="Profile Pictures">
+                    </div>
+                    <div>
+                        <div class="testimonial-name">Miguel Hernandez</div>
+                        <div class="testimonial-location">Madrid, Spain</div>
+                        <div class="testimonial-stars">★★★★★</div>
+                    </div>
+                </div>
+                <p style="color: #bfbfbf;">"Found three other backpackers for my South America trip. We shared costs, experiences, and had each other's backs through the entire journey. Couldn't have asked for better companions!"</p>
+            </div>
+            <div class="testimonial">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">
+                        <img class="profile-pic" src="../static/images/person3.jpg" alt="Profile Pictures">
+                    </div>
+                    <div>
+                        <div class="testimonial-name">Jennifer Wu</div>
+                        <div class="testimonial-location">Toronto, Canada</div>
+                        <div class="testimonial-stars">★★★★★</div>
+                    </div>
+                </div>
+                <p style="color: #bfbfbf;">"As a photographer traveling Europe, I found another photography enthusiast on TripSync. We created amazing memories and helped each other get the perfect shots!"</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta">
+        <h2>Ready to Find Your Travel Buddy?</h2>
+        <p>Join thousands of travelers looking for companions just like you. Create your free profile today and start connecting!</p>
+        <a href="/signup" class="cta-btn">Sign Up Now</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>TripSync</h3>
+                <p>Connecting travelers since 2023. Our mission is to make travel more enjoyable, affordable, and safe by helping you find the perfect travel companion.</p>
+                <div class="social-links">
+                    <a href="#">F</a>
+                    <a href="#">T</a>
+                    <a href="#">I</a>
+                    <a href="#">Y</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">How It Works</a></li>
+                    <li><a href="#">Find Travelers</a></li>
+                    <li><a href="#">Popular Destinations</a></li>
+                    <li><a href="#">Travel Tips</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Safety Tips</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for travel tips and exclusive offers.</p>
+                <form>
+                    <input type="email" placeholder="Your email" style="width: 100%; padding: 0.8rem; margin-top: 1rem; border: none; border-radius: 5px;">
+                    <button type="submit" style="width: 100%; padding: 0.8rem; margin-top: 0.5rem; background-color: #9600ff; color: white; border: none; border-radius: 5px; cursor: pointer;">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 TripSync. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/static/js/script.js"></script>
+
+</html>

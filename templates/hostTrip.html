@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host a Trip - TripSync</title>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            color: #333;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #000000;
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: #9600ff;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #9600ff;
+        }
+
+        .auth-buttons a {
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-left: 1rem;
+        }
+
+        .login {
+            color: white;
+            border: 2px solid white;
+        }
+
+        .login:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .signup {
+            background-color: #9600ff;
+            color: white;
+        }
+
+        .signup:hover {
+            background-color: #9600ff;
+        }
+
+        /* Page header */
+        .page-header {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../static/images/img\ 2.jpg");
+            background-size: cover;
+            background-position: center;
+            height: 30vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding-top: 70px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Main content */
+        .main-content {
+            padding: 3rem 10%;
+            background-color: #000000;
+            color: white;
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: #9600ff;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6' fill='white'%3E%3Cpath d='M0 0l6 6 6-6z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+        }
+
+        option {
+            background-color: #222;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1 0 240px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+
+        .range-slider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .range-slider input[type="range"] {
+            flex: 1;
+        }
+
+        .range-slider .value {
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .submit-btn {
+            background-color: #9600ff;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 2rem auto 0;
+            min-width: 200px;
+        }
+
+        .submit-btn:hover {
+            background-color: #8400e6;
+        }
+
+        /* Trip info box */
+        .trip-info {
+            background-color: #9600ff;
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .trip-info h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .trip-info p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Matching preferences visualization */
+        .match-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .match-profile {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            width: 220px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .match-profile:hover {
+            transform: translateY(-5px);
+        }
+
+        .match-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 1rem;
+            border: 3px solid #9600ff;
+        }
+
+        .match-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .match-name {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .match-location {
+            color: #bbb;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .match-compatibility {
+            background-color: #9600ff;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #000000;
+            color: white;
+            padding: 3rem 10% 1rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            flex: 1 0 200px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section ul li a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #9600ff;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: #9600ff;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bbb;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .match-profile {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">Trip<span>Sync</span></div>
+        <nav class="nav-links">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="#">Find Travelers</a></li>
+                <li><a href="#" class="active">Host a Trip</a></li>
+                <li><a href="#">My Trips</a></li>
+                <li><a href="#">Messages</a></li>
+            </ul>
+        </nav>
+        <div class="auth-buttons">
+            <a href="/login" class="login">Log In</a>
+            <a href="/signup" class="signup">Sign Up</a>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div>
+            <h1>Host a Trip</h1>
+            <p>Create your trip and find the perfect travel companions</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="main-content">
+        <div class="form-container">
+            <!-- Trip Information Section -->
+            <div class="trip-info">
+                <h3>Why Host a Trip?</h3>
+                <p>✓ Connect with travelers who match your preferences</p>
+                <p>✓ Share costs and experiences with like-minded companions</p>
+                <p>✓ Travel safer with trusted buddies</p>
+                <p>✓ Create memories that last a lifetime</p>
+            </div>
+
+            <form id="host-trip-form" name="host-trip-form" enctype="multipart/form-data">
+                <!-- Trip Details Section -->
+                <div class="form-section">
+                    <h2 class="section-title">Trip Details</h2>
+
+                    <div class="form-group">
+                        <label for="trip-title">Trip Title</label>
+                        <input type="text" id="trip-title" name="trip-title"
+                            placeholder="e.g. Backpacking through Southeast Asia" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="destination">Destination</label>
+                            <select id="destination" name="destination" required>
+                                <option value="" disabled selected>Select destination</option>
+                                <option value="europe">Europe</option>
+                                <option value="asia">Asia</option>
+                                <option value="africa">Africa</option>
+                                <option value="north-america">North America</option>
+                                <option value="south-america">South America</option>
+                                <option value="oceania">Oceania</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="specific-location">Specific Location</label>
+                            <input type="text" id="specific-location" name="specific-location"
+                                placeholder="e.g. Bangkok, Thailand">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="start-date">Start Date</label>
+                            <input type="date" id="start-date" name="start-date" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="end-date">End Date</label>
+                            <input type="date" id="end-date" name="end-date" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="trip-description">Trip Description</label>
+                        <textarea id="trip-description" name="trip-description" rows="4"
+                            placeholder="Describe your trip plan, activities, and what kind of experience you're looking for..."
+                            required></textarea>
+                    </div>
+                </div>
+
+                <!-- Travel Preferences Section -->
+                <div class="form-section">
+                    <h2 class="section-title">Travel Preferences</h2>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="travel-style">Travel Style</label>
+                            <select id="travel-style" name="travel-style" required>
+                                <option value="" disabled selected>Select travel style</option>
+                                <option value="adventure">Adventure</option>
+                                <option value="relaxation">Relaxation</option>
+                                <option value="culture">Cultural</option>
+                                <option value="budget">Budget</option>
+                                <option value="luxury">Luxury</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="budget-range">Budget Range</label>
+                            <select id="budget-range" name="budget-range" required>
+                                <option value="" disabled selected>Select budget range</option>
+                                <option value="budget">Budget ($0-$50/day)</option>
+                                <option value="mid-range">Mid-range ($50-$150/day)</option>
+                                <option value="high-end">High-end ($150-$300/day)</option>
+                                <option value="luxury">Luxury ($300+/day)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Activities/Interests (Select all that interest you)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="hiking" name="activities" value="hiking">
+                                <label for="hiking">Hiking/Trekking</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="beaches" name="activities" value="beaches">
+                                <label for="beaches">Beaches</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="food" name="activities" value="food">
+                                <label for="food">Food & Cuisine</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cities" name="activities" value="cities">
+                                <label for="cities">Cities</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="museums" name="activities" value="museums">
+                                <label for="museums">Museums & History</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="nightlife" name="activities" value="nightlife">
+                                <label for="nightlife">Nightlife</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="photography" name="activities" value="photography">
+                                <label for="photography">Photography</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="shopping" name="activities" value="shopping">
+                                <label for="shopping">Shopping</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="adventure-sports" name="activities" value="adventure-sports">
+                                <label for="adventure-sports">Adventure Sports</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="wildlife" name="activities" value="wildlife">
+                                <label for="wildlife">Wildlife</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="art" name="activities" value="art">
+                                <label for="art">Art</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pace">Preferred Pace</label>
+                        <div class="range-slider">
+                            <span>Relaxed</span>
+                            <input type="range" id="pace" name="pace" min="1" max="5" value="3">
+                            <span>Fast-paced</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Companion Preferences Section -->
+                <div class="form-section">
+                    <h2 class="section-title">Companion Preferences</h2>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age-range">Age Range</label>
+                            <select id="age-range" name="age-range" required>
+                                <option value="" disabled selected>Select age range</option>
+                                <option value="18-25">18-25</option>
+                                <option value="26-35">26-35</option>
+                                <option value="36-45">36-45</option>
+                                <option value="46-55">46-55</option>
+                                <option value="56+">56+</option>
+                                <option value="any">Any age</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="group-size">Group Size</label>
+                            <select id="group-size" name="group-size" required>
+                                <option value="" disabled selected>Select group size</option>
+                                <option value="1">Just one companion</option>
+                                <option value="2-3">Small group (2-3 people)</option>
+                                <option value="4-6">Medium group (4-6 people)</option>
+                                <option value="7+">Large group (7+ people)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Communication Style</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="talkative" name="communication" value="talkative">
+                                <label for="talkative">Talkative</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="quiet" name="communication" value="quiet">
+                                <label for="quiet">Quiet/Reserved</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="adventurous" name="communication" value="adventurous">
+                                <label for="adventurous">Adventurous</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="organized" name="communication" value="organized">
+                                <label for="organized">Organized</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="spontaneous" name="communication" value="spontaneous">
+                                <label for="spontaneous">Spontaneous</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="early-riser" name="communication" value="early-riser">
+                                <label for="early-riser">Early Riser</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="night-owl" name="communication" value="night-owl">
+                                <label for="night-owl">Night Owl</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender Preferences</label>
+                        <select id="gender" name="gender">
+                            <option value="" disabled selected>Select preference</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="no-preference">No preference</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="smoking">Smoking Preferences</label>
+                        <select id="smoking" name="smoking">
+                            <option value="" disabled selected>Select preference</option>
+                            <option value="non-smoker">No smoking</option>
+                            <option value="smoker">Smoking okay</option>
+                            <option value="no-preference">No preference</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alcohol">Alcohol Preferences</label>
+                        <select id="alcohol" name="alcohol">
+                            <option value="" disabled selected>Select preference</option>
+                            <option value="non-drinker">No drinking</option>
+                            <option value="social-drinker">Social drinking okay</option>
+                            <option value="no-preference">No preference</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additional-preferences">Additional Preferences or Requirements</label>
+                        <textarea id="additional-preferences" name="additional-preferences" rows="3"
+                            placeholder="Any other preferences or requirements for your ideal travel companion..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Accommodation Section -->
+                <div class="form-section">
+                    <h2 class="section-title">Accommodation Preferences</h2>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="accommodation-type">Accommodation Type</label>
+                            <select id="accommodation-type" name="accommodation-type">
+                                <option value="no-preference" disabled selected>Select accommodation</option>
+                                <option value="hostel">Hostel</option>
+                                <option value="budget-hotel">Budget Hotel</option>
+                                <option value="mid-range-hotel">Mid-range Hotel</option>
+                                <option value="luxury-hotel">Luxury Hotel</option>
+                                <option value="airbnb">Airbnb/Vacation Rental</option>
+                                <option value="camping">Camping</option>
+                                <option value="not-decided">Not decided yet</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="room-sharing">Room Sharing</label>
+                            <select id="room-sharing" name="room-sharing">
+                                <option value="no-preference" disabled selected>Select preference</option>
+                                <option value="shared-room">Willing to share room</option>
+                                <option value="private-room">Prefer private room</option>
+                                <option value="flexible">Flexible</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="meal">Meal Preference</label>
+                            <select id="meal" name="meal">
+                                <option value="no-preference" disabled selected>Select preference</option>
+                                <option value="pure-vegetarian">Pure Vegetarian</option>
+                                <option value="non-vegetarian">Non-Vegetarian</option>
+                                <option value="flexible">Flexible</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2 class="section-title">Images</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tripImage">Trip Image:</label>
+                            <input type="file" name="tripImage" id="tripImage" accept="image/*" required>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Host Trip & Find Companions</button>
+            </form>
+
+            <!-- Matching Preview -->
+            <div class="match-preview">
+                <h3 style="width: 100%; text-align: center; margin-bottom: 1rem;">Preview of Compatible Travelers</h3>
+
+                <div class="match-profile">
+                    <div class="match-avatar">
+                        <img src="../static/images/person1.jpg" alt="Traveler">
+                    </div>
+                    <div class="match-name">Sarah J.</div>
+                    <div class="match-location">London, UK</div>
+                    <div class="match-compatibility">92% Match</div>
+                </div>
+
+                <div class="match-profile">
+                    <div class="match-avatar">
+                        <img src="../static/images/person2.jpg" alt="Traveler">
+                    </div>
+                    <div class="match-name">Miguel H.</div>
+                    <div class="match-location">Madrid, Spain</div>
+                    <div class="match-compatibility">87% Match</div>
+                </div>
+
+                <div class="match-profile">
+                    <div class="match-avatar">
+                        <img src="../static/images/person3.jpg" alt="Traveler">
+                    </div>
+                    <div class="match-name">Jennifer W.</div>
+                    <div class="match-location">Toronto, Canada</div>
+                    <div class="match-compatibility">84% Match</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>TripSync</h3>
+                <p>Connecting travelers since 2023. Our mission is to make travel more enjoyable, affordable, and safe
+                    by helping you find the perfect travel companion.</p>
+                <div class="social-links">
+                    <a href="#">F</a>
+                    <a href="#">T</a>
+                    <a href="#">I</a>
+                    <a href="#">Y</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="Homepage.html">Home</a></li>
+                    <li><a href="#">How It Works</a></li>
+                    <li><a href="#">Find Travelers</a></li>
+                    <li><a href="#">Popular Destinations</a></li>
+                    <li><a href="#">Travel Tips</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Safety Tips</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for travel tips and exclusive offers.</p>
+                <form>
+                    <input type="email" placeholder="Your email"
+                        style="width: 100%; padding: 0.8rem; margin-top: 1rem; border: none; border-radius: 5px;">
+                    <button type="submit"
+                        style="width: 100%; padding: 0.8rem; margin-top: 0.5rem; background-color: #9600ff; color: white; border: none; border-radius: 5px; cursor: pointer;">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 TripSync. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script to manage range input display
+        document.addEventListener('DOMContentLoaded', function () {
+            // Handle pace slider value
+            const paceSlider = document.getElementById('pace');
+            paceSlider.addEventListener('input', function () {
+                const value = this.value;
+                let paceText = '';
+
+                switch (parseInt(value)) {
+                    case 1:
+                        paceText = 'Very relaxed';
+                        break;
+                    case 2:
+                        paceText = 'Relaxed';
+                        break;
+                    case 3:
+                        paceText = 'Moderate';
+                        break;
+                    case 4:
+                        paceText = 'Fast';
+                        break;
+                    case 5:
+                        paceText = 'Very fast';
+                        break;
+                }
+
+                // You could add an element to display the text value if desired
+                console.log(paceText);
+            });
+        });
+
+        // Form submission (prevent default for demo)
+        $("form[name='host-trip-form']").submit(function (e) {
+            e.preventDefault();
+
+            const $form = $(this);
+
+            // Remove any previously added hidden inputs to avoid duplicates
+            $form.find("input.hidden-dynamic").remove();
+
+            // Handle multi-select checkbox groups
+            const multiSelectFields = ['activities', 'communication'];
+            multiSelectFields.forEach(fieldName => {
+                const selected = [];
+                $form.find(`input[name='${fieldName}']:checked`).each(function () {
+                    selected.push($(this).val());
+                });
+
+                selected.forEach(val => {
+                    $('<input>')
+                        .attr({
+                            type: 'hidden',
+                            name: fieldName,
+                            value: val,
+                            class: 'hidden-dynamic'
+                        })
+                        .appendTo($form);
+                });
+            });
+
+        });
+
+    </script>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/static/js/script.js"></script>
+
+</html>

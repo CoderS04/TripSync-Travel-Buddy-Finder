@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripSync - Find a Trip</title>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            color: #333;
+            line-height: 1.6;
+            background-color: #000000;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #000000;
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            top: 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: #9600ff;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: #9600ff;
+        }
+
+        .auth-buttons a {
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-left: 1rem;
+        }
+
+        .login {
+            color: white;
+            border: 2px solid white;
+        }
+
+        .login:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .signup {
+            background-color: #9600ff;
+            color: white;
+        }
+
+        .signup:hover {
+            background-color: #7a00cc;
+        }
+
+        /* Main content */
+        main {
+            margin-top: 80px;
+            padding: 2rem 5%;
+        }
+
+        .page-title {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: #bfbfbf;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Filter section */
+        .filter-section {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-title {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            color: #bfbfbf;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #9600ff;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .filter-group option {
+            background-color: #333;
+            color: white;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .apply-filter {
+            background-color: #9600ff;
+            color: white;
+        }
+
+        .apply-filter:hover {
+            background-color: #7a00cc;
+        }
+
+        .clear-filter {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .clear-filter:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Results section */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .results-count {
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .sort-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sort-dropdown label {
+            color: #bfbfbf;
+        }
+
+        .sort-dropdown select {
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Trip cards */
+        .trips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .trip-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .trip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(150, 0, 255, 0.2);
+        }
+
+        .trip-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .trip-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background-color: #9600ff;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .trip-content {
+            padding: 1.5rem;
+        }
+
+        .trip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .trip-title {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .trip-duration {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #bfbfbf;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .trip-details {
+            color: #bfbfbf;
+            margin-bottom: 1rem;
+        }
+
+        .trip-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .trip-organizer {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .organizer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #9600ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .organizer-info {
+            flex: 1;
+        }
+
+        .organizer-name {
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .organizer-rating {
+            color: #f1c40f;
+            font-size: 0.8rem;
+        }
+
+        .trip-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .trip-price {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .price-per {
+            color: #bfbfbf;
+            font-size: 0.8rem;
+        }
+
+        .join-btn {
+            background-color: #9600ff;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .join-btn:hover {
+            background-color: #7a00cc;
+            transform: scale(1.05);
+        }
+
+        .spots-left {
+            color: #e74c3c;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        /* No results */
+        .no-results {
+            text-align: center;
+            color: #bfbfbf;
+            padding: 3rem;
+        }
+
+        .no-results h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .trips-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">Trip<span>Sync</span></div>
+        <nav class="nav-links">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="#" class="active">Find Trips</a></li>
+                <li><a href="#">My Trips</a></li>
+                <li><a href="#">Create Trip</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="auth-buttons">
+            <a href="/login" class="login">Log In</a>
+            <a href="/signup" class="signup">Sign Up</a>
+        </div>
+    </header>
+
+    <main>
+        <h1 class="page-title">Find Your Perfect Travel Buddy</h1>
+        <p class="page-subtitle">Discover amazing travellers and connect with them</p>
+
+        <!-- Filter Section -->
+        <section class="filter-section">
+            <h2 class="filter-title">🔍 Filter Buddies</h2>
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label for="destination">Destination</label>
+                    <select id="destination">
+                        <option value="">All Destinations</option>
+                        <option value="europe">Europe</option>
+                        <option value="asia">Asia</option>
+                        <option value="africa">Africa</option>
+                        <option value="north-america">North America</option>
+                        <option value="south-america">South America</option>
+                        <option value="oceania">Oceania</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="travel-style">Travel Style</label>
+                    <select id="travel-style">
+                        <option value="">All Styles</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="relaxation">Relaxation</option>
+                        <option value="culture">Cultural</option>
+                        <option value="budget">Budget</option>
+                        <option value="luxury">Luxury</option>
+                        <option value="backpacking">Backpacking</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="duration">Duration</label>
+                    <select id="duration">
+                        <option value="">Any Duration</option>
+                        <option value="1-3">1-3 days</option>
+                        <option value="4-7">4-7 days</option>
+                        <option value="8-14">1-2 weeks</option>
+                        <option value="15-30">2-4 weeks</option>
+                        <option value="30+">1+ month</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="budget">Budget Range</label>
+                    <select id="budget">
+                        <option value="">Any Budget</option>
+                        <option value="0-500">$0 - $500</option>
+                        <option value="500-1000">$500 - $1,000</option>
+                        <option value="1000-2000">$1,000 - $2,000</option>
+                        <option value="2000-5000">$2,000 - $5,000</option>
+                        <option value="5000+">$5,000+</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="start-date">Start Date</label>
+                    <input type="date" id="start-date">
+                </div>
+                <div class="filter-group">
+                    <label for="group-size">Group Size</label>
+                    <select id="group-size">
+                        <option value="">Any Size</option>
+                        <option value="2-4">2-4 people</option>
+                        <option value="5-8">5-8 people</option>
+                        <option value="9-15">9-15 people</option>
+                        <option value="16+">16+ people</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="filter-btn apply-filter" onclick="applyFilters()">Apply Filters</button>
+                <button class="filter-btn clear-filter" onclick="clearFilters()">Clear All</button>
+            </div>
+        </section>
+
+        <button class="filter-btn apply-filter" onclick="fetchAndRenderTrips(`/api/recommend_trips`)">Recommend Buddies</button>
+
+        <!-- Results Section -->
+        <section class="results-section">
+            <div class="results-header">
+                <div class="results-count">
+                    <span id="results-count">24</span> trips found
+                </div>
+                <div class="sort-dropdown">
+                    <label for="sort">Sort by:</label>
+                    <select id="sort" onchange="sortTrips()">
+                        <option value="date">Departure Date</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="duration">Duration</option>
+                        <option value="popularity">Popularity</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Trip Cards -->
+            <div class="trips-grid" id="trips-container">
+                <!-- Trip Card 1 -->
+                <div class="trip-card" data-destination="asia" data-style="adventure" data-duration="10"
+                    data-price="1800">
+                    <div class="trip-image" style="background-image: url('/api/placeholder/400/200');">
+                        <div class="trip-badge">Adventure</div>
+                    </div>
+                    <div class="trip-content">
+                        <div class="trip-header">
+                            <div>
+                                <h3 class="trip-title">Himalayan Trek Adventure</h3>
+                                <div class="trip-duration">10 days</div>
+                            </div>
+                        </div>
+                        <div class="trip-details">
+                            <div class="trip-detail">📍 Nepal, Everest Base Camp</div>
+                            <div class="trip-detail">📅 March 15, 2025</div>
+                            <div class="trip-detail">👥 4-8 travelers</div>
+                        </div>
+                        <div class="trip-organizer">
+                            <div class="organizer-avatar">MR</div>
+                            <div class="organizer-info">
+                                <div class="organizer-name">Mike Roberts</div>
+                                <div class="organizer-rating">⭐ 4.9 (47 reviews)</div>
+                            </div>
+                        </div>
+                        <div class="trip-footer">
+                            <div>
+                                <div class="trip-price">$1,800</div>
+                                <div class="price-per">per person</div>
+                                <div class="spots-left">3 spots left</div>
+                            </div>
+                            <button class="join-btn" onclick="viewTripDetails('himalayan-trek')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Card 2 -->
+                <div class="trip-card" data-destination="europe" data-style="culture" data-duration="7"
+                    data-price="1200">
+                    <div class="trip-image" style="background-image: url('/api/placeholder/400/200');">
+                        <div class="trip-badge">Cultural</div>
+                    </div>
+                    <div class="trip-content">
+                        <div class="trip-header">
+                            <div>
+                                <h3 class="trip-title">European Art & History Tour</h3>
+                                <div class="trip-duration">7 days</div>
+                            </div>
+                        </div>
+                        <div class="trip-details">
+                            <div class="trip-detail">📍 Italy, France, Spain</div>
+                            <div class="trip-detail">📅 April 2, 2025</div>
+                            <div class="trip-detail">👥 6-12 travelers</div>
+                        </div>
+                        <div class="trip-organizer">
+                            <div class="organizer-avatar">SC</div>
+                            <div class="organizer-info">
+                                <div class="organizer-name">Sophie Chen</div>
+                                <div class="organizer-rating">⭐ 4.8 (32 reviews)</div>
+                            </div>
+                        </div>
+                        <div class="trip-footer">
+                            <div>
+                                <div class="trip-price">$1,200</div>
+                                <div class="price-per">per person</div>
+                                <div class="spots-left">8 spots left</div>
+                            </div>
+                            <button class="join-btn" onclick="viewTripDetails('european-art-tour')">View
+                                Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Card 3 -->
+                <div class="trip-card" data-destination="africa" data-style="adventure" data-duration="14"
+                    data-price="2500">
+                    <div class="trip-image" style="background-image: url('/api/placeholder/400/200');">
+                        <div class="trip-badge">Safari</div>
+                    </div>
+                    <div class="trip-content">
+                        <div class="trip-header">
+                            <div>
+                                <h3 class="trip-title">African Safari Experience</h3>
+                                <div class="trip-duration">14 days</div>
+                            </div>
+                        </div>
+                        <div class="trip-details">
+                            <div class="trip-detail">📍 Kenya & Tanzania</div>
+                            <div class="trip-detail">📅 May 10, 2025</div>
+                            <div class="trip-detail">👥 8-16 travelers</div>
+                        </div>
+                        <div class="trip-organizer">
+                            <div class="organizer-avatar">DJ</div>
+                            <div class="organizer-info">
+                                <div class="organizer-name">David Johnson</div>
+                                <div class="organizer-rating">⭐ 5.0 (28 reviews)</div>
+                            </div>
+                        </div>
+                        <div class="trip-footer">
+                            <div>
+                                <div class="trip-price">$2,500</div>
+                                <div class="price-per">per person</div>
+                                <div class="spots-left">12 spots left</div>
+                            </div>
+                            <button class="join-btn" onclick="viewTripDetails('african-safari')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Card 4 -->
+                <div class="trip-card" data-destination="asia" data-style="relaxation" data-duration="5"
+                    data-price="800">
+                    <div class="trip-image" style="background-image: url('/api/placeholder/400/200');">
+                        <div class="trip-badge">Relaxation</div>
+                    </div>
+                    <div class="trip-content">
+                        <div class="trip-header">
+                            <div>
+                                <h3 class="trip-title">Bali Wellness Retreat</h3>
+                                <div class="trip-duration">5 days</div>
+                            </div>
+                        </div>
+                        <div class="trip-details">
+                            <div class="trip-detail">📍 Bali, Indonesia</div>
+                            <div class="trip-detail">📅 March 28, 2025</div>
+                            <div class="trip-detail">👥 4-10 travelers</div>
+                        </div>
+                        <div class="trip-organizer">
+                            <div class="organizer-avatar">LM</div>
+                            <div class="organizer-info">
+                                <div class="organizer-name">Lisa Martinez</div>
+                                <div class="organizer-rating">⭐ 4.7 (41 reviews)</div>
+                            </div>
+                        </div>
+                        <div class="trip-footer">
+                            <div>
+                                <div class="trip-price">$800</div>
+                                <div class="price-per">per person</div>
+                                <div class="spots-left">6 spots left</div>
+                            </div>
+                            <button class="join-btn" onclick="viewTripDetails('bali-wellness')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Card 5 -->
+                <div class="trip-card" data-destination="south-america" data-style="adventure" data-duration="21"
+                    data-price="3200">
+                    <div class="trip-image" style="background-image: url('/api/placeholder/400/200');">
+                        <div class="trip-badge">Backpacking</div>
+                    </div>
+                    <div class="trip-content">
+                        <div class="trip-header">
+                            <div>
+                                <h3 class="trip-title">South America Backpacking</h3>
+                                <div class="trip-duration">21 days</div>
+                            </div>
+                        </div>
+                        <div class="trip-details">
+                            <div class="trip-detail">📍 Peru, Bolivia, Chile</div>
+                            <div class="trip-detail">📅 June 5, 2025</div>
+                            <div class="trip-detail">👥 6-12 travelers</div>
+                        </div>
+                        <div class="trip-organizer">
+                            <div class="organizer-avatar">AR</div>
+                            <div class="organizer-info">
+                                <div class="organizer-name">Alex Rodriguez</div>
+                                <div class="organizer-rating">⭐ 4.9 (35 reviews)</div>
+                            </div>
+                        </div>
+                        <div class="trip-footer">
+                            <div>
+                                <div class="trip-price">$3,200</div>
+                                <div class="price-per">per person</div>
+                                <div class="spots-left">9 spots left</div>
+                            </div>
+                            <button class="join-btn" onclick="viewTripDetails('south-america-backpack')">View
+                                Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Card 6 -->
+                <div class="trip-card" data-destination="oceania" data-style="adventure" data-duration="12"
+                    data-price="2200">
+                    <div class="trip-image" style="background-image: url('/api/placeholder/400/200');">
+                        <div class="trip-badge">Adventure</div>
+                    </div>
+                    <div class="trip-content">
+                        <div class="trip-header">
+                            <div>
+                                <h3 class="trip-title">Australian Road Trip</h3>
+                                <div class="trip-duration">12 days</div>
+                            </div>
+                        </div>
+                        <div class="trip-details">
+                            <div class="trip-detail">📍 Sydney to Melbourne</div>
+                            <div class="trip-detail">📅 April 18, 2025</div>
+                            <div class="trip-detail">👥 4-8 travelers</div>
+                        </div>
+                        <div class="trip-organizer">
+                            <div class="organizer-avatar">JW</div>
+                            <div class="organizer-info">
+                                <div class="organizer-name">James Wilson</div>
+                                <div class="organizer-rating">⭐ 4.6 (22 reviews)</div>
+                            </div>
+                        </div>
+                        <div class="trip-footer">
+                            <div>
+                                <div class="trip-price">$2,200</div>
+                                <div class="price-per">per person</div>
+                                <div class="spots-left">5 spots left</div>
+                            </div>
+                            <button class="join-btn" onclick="viewTripDetails('australian-road-trip')">View
+                                Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // const userId = "USER_ID_FROM_SESSION"; // You can set this dynamically
+            fetchAndRenderTrips(`/api/recommend_trips`);
+        });
+
+        async function fetchAndRenderTrips(endpoint, payload = null) {
+            const res = await fetch(endpoint, {
+                method: payload ? 'POST' : 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                body: payload ? JSON.stringify(payload) : null
+            });
+            
+            const trips = await res.json();
+            renderTrips(trips);
+        }
+
+        function renderTrips(trips) {
+            const container = document.getElementById("trips-container");
+            container.innerHTML = "";
+            document.getElementById("results-count").textContent = trips.length;
+
+            trips.forEach(trip => {
+                const card = document.createElement("div");
+                card.className = "trip-card";
+                card.dataset.destination = trip.specificLocation + ", " + trip.destination;
+                card.dataset.style = trip.travelPreferences.travelStyle;
+                // card.dataset.duration = trip.duration;
+                card.dataset.duration = 'trip.duration';
+                // card.dataset.price = trip.price;
+                card.dataset.price = 'trip.price';
+
+                card.innerHTML = `
+            <div class="trip-image" style="background-image: url('${trip.image}');">
+                <div class="trip-badge">${trip.travelPreferences.travelStyle}</div>
+            </div>
+            <div class="trip-content">
+                <div class="trip-header">
+                    <div>
+                        <h3 class="trip-title">${trip.title}</h3>
+                        <div class="trip-duration">${trip.startDate} days</div>
+                    </div>
+                </div>
+                <div class="trip-details">
+                    <div class="trip-detail">📍 ${trip.specificLocation}</div>
+                    <div class="trip-detail">👥 ${trip.companionPreferences.groupSize || 'Varies'} travelers</div>
+                </div>
+                <div class="trip-organizer">
+                    <div class="organizer-avatar">Organizer</div>
+                    <div class="organizer-info">
+                        <div class="organizer-name">${trip.hostName}</div>
+                        <div class="organizer-rating">⭐ 5</div>
+                    </div>
+                </div>
+                <div class="trip-footer">
+                    <div>
+                        <div class="trip-price">$2000</div>
+                        <div class="price-per">per person</div>
+                        <div class="spots-left">${trip.companionPreferences.groupSize} spots left</div>
+                    </div>
+                    <button class="join-btn" onclick="viewTripDetails('${trip._id}')">View Details</button>
+                </div>
+            </div>
+        `;
+                container.appendChild(card);
+            });
+        }
+
+        function applyFilters() {
+            const payload = {
+                destination: document.getElementById("destination").value,
+                travelStyle: document.getElementById("travel-style").value,
+                duration: document.getElementById("duration").value,
+                budget: document.getElementById("budget").value
+            };
+            fetchAndRenderTrips('/api/search_trips', payload);
+        }
+
+
+
+
+        // function applyFilters() {
+        //     const destination = document.getElementById('destination').value;
+        //     const travelStyle = document.getElementById('travel-style').value;
+        //     const duration = document.getElementById('duration').value;
+        //     const budget = document.getElementById('budget').value;
+        //     const startDate = document.getElementById('start-date').value;
+        //     const groupSize = document.getElementById('group-size').value;
+
+        //     const tripCards = document.querySelectorAll('.trip-card');
+        //     let visibleCount = 0;
+
+        //     tripCards.forEach(card => {
+        //         let shouldShow = true;
+
+        //         // Filter by destination
+        //         if (destination && card.dataset.destination !== destination) {
+        //             shouldShow = false;
+        //         }
+
+        //         // Filter by travel style
+        //         if (travelStyle && card.dataset.style !== travelStyle) {
+        //             shouldShow = false;
+        //         }
+
+        //         // Filter by duration
+        //         if (duration) {
+        //             const cardDuration = parseInt(card.dataset.duration);
+        //             const [min, max] = duration.split('-').map(x => x === '+' ? Infinity : parseInt(x) || parseInt(x.replace('+', '')));
+        //             if (cardDuration < min || (max !== undefined && cardDuration > max)) {
+        //                 shouldShow = false;
+        //             }
+        //         }
+
+        //         // Filter by budget
+        //         if (budget) {
+        //             const cardPrice = parseInt(card.dataset.price);
+        //             const [minPrice, maxPrice] = budget.split('-').map(x => x === '+' ? Infinity : parseInt(x) || parseInt(x.replace('+', '')));
+        //             if (cardPrice < minPrice || (maxPrice !== undefined && cardPrice > maxPrice)) {
+        //                 shouldShow = false;
+        //             }
+        //         }
+
+        //         if (shouldShow) {
+        //             card.style.display = 'block';
+        //             visibleCount++;
+        //         } else {
+        //             card.style.display = 'none';
+        //         }
+        //     });
+
+        //     document.getElementById('results-count').textContent = visibleCount;
+        // }
+
+        function clearFilters() {
+            document.getElementById('destination').value = '';
+            document.getElementById('travel-style').value = '';
+            document.getElementById('duration').value = '';
+            document.getElementById('budget').value = '';
+            document.getElementById('start-date').value = '';
+            document.getElementById('group-size').value = '';
+
+            const tripCards = document.querySelectorAll('.trip-card');
+            tripCards.forEach(card => {
+                card.style.display = 'block';
+            });
+
+            document.getElementById('results-count').textContent = tripCards.length;
+        }
+
+        function sortTrips() {
+            const sortBy = document.getElementById('sort').value;
+            const container = document.getElementById('trips-container');
+            const cards = Array.from(container.querySelectorAll('.trip-card'));
+
+            cards.sort((a, b) => {
+                switch (sortBy) {
+                    case 'price-low':
+                        return parseInt(a.dataset.price) - parseInt(b.dataset.price);
+                    case 'price-high':
+                        return parseInt(b.dataset.price) - parseInt(a.dataset.price);
+                    case 'duration':
+                        return parseInt(a.dataset.duration) - parseInt(b.dataset.duration);
+                    case 'popularity':
+                        // Sort by organizer rating (extract from rating text)
+                        const ratingA = parseFloat(a.querySelector('.organizer-rating').textContent.match(/\d+\.\d+/)[0]);
+                        const ratingB = parseFloat(b.querySelector('.organizer-rating').textContent.match(/\d+\.\d+/)[0]);
+                        return ratingB - ratingA;
+                    case 'date':
+                    default:
+                        // For demo purposes, maintaining current order for date
+                        return 0;
+                }
+            });
+
+            // Clear container and re-append sorted cards
+            container.innerHTML = '';
+            cards.forEach(card => container.appendChild(card));
+        }
+
+        function viewTripDetails(tripId) {
+            // This would typically navigate to a detailed trip page
+            alert(`Viewing details for trip: ${tripId}\n\nThis would open a detailed trip page with:\n- Full itinerary\n- Organizer profile\n- Reviews and photos\n- Join/contact options`);
+
+            // In a real application, you might do:
+            // window.location.href = `trip-details.html?id=${tripId}`;
+        }
+
+        // Initialize page
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     // Set initial results count
+        //     const tripCards = document.querySelectorAll('.trip-card');
+        //     document.getElementById('results-count').textContent = tripCards.length;
+        // });
+    </script>
+</body>
+
+</html>

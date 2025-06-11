@@ -726,6 +726,21 @@
                 display: block;
             }
         }
+
+        /* Optional: Style the scroll bar */
+        .section div[style*="overflow-y: auto"]::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .section div[style*="overflow-y: auto"]::-webkit-scrollbar-thumb {
+            background-color: #9600ff;
+            border-radius: 10px;
+        }
+
+.section div[style*="overflow-y: auto"]::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
     </style>
 </head>
 
@@ -797,28 +812,32 @@
                 <div class="section-header">
                     <h2 class="section-title">Upcoming trips</h2>
                 </div>
-                {% for trip in joinedTrips %}
-                    <div class="trip-card">
-                        <div class="trip-image" id="trip-image" style="background-image: url('{{ trip.image }}');">
-                            <div class="trip-overlay">
-                                <div class="trip-title">{{ trip.title }}</div>
-                                <div class="trip-dates">{{ trip.startDate }} to {{ trip.endDate }}</div>
-                                <div class="trip-companions">
-                                    {% for user in trip.joinedUsers %}
-                                        <div class="companion-avatar" style="background-image: url('{{joinedUsers[user]}}');"></div>
-                                    {% else %}
-                                        No Companions Yet
-                                    {% endfor %}
+
+                <!-- 🔁 Scrollable wrapper added here -->
+                <div style="max-height: 500px; overflow-y: auto; padding-right: 10px;">
+                    {% for trip in joinedTrips %}
+                        <div class="trip-card">
+                            <div class="trip-image" style="background-image: url('{{ trip.image }}');">
+                                <div class="trip-overlay">
+                                    <div class="trip-title">{{ trip.title }}</div>
+                                    <div class="trip-dates">{{ trip.startDate }} to {{ trip.endDate }}</div>
+                                    <div class="trip-companions">
+                                        {% for user in trip.joinedUsers %}
+                                            <div class="companion-avatar" style="background-image: url('{{joinedUsers[user]}}');"></div>
+                                        {% else %}
+                                            No Companions Yet
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                {% else %}
-                    <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
-                        <p>No Upcoming Trips</p>
-                        <button class="show-more-btn" onclick="window.location.href = '/find-trips'">Find Trips</button>
-                    </div>
-                {% endfor %}
+                    {% else %}
+                        <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
+                            <p>No Upcoming Trips</p>
+                            <button class="show-more-btn" onclick="window.location.href = '/find-trips'">Find Trips</button>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
 
             <!-- Your Trips -->
@@ -827,27 +846,30 @@
                     <h2 class="section-title">Your Trips</h2>
                 </div>
 
-                {% for trip in hostedTrips %}
-                    <div class="done-trip">
-                        <div class="done-trip-avatar">T</div>
-                        <div class="done-trip-info">
-                            <div class="done-trip-name">{{ trip.title }}</div>
-                            <div class="done-trip-details">{{ trip.startDate }} • {{ trip.endDate }}</div>
-                            <div class="trip-actions">
-                                <a href="#" class="trip-action-btn companions">👥 Companions</a>
-                                <a href="#" class="trip-action-btn chatroom">💬 Chatroom</a>
-                                <a href="#" class="trip-action-btn settings">⚙️ Settings</a>
-                                <a href="/trip/{{trip._id}}/requests" class="trip-action-btn requests">📋 Requests</a>
+                <!-- 🔁 Scrollable wrapper added here -->
+                <div style="max-height: 500px; overflow-y: auto; padding-right: 10px;">
+                    {% for trip in hostedTrips %}
+                        <div class="done-trip">
+                            <div class="done-trip-avatar">T</div>
+                            <div class="done-trip-info">
+                                <div class="done-trip-name">{{ trip.title }}</div>
+                                <div class="done-trip-details">{{ trip.startDate }} • {{ trip.endDate }}</div>
+                                <div class="trip-actions">
+                                    <a href="#" class="trip-action-btn companions">👥 Companions</a>
+                                    <a href="#" class="trip-action-btn chatroom">💬 Chatroom</a>
+                                    <a href="#" class="trip-action-btn settings">⚙️ Settings</a>
+                                    <a href="/trip/{{trip._id}}/requests" class="trip-action-btn requests">📋 Requests</a>
+                                </div>
                             </div>
+                            <div class="done-trip-stats">{{ trip.endDate - trip.startDate }}</div>
                         </div>
-                        <div class="done-trip-stats">{{ trip.endDate - trip.startDate }}</div>
-                    </div>
-                {% else %}
-                    <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
-                        <p>No trips hosted yet</p>
-                        <button class="show-more-btn" onclick="window.location.href = '/host'">Host a Trip</button>
-                    </div>
-                {% endfor %}
+                    {% else %}
+                        <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
+                            <p>No trips hosted yet</p>
+                            <button class="show-more-btn" onclick="window.location.href = '/host'">Host a Trip</button>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
 

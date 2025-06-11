@@ -214,6 +214,21 @@
             text-decoration: underline;
         }
 
+        .alert{
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .alert-error {
+            background: #ffe0e0;
+            color: red;
+        }
+        .alert-success {
+            background: #e0ffe0;
+            color: green;
+        }
+
         .signup-btn {
             width: 100%;
             background-color: #000000;
@@ -343,7 +358,7 @@
                 <p>Join TripSync and find your perfect travel companion</p>
             </div>
 
-            <form action="/user/signup" method="POST" class="signup-form" name="signup-form" enctype="multipart/form-data">
+            <form class="signup-form" name="signup-form" enctype="multipart/form-data">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="first-name">First Name</label>
@@ -450,6 +465,8 @@
                     <label for="terms">I agree to TripSync's <a href="#">Terms of Service</a> and <a href="#">Privacy
                             Policy</a>, and I'm at least 18 years old.</label>
                 </div>
+
+                <div class="alert" id="alert-div"></div>
 
                 <input type="submit" value="Create Account" class="signup-btn">
 

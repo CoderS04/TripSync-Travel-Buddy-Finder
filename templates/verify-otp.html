@@ -159,59 +159,19 @@
             background: #eee;
         }
 
-        .interest-section h3 {
-            margin-bottom: 1rem;
+        .alert{
+            padding: 1rem;
+            text-align: center;
             font-size: 1.2rem;
         }
 
-        .interest-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
+        .alert-error {
+            background: #ffe0e0;
+            color: red;
         }
-
-        .interest-tag {
-            padding: 0.5rem 1rem;
-            background: #f5f5f5;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid #ddd;
-        }
-
-        .interest-tag.selected {
-            background: #9600ff;
-            color: white;
-            border-color: #9600ff;
-        }
-
-        .interest-tag:hover {
-            background: #eee;
-        }
-
-        .interest-tag.selected:hover {
-            background: #8400e3;
-        }
-
-        .terms-checkbox {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-        }
-
-        .terms-checkbox input {
-            margin-right: 0.5rem;
-            margin-top: 0.3rem;
-        }
-
-        .terms-checkbox a {
-            color: #9600ff;
-            text-decoration: none;
-        }
-
-        .terms-checkbox a:hover {
-            text-decoration: underline;
+        .alert-success {
+            background: #e0ffe0;
+            color: green;
         }
 
         .signup-btn {
@@ -340,14 +300,16 @@
         <div class="signup-box">
             <div class="signup-header">
                 <h2>Verify your Email</h2>
-                <p>OTP sent to [user-email]</p>
+                <p>OTP sent to {{ session['pending_user']['email'] }}</p>
             </div>
 
-            <form action="/user/verify-otp" method="POST" class="otp-verification-form" name="otp-verification-form">
+            <form class="otp-verification-form" name="otp-verification-form">
                 <div class="form-group">
                     <label for="otp">Enter OTP</label>
                     <input type="number" min="100000" max="999999" id="otp" name="otp" placeholder="OTP" required>
                 </div>
+                
+                <div class="alert" id="alert-div"></div>
 
                 <input type="submit" value="Verify" class="signup-btn">
 

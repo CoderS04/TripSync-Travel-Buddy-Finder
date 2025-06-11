@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, session, redirect, current_app
+from flask import Flask, jsonify, request, session, redirect, current_app, flash
 from passlib.hash import pbkdf2_sha256
 import uuid
 
@@ -101,7 +101,7 @@ class User:
         """
         mail.send(msg)
 
-        return redirect('/user/verify-otp')
+        return jsonify({"redirect": '/user/verify-otp'})
     
     def verifyOTP(self, otp):
 
@@ -143,9 +143,9 @@ class User:
             
             self.start_session(user)
             
-            return redirect("/login")
+            return jsonify({"redirect": "/login"}), 200
 
-        return "Invalid OTP. Try again.", 400
+        return jsonify({"error":"Invalid OTP. Try again."}), 400
 
 
     def login(self):

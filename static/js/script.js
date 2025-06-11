@@ -1,29 +1,58 @@
-// $("form[name=signup-form").submit(function (e) {
+$("form[name=signup-form").submit(function (e) {
 
-//     var form = this;
-//     var data = new FormData(form)
+    var form = this;
+    var data = new FormData(form)
 
-//     $.ajax({
-//         url: "/user/signup",
-//         type: "POST",
-//         data: data,
-//         dataType: "json",
-//         processData: false,
-//         contentType: false,
-//         success: function (resp) {
-//             console.log(resp);
-//             alert("SignUp Successful! Welcome to TripSync Community! Redirecting to Dashboard...");
-//             window.location.href = "/dashboard";
-//         },
-//         error: function (resp) {
-//             console.log(resp);
-//             alert(resp.responseJSON.error)
-//         }
-//     });
+    $.ajax({
+        url: "/user/signup",
+        type: "POST",
+        data: data,
+        dataType: "json",
+        processData: false,
+        contentType: false,
+        success: function (resp) {
+            if (resp.redirect){
+                window.location.href = resp.redirect;
+            }
+        },
+        error: function (resp) {
+            const errorDiv = document.getElementById("alert-div");
+            errorDiv.textContent = resp.responseJSON.error || "Signup Failed";
+            errorDiv.classList.add("alert-error");
+        }
+    });
 
-//     e.preventDefault();
+    e.preventDefault();
 
-// });
+});
+
+$("form[name=otp-verification-form]").submit(function (e) {
+
+    var form = this;
+    var data = new FormData(form)
+
+    $.ajax({
+        url: "/user/verify-otp",
+        type: "POST",
+        data: data,
+        dataType: "json",
+        processData: false,
+        contentType: false,
+        success: function (resp) {
+            if (resp.redirect){
+                window.location.href = resp.redirect;
+            }
+        },
+        error: function (resp) {
+            const errorDiv = document.getElementById("alert-div");
+            errorDiv.textContent = resp.responseJSON.error || "Signup Failed";
+            errorDiv.classList.add("alert-error");
+        }
+    });
+
+    e.preventDefault();
+ 
+});
 
 $("form[name=login-form").submit(function (e) {
 

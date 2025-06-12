@@ -49,6 +49,11 @@ def view_join_requests(trip_id):
         trip = Trip().getTripById(trip_id)
         if session['user']['_id'] != trip["hostID"]:
             return "Unauthorized", 403
+
+        for req in trip['joinRequests']:
+            u = Trip().getUserById(req['userId'])
+            req['user'] = u
+
         return render_template("reviewRequests.html", trip=trip)
     else:
         return redirect('/')
@@ -62,6 +67,20 @@ def approve_join_request(trip_id, user_id):
             return "Unauthorized", 403
 
         Trip().approveRequest(trip_id, user_id)
+
+        return redirect(f"/trip/{trip_id}/requests")
+    else:
+        return redirect('/')
+
+@trip_bp.route("/<trip_id>/reject/<user_id>", methods=["POST"])
+def reject_join_request(trip_id, user_id):
+    if 'logged_in' in session:
+        trip = Trip().getTripById(trip_id)
+
+        if session['user']['_id'] != trip["hostID"]:
+            return "Unauthorized", 403
+
+        Trip().rejectRequest(trip_id, user_id)
 
         return redirect(f"/trip/{trip_id}/requests")
     else:

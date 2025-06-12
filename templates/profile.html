@@ -598,7 +598,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background-position: center;
+            background-position: top center;
             background-size: cover;
             display: flex;
             align-items: center;
@@ -688,7 +688,7 @@
         <div class="logo">Trip<span>Sync</span></div>
         <nav class="nav-links">
             <ul>
-                <li><a href="/">Dashboard</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
                 <li><a href="/find-buddy">Find Buddies</a></li>
                 <li><a href="/find-trips">Find Trips</a></li>
                 <li><a href="#messages">Messages</a></li>
@@ -730,12 +730,12 @@
             </div>
             <div class="profile-info">
                 <div class="profile-name">
-                    <span id="displayName">{{session['user']['first_name']}} {{session['user']['last_name']}}</span>
+                    <span id="displayName">{{ session['user']['first_name'] }} {{ session['user']['last_name'] }}</span>
                     <button class="edit-btn" onclick="openEditModal()">Edit Profile</button>
                 </div>
                 <div class="profile-location">
                     <span>📍</span>
-                    <span id="displayLocation">San Francisco, CA</span>
+                    <span id="displayLocation">{{ session['user']['city'] }}, {{ session['user']['country'] }}</span>
                 </div>
                 <div class="profile-stats">
                     <div class="stat">
@@ -1055,9 +1055,7 @@
         const profileDropdown = document.getElementById('profile-dropdown');
 
         // Set initial avatar
-        profileAvatar.style.backgroundImage = "url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face')";
-        profileAvatar.style.backgroundSize = 'cover';
-        profileAvatar.style.backgroundPosition = 'center';
+        profileAvatar.style.backgroundImage = "url('{{ session['user']['image'] }}')";
 
         profileAvatar.addEventListener('click', function(e) {
             e.stopPropagation();

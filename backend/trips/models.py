@@ -105,7 +105,8 @@ class Trip:
             },
 
             "createdAt": datetime.now(),
-            "joinedUsers": []
+            "joinedUsers": [],
+            "joinRequests": []
         }
 
         if trips.insert_one(trip):
@@ -168,7 +169,8 @@ class Trip:
         request_entry = {
             "userId": user_id,
             "idProofPath": f"/{proof_path}",
-            "status": "pending"
+            "status": "pending",
+            "requestedOn": datetime.now()
         }
 
         db.trips.update_one(
@@ -182,11 +184,20 @@ class Trip:
         db.trips.update_one(
             {"_id": tripId, "joinRequests.userId": userId},
             {
-                "$set": {"joinRequests.$.status": "approved"},
+                "$set": {"joinRequests.$.status": "approved","joinRequests.$.statusUpdatedOn": datetime.now()},
                 "$addToSet": {"joinedUsers": userId}
             }
         )
         return "Approved", 200
+
+    def rejectRequest(self, tripId, userId):
+        db.trips.update_one(
+            {"_id": tripId, "joinRequests.userId": userId},
+            {
+                "$set": {"joinRequests.$.status": "rejected","joinRequests.$.statusUpdatedOn": datetime.now()}
+            }
+        )
+        return "Rejected", 200
 
     def getTripById(self, tripId):
         return db.trips.find_one({'_id':tripId})

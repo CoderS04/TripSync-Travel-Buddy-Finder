@@ -33,6 +33,7 @@ class User:
         email = request.form.get('email')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm-password')
+        city = request.form.get('city')
         country = request.form.get('country')
         birthdate = request.form.get('birthdate')
         gender = request.form.get('gender')
@@ -67,6 +68,7 @@ class User:
             "last_name": last_name,
             "email": email,
             "password": pbkdf2_sha256.encrypt(password),
+            "city": city,
             "country": country,
             "birthdate": birthdate,
             "gender": gender,

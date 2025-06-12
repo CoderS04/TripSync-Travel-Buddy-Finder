@@ -103,3 +103,28 @@ $("form[name=host-trip-form").submit(function (e) {
 
     e.preventDefault();
 });
+
+$("form[name=review-form").submit(function (e) {
+
+    var form = this;
+    var data = new FormData(form)
+
+    $.ajax({
+        url: "/api/review",
+        type: "POST",
+        data: data,
+        dataType: "json",
+        processData: false,
+        contentType: false,
+        success: function (resp) {
+            alert(resp.responseJSON.success)
+        },
+        error: function (resp) {
+            alert(resp.responseJSON.error);
+            window.location.href = '/login';
+        }
+    });
+
+    e.preventDefault();
+
+});

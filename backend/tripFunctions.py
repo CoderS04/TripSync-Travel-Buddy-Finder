@@ -1,5 +1,3 @@
-from flask import request
-# from pymongo import MongoClient
 from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
@@ -79,6 +77,6 @@ def search_trips(data):
     # Filter duration (in days) manually if needed
     if duration:
         min_days, max_days = map(int, duration.split("-")) if "-" in duration else (int(duration.replace("+", "")), float("inf"))
-        results = [r for r in results if min_days <= calculate_trip_days(r) <= max_days]
+        results = [r for r in results if min_days <= r['endDate']-r['startDate'] <= max_days]
 
     return results

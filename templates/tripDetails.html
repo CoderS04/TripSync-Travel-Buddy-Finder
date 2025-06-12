@@ -384,6 +384,10 @@
                 <h1 class="trip-title">{{ trip.title }}</h1>
                 <p class="host-info">Hosted by: <span class="host-name">{{ host.first_name }} {{ host.last_name
                         }}</span></p>
+                <p class="host-rating">
+                    ⭐ {{ averageRating }}/5
+                    <span class="rating-count">({{ ratingCount }} ratings)</span>
+                </p>
             </div>
 
             <!-- Trip image -->
@@ -438,6 +442,24 @@
                                 trip.joinedUsers|length) }}</span>
                             <span class="stat-label">Spots Left</span>
                         </div>
+
+                        <form id="review-form" name="review-form">
+                            <label>Rate the Host</label>
+                            <select name="rating" required>
+                                <option value="">Select rating</option>
+                                <option value="5">⭐ 5 - Excellent</option>
+                                <option value="4">⭐ 4 - Good</option>
+                                <option value="3">⭐ 3 - Average</option>
+                                <option value="2">⭐ 2 - Below Avg</option>
+                                <option value="1">⭐ 1 - Poor</option>
+                            </select>
+                            <textarea name="comment" placeholder="Your review..." required></textarea>
+                            <input type="hidden" name="tripId" value="{{ trip._id }}">
+                            <input type="hidden" name="hostId" value="{{ host._id }}">
+                            <button type="submit">Submit Review</button>
+                        </form>
+                        <div id="review-message"></div>
+
                     </div>
                 </div>
             </div>
@@ -572,5 +594,8 @@
         });
     </script>
 </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="/static/js/script.js"></script>
 
 </html>

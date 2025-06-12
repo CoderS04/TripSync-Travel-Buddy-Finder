@@ -1,5 +1,6 @@
 from flask import Flask, Blueprint, session, redirect, render_template, jsonify
 from backend.trips.models import Trip
+from backend.apis.models import API
 
 trip_bp = Blueprint('trip', __name__, url_prefix='/trip')
 
@@ -20,14 +21,20 @@ def find():
     
 @trip_bp.route('/<trip_id>')
 def tripDetails(trip_id):
-    print(trip_id)
     trip = Trip().getTripById(trip_id)
     if not trip:
         return "Trip not found", 404
     
     host = Trip().getUserById(trip["hostID"])
 
-    return render_template('tripDetails.html', trip = trip, host = host)
+    ratingData = API().getRatingSummary(trip["hostID"])
+
+    return render_template(
+        'tripDetails.html',
+        trip = trip,
+        host = host,
+        averageRating = round(ratingData["averageRating"], 1),
+        ratingCount=ratingData["ratingCount"])
 
 @trip_bp.route("/<trip_id>/join_request", methods=["POST"])
 def request_to_join_trip(trip_id):

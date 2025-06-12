@@ -689,8 +689,8 @@
         <nav class="nav-links">
             <ul>
                 <li><a href="/">Dashboard</a></li>
-                <li><a href="#find-travelers">Find Buddies</a></li>
-                <li><a href="#my-trips">Find Trips</a></li>
+                <li><a href="/find-buddy">Find Buddies</a></li>
+                <li><a href="/find-trips">Find Trips</a></li>
                 <li><a href="#messages">Messages</a></li>
             </ul>
         </nav>
@@ -725,12 +725,12 @@
         <!-- Profile Header -->
         <div class="profile-header">
             <div class="profile-picture">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face" alt="Profile Picture" class="profile-pic" id="profileImage">
+                <img src="{{ session['user']['image'] }}" alt="Profile Picture" class="profile-pic" id="profileImage">
                 <button class="edit-pic-btn" onclick="changeProfilePicture()">📷</button>
             </div>
             <div class="profile-info">
                 <div class="profile-name">
-                    <span id="displayName">Alex Johnson</span>
+                    <span id="displayName">{{session['user']['first_name']}} {{session['user']['last_name']}}</span>
                     <button class="edit-btn" onclick="openEditModal()">Edit Profile</button>
                 </div>
                 <div class="profile-location">
@@ -765,7 +765,7 @@
                 <p class="about-text" id="aboutText">
                     Passionate traveler and adventure seeker! I love exploring new cultures, trying local cuisines, and meeting fellow travelers. I believe the best journeys are shared with great company. Always up for spontaneous adventures and off-the-beaten-path destinations.
                 </p>
-                <div class="travel-style" id="travelStyle">🎒 Adventure Seeker</div>
+                <div class="travel-style" id="travelStyle">🎒 {{ session['user']['travel_style'] }}</div>
             </div>
 
             <!-- Interests Section -->
@@ -775,15 +775,10 @@
                     <button class="edit-btn" onclick="openInterestsModal()">Edit</button>
                 </div>
                 <div class="interests-grid" id="interestsGrid">
-                    <span class="interest-tag">Photography</span>
-                    <span class="interest-tag">Hiking</span>
-                    <span class="interest-tag">Local Food</span>
-                    <span class="interest-tag">Museums</span>
-                    <span class="interest-tag">Nightlife</span>
-                    <span class="interest-tag">Beach</span>
-                    <span class="interest-tag">Architecture</span>
-                    <span class="interest-tag">History</span>
-                </div>
+                    {% for interest in session['user']['interests'] %}
+                        <span class="interest-tag">{{interest}}</span>
+                    {% endfor %}
+                    </div>
             </div>
 
             <!-- Travel Preferences -->

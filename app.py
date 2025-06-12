@@ -84,5 +84,9 @@ def host():
 def findBuddy():
     return render_template('findBuddy.html')
 
+@app.route('/<userId>')
+def userProfile(userId):
+    return render_template('profile.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

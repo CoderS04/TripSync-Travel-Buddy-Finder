@@ -28,7 +28,6 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'tripsync2025@gmail.com'
 app.config['MAIL_PASSWORD'] = 'impf cazu kmkv wkjq'  # Use App Password from Gmail
 app.config['MAIL_DEFAULT_SENDER'] = 'tripsync2025@gmail.com'
-
 mail.init_app(app)
 
 def login_required(f):

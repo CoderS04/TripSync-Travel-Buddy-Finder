@@ -29,6 +29,7 @@
             justify-content: space-between;
             align-items: center;
             position: fixed;
+            top: 0;
             width: 100%;
             z-index: 100;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -540,6 +541,135 @@
             }
         }
 
+        .icon-btn {
+                        color: white;
+                        font-size: 1.3rem;
+                        margin-right: 1rem;
+                        text-decoration: none;
+                        position: relative;
+                        transition: transform 0.2s;
+                    }
+
+                    .icon-btn:hover {
+                        transform: scale(1.2);
+                        color: #9600ff;
+                    }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .notification-btn, .messages-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .notification-btn:hover, .messages-btn:hover {
+            background: rgba(150, 0, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        /* Enhanced Messages Button with gradient background
+        .messages-btn {
+            background: linear-gradient(45deg, #9600ff, #ff006e);
+            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.3);
+        } */
+
+        .messages-btn:hover {
+                background: rgba(150, 0, 255, 0.2);
+                transform: scale(1.1);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-position: center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .profile-avatar:hover {
+            border-color: #9600ff;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.4);
+        }
+
+        /* Profile Dropdown Menu */
+        .profile-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px 0;
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(150, 0, 255, 0.2);
+            color: #9600ff;
+        }
+
+        .dropdown-item .icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 5px 0;
+        }
+
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
@@ -558,15 +688,35 @@
         <div class="logo">Trip<span>Sync</span></div>
         <nav class="nav-links">
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="#find-travelers">Find Travelers</a></li>
-                <li><a href="#my-trips">My Trips</a></li>
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="#find-travelers">Find Buddies</a></li>
+                <li><a href="#my-trips">Find Trips</a></li>
                 <li><a href="#messages">Messages</a></li>
-                <li><a href="#profile">Profile</a></li>
             </ul>
         </nav>
-        <div class="user-menu">
-            <div class="user-avatar">AJ</div>
+        <div class="user-profile">
+            <button class="notification-btn">🔔</button>
+            <button class="messages-btn" onclick="window.location.href='/messages'">💬</button>
+            <div class="profile-avatar" id="profile-avatar"></div>
+            <div class="profile-dropdown" id="profile-dropdown">
+                <a href="/profile" class="dropdown-item">
+                    <span class="icon">👤</span>
+                    <span>My Profile</span>
+                </a>
+                <a href="/settings" class="dropdown-item">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="/help" class="dropdown-item">
+                    <span class="icon">❓</span>
+                    <span>Help & Support</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="/user/signout" class="dropdown-item">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </div>
         </div>
     </header>
 
@@ -819,3 +969,352 @@
                 <h3 class="modal-title">Edit Travel Preferences</h3>
                 <button class="close-btn" onclick="closeModal('preferencesModal')">&times;</button>
             </div>
+            <form onsubmit="savePreferences(event)">
+                <div class="form-group">
+                    <label class="form-label">Budget Range</label>
+                    <select class="form-input form-select" id="editBudget">
+                        <option value="$25-50/day">$25-50/day</option>
+                        <option value="$50-100/day" selected>$50-100/day</option>
+                        <option value="$100-200/day">$100-200/day</option>
+                        <option value="$200+/day">$200+/day</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Accommodation</label>
+                    <select class="form-input form-select" id="editAccommodation">
+                        <option value="Hostels">Hostels</option>
+                        <option value="Hostels & Hotels" selected>Hostels & Hotels</option>
+                        <option value="Hotels">Hotels</option>
+                        <option value="Luxury Hotels">Luxury Hotels</option>
+                        <option value="Airbnb">Airbnb</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Group Size</label>
+                    <select class="form-input form-select" id="editGroupSize">
+                        <option value="Solo">Solo</option>
+                        <option value="2-4 people" selected>2-4 people</option>
+                        <option value="5-8 people">5-8 people</option>
+                        <option value="Large groups">Large groups</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Languages</label>
+                    <input type="text" class="form-input" id="editLanguages" value="English, Spanish">
+                </div>
+                <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Trip Modal -->
+    <div id="tripsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Trip</h3>
+                <button class="close-btn" onclick="closeModal('tripsModal')">&times;</button>
+            </div>
+            <form onsubmit="addTrip(event)">
+                <div class="form-group">
+                    <label class="form-label">Destination</label>
+                    <input type="text" class="form-input" id="tripDestination" placeholder="e.g., Paris, France" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" class="form-input" id="tripStartDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">End Date</label>
+                    <input type="date" class="form-input" id="tripEndDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input form-textarea" id="tripDescription" placeholder="Tell others about your trip plans..."></textarea>
+                </div>
+                <button type="submit" class="save-btn">Add Trip</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Photo Management Modal -->
+    <div id="photosModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Manage Travel Photos</h3>
+                <button class="close-btn" onclick="closeModal('photosModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Add New Photo</label>
+                <input type="file" class="form-input" id="photoUpload" accept="image/*" multiple>
+                <div style="color: #bfbfbf; font-size: 0.9rem; margin-top: 0.5rem;">
+                    Select up to 5 travel photos to showcase your adventures
+                </div>
+            </div>
+            <button type="button" class="save-btn" onclick="uploadPhotos()">Upload Photos</button>
+        </div>
+    </div>
+
+    <script>
+        // Profile dropdown functionality
+        const profileAvatar = document.getElementById('profile-avatar');
+        const profileDropdown = document.getElementById('profile-dropdown');
+
+        // Set initial avatar
+        profileAvatar.style.backgroundImage = "url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face')";
+        profileAvatar.style.backgroundSize = 'cover';
+        profileAvatar.style.backgroundPosition = 'center';
+
+        profileAvatar.addEventListener('click', function(e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function() {
+            profileDropdown.classList.remove('show');
+        });
+
+        // Modal functions
+        function openEditModal() {
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function openAboutModal() {
+            document.getElementById('aboutModal').style.display = 'block';
+        }
+
+        function openInterestsModal() {
+            document.getElementById('interestsModal').style.display = 'block';
+            populateEditInterests();
+        }
+
+        function openPreferencesModal() {
+            document.getElementById('preferencesModal').style.display = 'block';
+        }
+
+        function openTripsModal() {
+            document.getElementById('tripsModal').style.display = 'block';
+        }
+
+        function openPhotosModal() {
+            document.getElementById('photosModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Profile saving functions
+        function saveProfile(event) {
+            event.preventDefault();
+            const name = document.getElementById('editName').value;
+            const location = document.getElementById('editLocation').value;
+            const travelStyle = document.getElementById('editTravelStyle').value;
+            
+            document.getElementById('displayName').textContent = name;
+            document.getElementById('displayLocation').textContent = location;
+            document.getElementById('travelStyle').textContent = travelStyle;
+            
+            closeModal('editModal');
+            showNotification('Profile updated successfully!');
+        }
+
+        function saveAbout(event) {
+            event.preventDefault();
+            const about = document.getElementById('editAbout').value;
+            document.getElementById('aboutText').textContent = about;
+            closeModal('aboutModal');
+            showNotification('About section updated!');
+        }
+
+        function savePreferences(event) {
+            event.preventDefault();
+            const budget = document.getElementById('editBudget').value;
+            const accommodation = document.getElementById('editAccommodation').value;
+            const groupSize = document.getElementById('editGroupSize').value;
+            const languages = document.getElementById('editLanguages').value;
+            
+            document.getElementById('budgetRange').textContent = budget;
+            document.getElementById('accommodation').textContent = accommodation;
+            document.getElementById('groupSize').textContent = groupSize;
+            document.getElementById('languages').textContent = languages;
+            
+            closeModal('preferencesModal');
+            showNotification('Preferences updated!');
+        }
+
+        // Interests management
+        let currentInterests = ['Photography', 'Hiking', 'Local Food', 'Museums', 'Nightlife', 'Beach', 'Architecture', 'History'];
+
+        function populateEditInterests() {
+            const grid = document.getElementById('editInterestsGrid');
+            grid.innerHTML = '';
+            currentInterests.forEach(interest => {
+                const tag = document.createElement('span');
+                tag.className = 'interest-tag removable';
+                tag.textContent = interest;
+                tag.addEventListener('click', () => removeInterest(interest));
+                grid.appendChild(tag);
+            });
+        }
+
+        function addInterest() {
+            const input = document.getElementById('newInterest');
+            const interest = input.value.trim();
+            if (interest && !currentInterests.includes(interest)) {
+                currentInterests.push(interest);
+                populateEditInterests();
+                input.value = '';
+            }
+        }
+
+        function removeInterest(interest) {
+            currentInterests = currentInterests.filter(i => i !== interest);
+            populateEditInterests();
+        }
+
+        function saveInterests() {
+            const grid = document.getElementById('interestsGrid');
+            grid.innerHTML = '';
+            currentInterests.forEach(interest => {
+                const tag = document.createElement('span');
+                tag.className = 'interest-tag';
+                tag.textContent = interest;
+                grid.appendChild(tag);
+            });
+            closeModal('interestsModal');
+            showNotification('Interests updated!');
+        }
+
+        // Trip management
+        function addTrip(event) {
+            event.preventDefault();
+            const destination = document.getElementById('tripDestination').value;
+            const startDate = document.getElementById('tripStartDate').value;
+            const endDate = document.getElementById('tripEndDate').value;
+            const description = document.getElementById('tripDescription').value;
+            
+            const tripContainer = document.getElementById('upcomingTrips');
+            const tripDiv = document.createElement('div');
+            tripDiv.className = 'upcoming-trip';
+            tripDiv.innerHTML = `
+                <button class="trip-remove" onclick="removeTrip(this)">×</button>
+                <div class="trip-destination">🌍 ${destination}</div>
+                <div class="trip-dates">${formatDate(startDate)} - ${formatDate(endDate)}</div>
+                <div class="trip-details">${description}</div>
+            `;
+            tripContainer.appendChild(tripDiv);
+            
+            closeModal('tripsModal');
+            event.target.reset();
+            showNotification('Trip added successfully!');
+        }
+
+        function removeTrip(button) {
+            button.parentElement.remove();
+            showNotification('Trip removed!');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                month: 'long', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+        }
+
+        // Photo management
+        function addPhoto() {
+            document.getElementById('photoUpload').click();
+        }
+
+        function removePhoto(button) {
+            button.parentElement.remove();
+            showNotification('Photo removed!');
+        }
+
+        function uploadPhotos() {
+            const fileInput = document.getElementById('photoUpload');
+            const files = fileInput.files;
+            
+            if (files.length > 0) {
+                // In a real app, you would upload these files to a server
+                // For demo purposes, we'll just show a success message
+                showNotification(`${files.length} photo(s) uploaded successfully!`);
+                closeModal('photosModal');
+                fileInput.value = '';
+            }
+        }
+
+        // Profile picture change
+        function changeProfilePicture() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('profileImage').src = e.target.result;
+                        profileAvatar.style.backgroundImage = `url(${e.target.result})`;
+                        showNotification('Profile picture updated!');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Notification system
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(135deg, #9600ff, #7d00d1);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Add CSS animations for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Handle Enter key for adding interests
+        document.getElementById('newInterest').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addInterest();
+            }
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

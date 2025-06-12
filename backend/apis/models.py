@@ -1,4 +1,5 @@
 from flask import Flask, session, jsonify, request
+import uuid
 
 import datetime
 
@@ -10,6 +11,7 @@ class API():
 
         data = request.form
         review = {
+            "_id": uuid.uuid4().hex,
             "tripId": data["tripId"],
             "hostId": data["hostId"],
             "reviewerId": session["user"]['_id'],

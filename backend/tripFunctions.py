@@ -1,61 +1,89 @@
-from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.preprocessing import MultiLabelBinarizer
 
 from extensions import db
 
-def recommend_trips(user_id):
-    user = db.users.find_one({"_id": user_id})
-    trips = list(db.trips.find())
+def get_user(user_id):
+    return db.users.find_one({"_id": user_id})
 
-    if not user or not trips:
-        # return jsonify({"error": "User or trips not found"}), 404
-        return {"error": "User or trips not found"}
+def get_all_trips():
+    return list(db.trips.find())
 
-    # Prepare data
-    user_vector = {
-        "travelStyle": [user.get("travel_style", "").lower()],
-        "activities": [interest.lower() for interest in user.get("interests", [])]
-    }
+def get_all_ratings():
+    return list(db.trip_ratings.find())
 
-    trip_vectors = []
-    trip_ids = []
+# Step 1: Content-Based Scoring
+def content_scores(user, trips):
+    df = pd.DataFrame(trips)
+    df["activities"] = df["travelPreferences"].apply(lambda x: x.get("activities", []))
+    df["style"] = df["travelPreferences"].apply(lambda x: x.get("travelStyle", ""))
+    df["features"] = df["activities"] + df["style"].apply(lambda x: [x])
 
+    mlb = MultiLabelBinarizer()
+    trip_features_matrix = mlb.fit_transform(df["features"])
+    
+    user_features = user["interests"] + [user["travel_style"]]
+    user_vector = mlb.transform([user_features])
+
+    similarity_scores = cosine_similarity(user_vector, trip_features_matrix).flatten()
+    content_scores = dict(zip(df["_id"], similarity_scores))
+
+    return content_scores
+
+# Step 2: Collaborative Scoring (User-based)
+def collaborative_scores(user_id, all_trips, ratings_data):
+    df = pd.DataFrame(ratings_data)
+    if df.empty:
+        return {}
+
+    rating_matrix = df.pivot_table(index="userId", columns="tripId", values="rating").fillna(0)
+
+    if user_id not in rating_matrix.index:
+        return {}
+
+    user_vector = rating_matrix.loc[user_id]
+    similarity = cosine_similarity([user_vector], rating_matrix)[0]
+    sim_users = pd.Series(similarity, index=rating_matrix.index).drop(user_id)
+
+    score_sums = {}
+    sim_sums = {}
+
+    for other_user, sim_score in sim_users.items():
+        for trip_id, rating in rating_matrix.loc[other_user].items():
+            if rating > 0 and user_vector[trip_id] == 0:
+                score_sums[trip_id] = score_sums.get(trip_id, 0) + sim_score * rating
+                sim_sums[trip_id] = sim_sums.get(trip_id, 0) + sim_score
+
+    final_scores = {}
+    for trip_id in score_sums:
+        if sim_sums[trip_id] > 0:
+            final_scores[trip_id] = score_sums[trip_id] / sim_sums[trip_id]
+
+    # Normalize to [0, 1]
+    max_rating = 5.0
+    return {tid: score / max_rating for tid, score in final_scores.items()}
+
+# Step 3: Hybrid Scoring (Combine both)
+def hybrid_recommend(user_id, alpha=0.5, top_n=10):
+    user = get_user(user_id)
+    trips = get_all_trips()
+    ratings = get_all_ratings()
+
+    content = content_scores(user, trips)
+    collab = collaborative_scores(str(user_id), trips, ratings)
+
+    hybrid = []
     for trip in trips:
-        travel_pref = trip.get("travelPreferences", {})
-        trip_vector = {
-            "travelStyle": [travel_pref.get("travelStyle", "").lower()],
-            "activities": [a.lower() for a in travel_pref.get("activities", [])]
-        }
-        trip_vectors.append(trip_vector)
-        trip_ids.append(str(trip["_id"]))
+        tid = trip["_id"]
+        c_score = content.get(tid, 0)
+        cf_score = collab.get(tid, 0)
+        final = alpha * c_score + (1 - alpha) * cf_score
+        hybrid.append((trip, final))
 
-    # One-hot encode travelStyle and activities
-    df_user = pd.DataFrame([user_vector])
-    df_trips = pd.DataFrame(trip_vectors)
-
-    mlb_style = MultiLabelBinarizer()
-    mlb_acts = MultiLabelBinarizer()
-
-    travel_styles = pd.DataFrame(mlb_style.fit_transform(df_trips["travelStyle"]), columns=mlb_style.classes_)
-    activities = pd.DataFrame(mlb_acts.fit_transform(df_trips["activities"]), columns=mlb_acts.classes_)
-
-    df_trips_encoded = pd.concat([travel_styles, activities], axis=1)
-
-    # Encode user in the same format
-    user_style = pd.DataFrame(mlb_style.transform(df_user["travelStyle"]), columns=mlb_style.classes_)
-    user_acts = pd.DataFrame(mlb_acts.transform(df_user["activities"]), columns=mlb_acts.classes_)
-    df_user_encoded = pd.concat([user_style, user_acts], axis=1)
-
-    # Compute similarity
-    scores = cosine_similarity(df_user_encoded, df_trips_encoded)[0]
-    top_indices = scores.argsort()[::-1][:5]
-
-    # Get recommended trip IDs and scores
-    recommended = [{"trip_id": trip_ids[i], "score": round(float(scores[i]), 2)} for i in top_indices]
-
-    # return jsonify(recommended)
-    return recommended
+    hybrid.sort(key=lambda x: x[1], reverse=True)
+    return hybrid[:top_n]
 
 def search_trips(data):
     # data = request.json  # from frontend

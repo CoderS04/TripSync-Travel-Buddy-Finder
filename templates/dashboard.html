@@ -751,6 +751,19 @@
         .section div[style*="overflow-y: auto"]::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
         }
+
+        .horizontal-scroll-wrapper {
+            overflow-x: auto;
+            padding-bottom: 15px;
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        .horizontal-scroll-wrapper::-webkit-scrollbar { display: none; /* Chrome, Safari and Opera */ }
+        .explore-grid {
+            display: flex; /* Changed from grid to flex */
+            flex-wrap: nowrap; /* Prevents wrapping */
+            gap: 15px;
+        }
     </style>
 </head>
 
@@ -886,24 +899,28 @@
             </div>
         </div>
 
-        <!-- Explore Trips Section -->
+        <!-- Top Trip Recommendations Section -->
         <div class="section">
             <div class="section-header">
                 <h2 class="section-title">Top Trip Recommendations</h2>
             </div>
-
-            <div class="explore-grid" id="explore-container">
-
+            <div class="horizontal-scroll-wrapper">
+                <div class="explore-grid" id="trip-recommendations-container">
+                    <!-- Trip cards will be dynamically inserted here -->
+                </div>
             </div>
         </div>
 
+        <!-- Top Buddy Recommendations Section -->
         <div class="section">
             <div class="section-header">
                 <h2 class="section-title">Top Buddy Recommendations</h2>
             </div>
-
-            <div class="explore-grid" id="explore-container">
-
+            <div class="horizontal-scroll-wrapper">
+                <div class="explore-grid" id="buddy-recommendations-container">
+                    <!-- Buddy cards will be dynamically inserted here -->
+                     
+                </div>
             </div>
         </div>
     </div>

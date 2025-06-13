@@ -443,46 +443,63 @@
                             <span class="stat-label">Spots Left</span>
                         </div>
 
-                        <form id="review-form" name="review-form">
-                            <label>Rate the Host</label>
-                            <select name="rating" required>
-                                <option value="">Select rating</option>
-                                <option value="5">⭐ 5 - Excellent</option>
-                                <option value="4">⭐ 4 - Good</option>
-                                <option value="3">⭐ 3 - Average</option>
-                                <option value="2">⭐ 2 - Below Avg</option>
-                                <option value="1">⭐ 1 - Poor</option>
-                            </select>
-                            <textarea name="comment" placeholder="Your review..." required></textarea>
-                            <input type="hidden" name="tripId" value="{{ trip._id }}">
-                            <input type="hidden" name="hostId" value="{{ host._id }}">
-                            <button type="submit">Submit Review</button>
-                        </form>
-                        <div id="review-message"></div>
+                        {% if session['logged_in'] %}
+                            {% if host._id != session['user']['_id'] %}
 
+                                <form id="review-form" name="review-form">
+                                    <label>Rate the Host</label>
+                                    <select name="rating" required>
+                                        <option value="">Select rating</option>
+                                        <option value="5">⭐ 5 - Excellent</option>
+                                        <option value="4">⭐ 4 - Good</option>
+                                        <option value="3">⭐ 3 - Average</option>
+                                        <option value="2">⭐ 2 - Below Avg</option>
+                                        <option value="1">⭐ 1 - Poor</option>
+                                    </select>
+                                    <textarea name="comment" placeholder="Your review..." required></textarea>
+                                    <input type="hidden" name="tripId" value="{{ trip._id }}">
+                                    <input type="hidden" name="hostId" value="{{ host._id }}">
+                                    <button type="submit">Submit Review</button>
+                                </form>
+                                <div id="review-message"></div>
+                            {% else %}
+                                <p>You are the host!</p>
+                            {% endif %}
+                        {% else %}
+                            <p>Login required to submit review!</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
 
-            <!-- Action section -->
-            <div class="action-section">
-                <button class="join-btn" onclick="openJoinModal()">Request to Join</button>
+            {% if session['logged_in'] %}
+                {% if host._id != session['user']['_id'] %}
+                    <!-- Action section -->
+                    <div class="action-section">
+                        <button class="join-btn" onclick="openJoinModal()">Request to Join</button>
 
-                <div id="join-modal" style="display:none;">
-                    <form id="join-request-form" enctype="multipart/form-data">
-                        <label>Upload Identity Proof (PDF/JPG/PNG):</label>
-                        <input type="file" name="idProof" accept=".pdf, .jpg, .jpeg, .png" required>
-                        <input type="hidden" name="tripId" value="{{ trip._id }}">
-                        <button type="submit">Submit Request</button>
-                    </form>
-                </div>
+                        <div id="join-modal" style="display:none;">
+                            <form id="join-request-form" enctype="multipart/form-data">
+                                <label>Upload Identity Proof (PDF/JPG/PNG):</label>
+                                <input type="file" name="idProof" accept=".pdf, .jpg, .jpeg, .png" required>
+                                <input type="hidden" name="tripId" value="{{ trip._id }}">
+                                <button type="submit">Submit Request</button>
+                            </form>
+                        </div>
 
-                <!-- <button class="join-btn" id="join-trip-btn" data-trip-id="{{ trip._id }}">
-                    Join This Adventure
-                </button> -->
+                        <!-- <button class="join-btn" id="join-trip-btn" data-trip-id="{{ trip._id }}">
+                            Join This Adventure
+                        </button> -->
 
-                <div id="join-msg"></div>
-            </div>
+                        <div id="join-msg"></div>
+                    </div>
+
+                {% else %}
+                    <p>You are the host!</p>
+                {% endif %}
+            {% else %}
+                <p>Login required to submit request!</p>
+            {% endif %}
         </div>
     </main>
 

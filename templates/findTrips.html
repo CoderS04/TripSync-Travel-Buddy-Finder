@@ -737,6 +737,10 @@
 
     <script>
 
+        document.addEventListener("DOMContentLoaded", function () {
+            applyFilters();
+        });
+
         async function fetchAndRenderTrips(endpoint, payload = null) {
             const res = await fetch(endpoint, {
                 method: payload ? 'POST' : 'GET',
@@ -856,9 +860,6 @@
         }
 
         function viewTripDetails(tripId) {
-            // This would typically navigate to a detailed trip page
-            alert(`Viewing details for trip: ${tripId}\n\nThis would open a detailed trip page with:\n- Full itinerary\n- Organizer profile\n- Reviews and photos\n- Join/contact options`);
-
             // In a real application, you might do:
             window.location.href = `/trip/${tripId}`;
         }

@@ -20,7 +20,7 @@
             background-color: #f4f4f4;
         }
 
-        /* Header styles */
+        /* Header styles matching homepage */
         header {
             background-color: #000000;
             color: white;
@@ -29,6 +29,7 @@
             justify-content: space-between;
             align-items: center;
             position: fixed;
+            top: 0;
             width: 100%;
             z-index: 100;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -64,31 +65,145 @@
             color: #9600ff;
         }
 
-        .auth-buttons a {
-            padding: 0.5rem 1.2rem;
-            border-radius: 30px;
-            text-decoration: none;
+        .user-menu {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #9600ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
             font-weight: bold;
-            transition: all 0.3s;
-            margin-left: 1rem;
+            cursor: pointer;
         }
 
-        .login {
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .notification-btn,
+        .messages-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
             color: white;
-            border: 2px solid white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            position: relative;
         }
 
-        .login:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        .notification-btn:hover,
+        .messages-btn:hover {
+            background: rgba(150, 0, 255, 0.2);
+            transform: scale(1.1);
         }
 
-        .signup {
-            background-color: #9600ff;
+        .messages-btn:hover {
+            background: rgba(150, 0, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-position: top center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
 
-        .signup:hover {
-            background-color: #9600ff;
+        .profile-avatar:hover {
+            border-color: #9600ff;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.4);
+        }
+
+        /* Profile Dropdown Menu */
+        .profile-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px 0;
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(150, 0, 255, 0.2);
+            color: #9600ff;
+        }
+
+        .dropdown-item .icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 5px 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         /* Page header */
@@ -421,16 +536,35 @@
         <div class="logo">Trip<span>Sync</span></div>
         <nav class="nav-links">
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="#">Find Travelers</a></li>
-                <li><a href="#" class="active">Host a Trip</a></li>
-                <li><a href="#">My Trips</a></li>
-                <li><a href="#">Messages</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/find-buddy">Find Buddies</a></li>
+                <li><a href="/find-trips">Find Trips</a></li>
+                <li><a href="/host">Host a Trip</a></li>
             </ul>
         </nav>
-        <div class="auth-buttons">
-            <a href="/login" class="login">Log In</a>
-            <a href="/signup" class="signup">Sign Up</a>
+        <div class="user-profile">
+            <button class="notification-btn">🔔</button>
+            <button class="messages-btn" onclick="window.location.href='/messages'">💬</button>
+            <div class="profile-avatar" id="profile-avatar"></div>
+            <div class="profile-dropdown" id="profile-dropdown">
+                <a href="/profile" class="dropdown-item">
+                    <span class="icon">👤</span>
+                    <span>My Profile</span>
+                </a>
+                <a href="/settings" class="dropdown-item">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="/help" class="dropdown-item">
+                    <span class="icon">❓</span>
+                    <span>Help & Support</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="/user/signout" class="dropdown-item">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </div>
         </div>
     </header>
 
@@ -835,6 +969,23 @@
     </footer>
 
     <script>
+
+        // Profile dropdown functionality
+        const profileAvatar = document.getElementById('profile-avatar');
+        const profileDropdown = document.getElementById('profile-dropdown');
+
+        // Set initial avatar
+        profileAvatar.style.backgroundImage = "url('{{ session['user']['image'] }}')";
+
+        profileAvatar.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function () {
+            profileDropdown.classList.remove('show');
+        });
+
         // Simple script to manage range input display
         document.addEventListener('DOMContentLoaded', function () {
             // Handle pace slider value

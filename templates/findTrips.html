@@ -93,6 +93,118 @@
             background-color: #7a00cc;
         }
 
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .notification-btn,
+        .messages-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .notification-btn:hover,
+        .messages-btn:hover {
+            background: rgba(150, 0, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .messages-btn:hover {
+            background: rgba(150, 0, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-position: top center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .profile-avatar:hover {
+            border-color: #9600ff;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.4);
+        }
+
+        /* Profile Dropdown Menu */
+        .profile-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px 0;
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(150, 0, 255, 0.2);
+            color: #9600ff;
+        }
+
+        .dropdown-item .icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 5px 0;
+        }
+
+
         /* Main content */
         main {
             margin-top: 80px;
@@ -433,6 +545,70 @@
 </head>
 
 <body>
+
+    {% if session['logged_in'] %}
+
+    <!-- Header -->
+    <header>
+        <div class="logo">Trip<span>Sync</span></div>
+        <nav class="nav-links">
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/find-buddy">Find Buddies</a></li>
+                <li><a href="/find-trips">Find Trips</a></li>
+                <li><a href="#messages">Messages</a></li>
+            </ul>
+        </nav>
+        <div class="user-profile">
+            <button class="notification-btn">🔔</button>
+            <button class="messages-btn" onclick="window.location.href='/messages'">💬</button>
+            <div class="profile-avatar" id="profile-avatar"></div>
+            <div class="profile-dropdown" id="profile-dropdown">
+                <a href="/profile" class="dropdown-item">
+                    <span class="icon">👤</span>
+                    <span>My Profile</span>
+                </a>
+                <a href="/settings" class="dropdown-item">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="/help" class="dropdown-item">
+                    <span class="icon">❓</span>
+                    <span>Help & Support</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="/user/signout" class="dropdown-item">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // Profile dropdown functionality
+        const profileAvatar = document.getElementById('profile-avatar');
+        const profileDropdown = document.getElementById('profile-dropdown');
+
+        // Set initial avatar
+        profileAvatar.style.backgroundImage = "url('{{ session['user']['image'] }}')";
+
+        profileAvatar.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function () {
+            profileDropdown.classList.remove('show');
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            applyFilters();
+        });
+
+    </script>
+
+    {% else %}
     <!-- Header -->
     <header>
         <div class="logo">Trip<span>Sync</span></div>
@@ -450,6 +626,8 @@
             <a href="/signup" class="signup">Sign Up</a>
         </div>
     </header>
+
+    {% endif %}
 
     <main>
         <h1 class="page-title">Find Your Perfect Trip</h1>
@@ -526,14 +704,17 @@
             </div>
         </section>
 
-
-        <button class="filter-btn apply-filter" onclick="fetchAndRenderTrips(`/api/recommend_trips`)">Recommend Trips</button>
+        {% if session['logged_in'] %}
+        <button class="filter-btn apply-filter" onclick="fetchAndRenderTrips(`/api/recommend_trips`)">Recommend
+            Trips</button>
+        
+        {% endif %}
 
         <!-- Results Section -->
         <section class="results-section">
             <div class="results-header">
                 <div class="results-count">
-                    <span id="results-count">24</span> trips found
+                    <span id="results-count">0</span> trips found
                 </div>
                 <div class="sort-dropdown">
                     <label for="sort">Sort by:</label>
@@ -549,233 +730,12 @@
 
             <!-- Trip Cards -->
             <div class="trips-grid" id="trips-container">
-                <!-- Trip Card 1 -->
-                <div class="trip-card" data-destination="asia" data-style="adventure" data-duration="10"
-                    data-price="1800">
-                    <div class="trip-image" style="background-image: url('/api/placeholder/400/200');">
-                        <div class="trip-badge">Adventure</div>
-                    </div>
-                    <div class="trip-content">
-                        <div class="trip-header">
-                            <div>
-                                <h3 class="trip-title">Himalayan Trek Adventure</h3>
-                                <div class="trip-duration">10 days</div>
-                            </div>
-                        </div>
-                        <div class="trip-details">
-                            <div class="trip-detail">📍 Nepal, Everest Base Camp</div>
-                            <div class="trip-detail">📅 March 15, 2025</div>
-                            <div class="trip-detail">👥 4-8 travelers</div>
-                        </div>
-                        <div class="trip-organizer">
-                            <div class="organizer-avatar">MR</div>
-                            <div class="organizer-info">
-                                <div class="organizer-name">Mike Roberts</div>
-                                <div class="organizer-rating">⭐ 4.9 (47 reviews)</div>
-                            </div>
-                        </div>
-                        <div class="trip-footer">
-                            <div>
-                                <div class="trip-price">$1,800</div>
-                                <div class="price-per">per person</div>
-                                <div class="spots-left">3 spots left</div>
-                            </div>
-                            <button class="join-btn" onclick="viewTripDetails('himalayan-trek')">View Details</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Trip Card 2 -->
-                <div class="trip-card" data-destination="europe" data-style="culture" data-duration="7"
-                    data-price="1200">
-                    <div class="trip-image" style="background-image: url('/api/placeholder/400/200');">
-                        <div class="trip-badge">Cultural</div>
-                    </div>
-                    <div class="trip-content">
-                        <div class="trip-header">
-                            <div>
-                                <h3 class="trip-title">European Art & History Tour</h3>
-                                <div class="trip-duration">7 days</div>
-                            </div>
-                        </div>
-                        <div class="trip-details">
-                            <div class="trip-detail">📍 Italy, France, Spain</div>
-                            <div class="trip-detail">📅 April 2, 2025</div>
-                            <div class="trip-detail">👥 6-12 travelers</div>
-                        </div>
-                        <div class="trip-organizer">
-                            <div class="organizer-avatar">SC</div>
-                            <div class="organizer-info">
-                                <div class="organizer-name">Sophie Chen</div>
-                                <div class="organizer-rating">⭐ 4.8 (32 reviews)</div>
-                            </div>
-                        </div>
-                        <div class="trip-footer">
-                            <div>
-                                <div class="trip-price">$1,200</div>
-                                <div class="price-per">per person</div>
-                                <div class="spots-left">8 spots left</div>
-                            </div>
-                            <button class="join-btn" onclick="viewTripDetails('european-art-tour')">View
-                                Details</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Trip Card 3 -->
-                <div class="trip-card" data-destination="africa" data-style="adventure" data-duration="14"
-                    data-price="2500">
-                    <div class="trip-image" style="background-image: url('/api/placeholder/400/200');">
-                        <div class="trip-badge">Safari</div>
-                    </div>
-                    <div class="trip-content">
-                        <div class="trip-header">
-                            <div>
-                                <h3 class="trip-title">African Safari Experience</h3>
-                                <div class="trip-duration">14 days</div>
-                            </div>
-                        </div>
-                        <div class="trip-details">
-                            <div class="trip-detail">📍 Kenya & Tanzania</div>
-                            <div class="trip-detail">📅 May 10, 2025</div>
-                            <div class="trip-detail">👥 8-16 travelers</div>
-                        </div>
-                        <div class="trip-organizer">
-                            <div class="organizer-avatar">DJ</div>
-                            <div class="organizer-info">
-                                <div class="organizer-name">David Johnson</div>
-                                <div class="organizer-rating">⭐ 5.0 (28 reviews)</div>
-                            </div>
-                        </div>
-                        <div class="trip-footer">
-                            <div>
-                                <div class="trip-price">$2,500</div>
-                                <div class="price-per">per person</div>
-                                <div class="spots-left">12 spots left</div>
-                            </div>
-                            <button class="join-btn" onclick="viewTripDetails('african-safari')">View Details</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Trip Card 4 -->
-                <div class="trip-card" data-destination="asia" data-style="relaxation" data-duration="5"
-                    data-price="800">
-                    <div class="trip-image" style="background-image: url('/api/placeholder/400/200');">
-                        <div class="trip-badge">Relaxation</div>
-                    </div>
-                    <div class="trip-content">
-                        <div class="trip-header">
-                            <div>
-                                <h3 class="trip-title">Bali Wellness Retreat</h3>
-                                <div class="trip-duration">5 days</div>
-                            </div>
-                        </div>
-                        <div class="trip-details">
-                            <div class="trip-detail">📍 Bali, Indonesia</div>
-                            <div class="trip-detail">📅 March 28, 2025</div>
-                            <div class="trip-detail">👥 4-10 travelers</div>
-                        </div>
-                        <div class="trip-organizer">
-                            <div class="organizer-avatar">LM</div>
-                            <div class="organizer-info">
-                                <div class="organizer-name">Lisa Martinez</div>
-                                <div class="organizer-rating">⭐ 4.7 (41 reviews)</div>
-                            </div>
-                        </div>
-                        <div class="trip-footer">
-                            <div>
-                                <div class="trip-price">$800</div>
-                                <div class="price-per">per person</div>
-                                <div class="spots-left">6 spots left</div>
-                            </div>
-                            <button class="join-btn" onclick="viewTripDetails('bali-wellness')">View Details</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Trip Card 5 -->
-                <div class="trip-card" data-destination="south-america" data-style="adventure" data-duration="21"
-                    data-price="3200">
-                    <div class="trip-image" style="background-image: url('/api/placeholder/400/200');">
-                        <div class="trip-badge">Backpacking</div>
-                    </div>
-                    <div class="trip-content">
-                        <div class="trip-header">
-                            <div>
-                                <h3 class="trip-title">South America Backpacking</h3>
-                                <div class="trip-duration">21 days</div>
-                            </div>
-                        </div>
-                        <div class="trip-details">
-                            <div class="trip-detail">📍 Peru, Bolivia, Chile</div>
-                            <div class="trip-detail">📅 June 5, 2025</div>
-                            <div class="trip-detail">👥 6-12 travelers</div>
-                        </div>
-                        <div class="trip-organizer">
-                            <div class="organizer-avatar">AR</div>
-                            <div class="organizer-info">
-                                <div class="organizer-name">Alex Rodriguez</div>
-                                <div class="organizer-rating">⭐ 4.9 (35 reviews)</div>
-                            </div>
-                        </div>
-                        <div class="trip-footer">
-                            <div>
-                                <div class="trip-price">$3,200</div>
-                                <div class="price-per">per person</div>
-                                <div class="spots-left">9 spots left</div>
-                            </div>
-                            <button class="join-btn" onclick="viewTripDetails('south-america-backpack')">View
-                                Details</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Trip Card 6 -->
-                <div class="trip-card" data-destination="oceania" data-style="adventure" data-duration="12"
-                    data-price="2200">
-                    <div class="trip-image" style="background-image: url('/api/placeholder/400/200');">
-                        <div class="trip-badge">Adventure</div>
-                    </div>
-                    <div class="trip-content">
-                        <div class="trip-header">
-                            <div>
-                                <h3 class="trip-title">Australian Road Trip</h3>
-                                <div class="trip-duration">12 days</div>
-                            </div>
-                        </div>
-                        <div class="trip-details">
-                            <div class="trip-detail">📍 Sydney to Melbourne</div>
-                            <div class="trip-detail">📅 April 18, 2025</div>
-                            <div class="trip-detail">👥 4-8 travelers</div>
-                        </div>
-                        <div class="trip-organizer">
-                            <div class="organizer-avatar">JW</div>
-                            <div class="organizer-info">
-                                <div class="organizer-name">James Wilson</div>
-                                <div class="organizer-rating">⭐ 4.6 (22 reviews)</div>
-                            </div>
-                        </div>
-                        <div class="trip-footer">
-                            <div>
-                                <div class="trip-price">$2,200</div>
-                                <div class="price-per">per person</div>
-                                <div class="spots-left">5 spots left</div>
-                            </div>
-                            <button class="join-btn" onclick="viewTripDetails('australian-road-trip')">View
-                                Details</button>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </section>
     </main>
 
     <script>
-
-        document.addEventListener("DOMContentLoaded", function () {
-            applyFilters();
-        });
 
         async function fetchAndRenderTrips(endpoint, payload = null) {
             const res = await fetch(endpoint, {
@@ -783,7 +743,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: payload ? JSON.stringify(payload) : null
             });
-            
+
             const trips = await res.json();
             renderTrips(trips);
         }

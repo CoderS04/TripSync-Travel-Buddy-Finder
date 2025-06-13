@@ -30,9 +30,9 @@
             justify-content: space-between;
             align-items: center;
             position: fixed;
-            width: 100%;
             top: 0;
-            z-index: 1000;
+            width: 100%;
+            z-index: 100;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
@@ -46,33 +46,43 @@
             color: #9600ff;
         }
 
-        .navigation-buttons {
+        nav ul {
             display: flex;
-            gap: 1rem;
-            align-items: center;
+            list-style: none;
         }
 
-        .navigation-btn {
-            padding: 8px 16px;
-            border-radius: 20px;
-            text-decoration: none;
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
             color: white;
-            font-size: 14px;
-            font-weight: 600;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 2px solid transparent;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
         }
 
-        .navigation-btn:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(150, 0, 255, 0.5);
+        nav ul li a:hover {
+            color: #9600ff;
         }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #9600ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
 
         .user-profile {
             display: flex;
@@ -81,7 +91,8 @@
             position: relative;
         }
 
-        .notification-btn, .messages-btn {
+        .notification-btn,
+        .messages-btn {
             width: 40px;
             height: 40px;
             background: rgba(255, 255, 255, 0.1);
@@ -94,9 +105,16 @@
             justify-content: center;
             transition: all 0.3s ease;
             font-size: 18px;
+            position: relative;
         }
 
-        .notification-btn:hover, .messages-btn:hover {
+        .notification-btn:hover,
+        .messages-btn:hover {
+            background: rgba(150, 0, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .messages-btn:hover {
             background: rgba(150, 0, 255, 0.2);
             transform: scale(1.1);
         }
@@ -105,8 +123,13 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background-position: center;
+            background-position: top center;
             background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
             border: 2px solid transparent;
@@ -115,8 +138,10 @@
         .profile-avatar:hover {
             border-color: #9600ff;
             transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.4);
         }
 
+        /* Profile Dropdown Menu */
         .profile-dropdown {
             position: absolute;
             top: 50px;
@@ -132,6 +157,7 @@
             transform: translateY(-10px);
             transition: all 0.3s ease;
             z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .profile-dropdown.show {
@@ -155,6 +181,12 @@
         .dropdown-item:hover {
             background: rgba(150, 0, 255, 0.2);
             color: #9600ff;
+        }
+
+        .dropdown-item .icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
         }
 
         .dropdown-divider {
@@ -332,13 +364,17 @@
 
 <body>
     <!-- Header (Identical to dashboard) -->
+    <!-- Header -->
     <header>
         <div class="logo">Trip<span>Sync</span></div>
-        <div class="navigation-buttons">
-            <a href="/find-buddy" class="navigation-btn">Find Travel Buddies</a>
-            <a href="/find-trips" class="navigation-btn">Find Trips</a>
-            <a href="/host" class="navigation-btn">Host a Trip</a>
-        </div>
+        <nav class="nav-links">
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/find-buddy">Find Buddies</a></li>
+                <li><a href="/find-trips">Find Trips</a></li>
+                <li><a href="/host">Host a Trip</a></li>
+            </ul>
+        </nav>
         <div class="user-profile">
             <button class="notification-btn">🔔</button>
             <button class="messages-btn" onclick="window.location.href='/messages'">💬</button>
@@ -363,15 +399,14 @@
                 </a>
             </div>
         </div>
-        <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
     </header>
 
-     <!-- Mobile Menu (Identical to dashboard) -->
+     <!-- Mobile Menu (Identical to dashboard)
     <div class="mobile-menu" id="mobile-menu">
         <a href="/">Home</a>
         <a href="/dashboard">Dashboard</a>
         <!-- Add other links as needed -->
-    </div>
+    <!-- </div> -->
 
     <!-- Main Content -->
     <div class="main-content">
@@ -389,34 +424,24 @@
     </div>
 
     <script>
+
+        // Profile dropdown functionality
+        const profileAvatar = document.getElementById('profile-avatar');
+        const profileDropdown = document.getElementById('profile-dropdown');
+
+        // Set initial avatar
+        profileAvatar.style.backgroundImage = "url('{{ session['user']['image'] }}')";
+
+        profileAvatar.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function () {
+            profileDropdown.classList.remove('show');
+        });
+
         document.addEventListener("DOMContentLoaded", function () {
-            // --- Re-used Header and Menu Logic from Dashboard ---
-            const profileAvatar = document.getElementById('profile-avatar');
-            const profileDropdown = document.getElementById('profile-dropdown');
-            
-            // This would be replaced with actual user session data
-            profileAvatar.style.backgroundImage = "url({{session['user']['image']}})"; 
-            
-            profileAvatar.addEventListener('mouseenter', () => profileDropdown.classList.add('show'));
-            document.querySelector('.user-profile').addEventListener('mouseleave', () => profileDropdown.classList.remove('show'));
-            profileDropdown.addEventListener('mouseenter', () => profileDropdown.classList.add('show'));
-            document.addEventListener('click', (event) => {
-                if (!event.target.closest('.user-profile')) {
-                    profileDropdown.classList.remove('show');
-                }
-            });
-
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('show'));
-            document.addEventListener('click', (event) => {
-                if (!event.target.closest('.mobile-menu') && !event.target.closest('.mobile-menu-btn')) {
-                    mobileMenu.classList.remove('show');
-                }
-            });
-
-            // --- New Logic for this Page ---
             renderCompanions();
         });
 

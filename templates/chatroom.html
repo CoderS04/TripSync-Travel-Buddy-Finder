@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripSync - Travel Buddy Finder</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Landing Page Styles */
+        .landing-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        .landing-container {
+            background: rgba(45, 45, 45, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 450px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #b3b3b3;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: #888;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Chat Page Styles */
+        .chat-page {
+            display: none;
+            height: 100vh;
+            background: #1a1a1a;
+        }
+
+        .chat-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #2d2d2d;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            /* -webkit-background-clip: text;
+            -webkit-background-clip: transparent; */
+        }
+
+        .sidebar-section {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #8b5cf6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .room-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .room-input {
+            flex: 1;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .join-btn {
+            padding: 10px 15px;
+            background: #8b5cf6;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .join-btn:hover {
+            background: #7c3aed;
+        }
+
+        .room-item, .user-item {
+            padding: 12px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .room-item:hover, .user-item:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: #8b5cf6;
+        }
+
+        .room-item.active {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 20px;
+            background: #2d2d2d;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .right-sidebar {
+            width: 300px;
+            background: #2d2d2d;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+        }
+
+        .invite-section {
+            margin-bottom: 30px;
+        }
+
+        .invite-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .invite-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #1a1a1a;
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+            margin: 50px 0;
+            padding: 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            background: rgba(45, 45, 45, 0.5);
+            border-radius: 12px;
+            border-left: 3px solid #8b5cf6;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        .message.own {
+            background: rgba(139, 92, 246, 0.2);
+            border-left-color: #a855f7;
+            margin-left: 50px;
+        }
+
+        .message-author {
+            font-weight: 600;
+            color: #8b5cf6;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .message-content {
+            color: #ffffff;
+            line-height: 1.4;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: #2d2d2d;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: #ffffff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        .send-btn {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .leave-btn {
+            padding: 10px 20px;
+            background: #dc2626;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .leave-btn:hover {
+            background: #b91c1c;
+        }
+
+        .online-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .system-message {
+            text-align: center;
+            color: #10b981;
+            font-style: italic;
+            margin: 10px 0;
+            padding: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 8px;
+        }
+
+        .chat-type-tabs {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .chat-tab {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .chat-tab.active {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .private-chat-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.5);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.7);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chat-container {
+                flex-direction: column;
+            }
+            
+            .sidebar, .right-sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .landing-container {
+                width: 90%;
+                margin: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Page -->
+    <div class="landing-page" id="landingPage">
+        <div class="landing-container">
+            <h1 class="logo">TripSync</h1>
+            <p class="tagline">Connect with fellow travelers worldwide</p>
+            
+            <div class="form-group">
+                <label for="travelName">Choose your travel name</label>
+                <input type="text" id="travelName" class="form-input" placeholder="e.g. AdventureSeeker, BackpackerBob">
+            </div>
+            
+            <div class="form-group">
+                <label for="destinationRoom">Join a destination room</label>
+                <input type="text" id="destinationRoom" class="form-input" placeholder="e.g. Bali2025, EuroTrip, BackpackAsia">
+            </div>
+            
+            <button class="start-btn" onclick="startChatting()">Start Chatting</button>
+        </div>
+    </div>
+
+    <!-- Chat Page -->
+    <div class="chat-page" id="chatPage">
+        <div class="chat-container">
+            <!-- Left Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-logo">TripSync</div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="section-title">Travel Rooms</div>
+                    <div class="room-input-container">
+                        <input type="text" class="room-input" id="newRoomInput" placeholder="New destination...">
+                        <button class="join-btn" onclick="joinRoom()">Join</button>
+                    </div>
+                    <div id="roomsList">
+                        <div class="room-item active" data-room="general">Not in any room</div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <div class="section-title">Fellow Travelers</div>
+                    <div class="chat-type-tabs">
+                        <button class="chat-tab active" onclick="switchChatType('group')">Group</button>
+                        <button class="chat-tab" onclick="switchChatType('private')">Private</button>
+                    </div>
+                    <div id="usersList">
+                        <!-- Users will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Chat Area -->
+            <div class="main-content">
+                <div class="chat-header">
+                    <h2 class="chat-title" id="chatTitle">Welcome to TripSync Chat</h2>
+                    <button class="leave-btn" onclick="leaveRoom()">Leave Room</button>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <div class="welcome-message">
+                        <h3>🌍 Welcome to TripSync! ✈️</h3>
+                        <p>Connect with travelers, share experiences, and plan amazing adventures together.</p>
+                    </div>
+                </div>
+                
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="messageInput" placeholder="Share your travel plans, ask questions, or just say hi!">
+                    <button class="send-btn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="right-sidebar">
+                <div class="invite-section">
+                    <div class="section-title">Invite Travelers</div>
+                    <input type="text" class="invite-input" id="inviteUsername" placeholder="Username to invite">
+                    <input type="text" class="invite-input" id="inviteRoom" placeholder="Room name">
+                    <button class="invite-btn" onclick="sendInvite()">Send Invite</button>
+                </div>
+                
+                <div>
+                    <div class="section-title">Trip Invitations</div>
+                    <div id="invitationsList">
+                        <!-- Invitations will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let socket;
+        let currentUser = '';
+        let currentRoom = '';
+        let currentChatType = 'group';
+        let currentPrivateChat = '';
+        let connectedUsers = new Set();
+
+        // Initialize socket connection
+        function initializeSocket() {
+            // Replace with your Socket.IO server URL
+            socket = io('ws://localhost:3000', {
+                transports: ['websocket', 'polling']
+            });
+
+            // Socket event listeners
+            socket.on('connect', () => {
+                console.log('Connected to server');
+                if (currentUser && currentRoom) {
+                    socket.emit('join-room', { username: currentUser, room: currentRoom });
+                }
+            });
+
+            socket.on('disconnect', () => {
+                console.log('Disconnected from server');
+            });
+
+            socket.on('message', (data) => {
+                displayMessage(data);
+            });
+
+            socket.on('private-message', (data) => {
+                displayPrivateMessage(data);
+            });
+
+            socket.on('user-joined', (data) => {
+                displaySystemMessage(`${data.username} joined the room`);
+                updateUsersList(data.users);
+            });
+
+            socket.on('user-left', (data) => {
+                displaySystemMessage(`${data.username} left the room`);
+                updateUsersList(data.users);
+            });
+
+            socket.on('room-users', (users) => {
+                updateUsersList(users);
+            });
+
+            socket.on('invitation', (data) => {
+                displayInvitation(data);
+            });
+
+            socket.on('error', (error) => {
+                alert('Error: ' + error.message);
+            });
+        }
+
+        // Start chatting function
+        function startChatting() {
+            const travelName = document.getElementById('travelName').value.trim();
+            const destinationRoom = document.getElementById('destinationRoom').value.trim();
+
+            if (!travelName) {
+                alert('Please enter your travel name');
+                return;
+            }
+
+            if (!destinationRoom) {
+                alert('Please enter a destination room');
+                return;
+            }
+
+            currentUser = travelName;
+            currentRoom = destinationRoom;
+
+            // Hide landing page and show chat page
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('chatPage').style.display = 'block';
+
+            // Update chat title
+            document.getElementById('chatTitle').textContent = `${currentRoom} - Group Chat`;
+
+            // Initialize socket connection
+            initializeSocket();
+
+            // Update room list
+            updateRoomsList();
+        }
+
+        // Send message function
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+
+            if (!message) return;
+
+            if (currentChatType === 'group') {
+                socket.emit('send-message', {
+                    room: currentRoom,
+                    message: message,
+                    username: currentUser,
+                    timestamp: new Date().toISOString()
+                });
+            } else {
+                if (!currentPrivateChat) {
+                    alert('Please select a user to chat with');
+                    return;
+                }
+                socket.emit('private-message', {
+                    to: currentPrivateChat,
+                    message: message,
+                    username: currentUser,
+                    timestamp: new Date().toISOString()
+                });
+            }
+
+            messageInput.value = '';
+        }
+
+        // Display message function
+        function displayMessage(data) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${data.username === currentUser ? 'own' : ''}`;
+
+            const time = new Date(data.timestamp).toLocaleTimeString();
+
+            messageDiv.innerHTML = `
+                <div class="message-author">${data.username}</div>
+                <div class="message-content">${data.message}</div>
+                <div class="message-time">${time}</div>
+            `;
+
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Display private message function
+        function displayPrivateMessage(data) {
+            if (currentChatType === 'private' && 
+                (data.from === currentPrivateChat || data.to === currentPrivateChat)) {
+                const messagesContainer = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${data.from === currentUser ? 'own' : ''}`;
+
+                const time = new Date(data.timestamp).toLocaleTimeString();
+
+                messageDiv.innerHTML = `
+                    <div class="message-author">${data.from}</div>
+                    <div class="message-content">${data.message}</div>
+                    <div class="message-time">${time}</div>
+                `;
+
+                messagesContainer.appendChild(messageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        // Display system message
+        function displaySystemMessage(message) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'system-message';
+            messageDiv.textContent = message;
+
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Update users list
+        function updateUsersList(users) {
+            const usersList = document.getElementById('usersList');
+            connectedUsers = new Set(users);
+
+            if (currentChatType === 'group') {
+                usersList.innerHTML = users.map(user => `
+                    <div class="user-item">
+                        <span class="online-indicator"></span>
+                        ${user}
+                    </div>
+                `).join('');
+            } else {
+                usersList.innerHTML = users.filter(user => user !== currentUser).map(user => `
+                    <div class="user-item ${user === currentPrivateChat ? 'active' : ''}" 
+                         onclick="startPrivateChat('${user}')">
+                        <span class="online-indicator"></span>
+                        ${user}
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Switch chat type
+        function switchChatType(type) {
+            currentChatType = type;
+            
+            // Update tab appearance
+            document.querySelectorAll('.chat-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Clear messages
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = '';
+
+            if (type === 'group') {
+                currentPrivateChat = '';
+                document.getElementById('chatTitle').textContent = `${currentRoom} - Group Chat`;
+                messagesContainer.innerHTML = `
+                    <div class="welcome-message">
+                        <h3>🌍 ${currentRoom} Group Chat</h3>
+                        <p>Connect with fellow travelers planning to visit ${currentRoom}</p>
+                    </div>
+                `;
+            } else {
+                document.getElementById('chatTitle').textContent = 'Private Messages';
+                messagesContainer.innerHTML = `
+                    <div class="welcome-message">
+                        <h3>💬 Private Messages</h3>
+                        <p>Select a traveler from the list to start a private conversation</p>
+                    </div>
+                `;
+            }
+
+            // Update users list
+            updateUsersList(Array.from(connectedUsers));
+        }
+
+        // Start private chat
+        function startPrivateChat(username) {
+            currentPrivateChat = username;
+            document.getElementById('chatTitle').textContent = `Private chat with ${username}`;
+            
+            // Clear messages and show private chat interface
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = `
+                <div class="welcome-message">
+                    <h3>💬 Private chat with ${username}</h3>
+                    <p>Start planning your adventure together!</p>
+                </div>
+            `;
+
+            // Update users list to show active chat
+            updateUsersList(Array.from(connectedUsers));
+        }
+
+        // Join room function
+        function joinRoom() {
+            const newRoom = document.getElementById('newRoomInput').value.trim();
+            if (!newRoom) return;
+
+            // Leave current room
+            if (currentRoom) {
+                socket.emit('leave-room', { username: currentUser, room: currentRoom });
+            }
+
+            // Join new room
+            currentRoom = newRoom;
+            socket.emit('join-room', { username: currentUser, room: currentRoom });
+
+            // Update UI
+            document.getElementById('chatTitle').textContent = `${currentRoom} - Group Chat`;
+            document.getElementById('newRoomInput').value = '';
+
+            // Clear messages
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = `
+                <div class="welcome-message">
+                    <h3>🌍 Welcome to ${currentRoom}!</h3>
+                    <p>Connect with fellow travelers planning to visit ${currentRoom}</p>
+                </div>
+            `;
+
+            updateRoomsList();
+        }
+
+        // Leave room function
+        function leaveRoom() {
+            if (currentRoom) {
+                socket.emit('leave-room', { username: currentUser, room: currentRoom });
+                currentRoom = '';
+                document.getElementById('chatTitle').textContent = 'Not in any room';
+                
+                // Clear messages
+                const messagesContainer = document.getElementById('chatMessages');
+                messagesContainer.innerHTML = `
+                    <div class="welcome-message">
+                        <h3>🌍 Welcome to TripSync!</h3>
+                        <p>Join a destination room to start connecting with fellow travelers</p>
+                    </div>
+                `;
+                
+                updateRoomsList();
+            }
+        }
+
+        // Update rooms list
+        function updateRoomsList() {
+            const roomsList = document.getElementById('roomsList');
+            roomsList.innerHTML = `
+                <div class="room-item ${!currentRoom ? 'active' : ''}" data-room="">
+                    Not in any room
+                </div>
+                ${currentRoom ? `<div class="room-item active" data-room="${currentRoom}">${currentRoom}</div>` : ''}
+            `;
+        }
+
+        // Send invitation
+        function sendInvite() {
+            const username = document.getElementById('inviteUsername').value.trim();
+            const room = document.getElementById('inviteRoom').value.trim();
+
+            if (!username || !room) {
+                alert('Please enter both username and room name');
+                return;
+            }
+
+            socket.emit('send-invitation', {
+                to: username,
+                room: room,
+                from: currentUser
+            });
+
+            document.getElementById('inviteUsername').value = '';
+            document.getElementById('inviteRoom').value = '';
+        }
+
+        // Display invitation
+        function displayInvitation(data) {
+            const invitationsList = document.getElementById('invitationsList');
+            const inviteDiv = document.createElement('div');
+            inviteDiv.className = 'user-item';
+            inviteDiv.innerHTML = `
+                <div>Invite to ${data.room} from ${data.from}</div>
+                <button onclick="acceptInvitation('${data.room}')" style="margin-top: 5px; padding: 5px 10px; background: #10b981; border: none; border-radius: 4px; color: white; cursor: pointer;">Accept</button>
+            `;
+            invitationsList.appendChild(inviteDiv);
+        }
+
+        // Accept invitation
+        function acceptInvitation(room) {
+            // Leave current room
+            if (currentRoom) {
+                socket.emit('leave-room', { username: currentUser, room: currentRoom });
+            }
+
+            // Join invited room
+            currentRoom = room;
+            socket.emit('join-room', { username: currentUser, room: currentRoom });
+
+            // Update UI
+            document.getElementById('chatTitle').textContent = `${currentRoom} - Group Chat`;
+            updateRoomsList();
+        }
+
+        // Enter key to send message
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('messageInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
+            document.getElementById('newRoomInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    joinRoom();
+                }
+            });
+        });
+    </script>
+</body>
+</html

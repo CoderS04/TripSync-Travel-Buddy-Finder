@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - TripSync</title>
+    <style>
+        /* Base styles matching homepage */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000000;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header styles matching homepage */
+        header {
+            background-color: #000000;
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: #9600ff;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #9600ff;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #9600ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem 5%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-picture {
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #9600ff;
+        }
+
+        .edit-pic-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #9600ff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .edit-pic-btn:hover {
+            background-color: #7d00d1;
+        }
+
+        .profile-info {
+            flex: 1;
+            color: white;
+        }
+
+        .profile-name {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .edit-btn {
+            background-color: transparent;
+            border: 2px solid #9600ff;
+            color: #9600ff;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .edit-btn:hover {
+            background-color: #9600ff;
+            color: white;
+        }
+
+        .profile-location {
+            color: #bfbfbf;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #9600ff;
+        }
+
+        .stat-label {
+            color: #bfbfbf;
+            font-size: 0.9rem;
+        }
+
+        /* Profile sections */
+        .profile-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .profile-section {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .about-text {
+            color: #bfbfbf;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .interests-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .interest-tag {
+            background-color: rgba(150, 0, 255, 0.2);
+            color: #9600ff;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(150, 0, 255, 0.3);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .interest-tag.removable::after {
+            content: '×';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .travel-style {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            padding: 0.7rem 1.2rem;
+            border-radius: 25px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+
+        .preference-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bfbfbf;
+        }
+
+        .preference-item:last-child {
+            border-bottom: none;
+        }
+
+        .preference-value {
+            color: white;
+            font-weight: 500;
+        }
+
+        .upcoming-trip {
+            background: linear-gradient(135deg, rgba(150, 0, 255, 0.1), rgba(150, 0, 255, 0.05));
+            border: 1px solid rgba(150, 0, 255, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .trip-remove {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            display: none;
+        }
+
+        .upcoming-trip:hover .trip-remove {
+            display: block;
+        }
+
+        .trip-destination {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .trip-dates {
+            color: #9600ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .trip-details {
+            color: #bfbfbf;
+            font-size: 0.9rem;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .photo-item {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.05);
+        }
+
+        .photo-item:hover .photo-remove {
+            display: block;
+        }
+
+        .photo-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            display: none;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .add-photo {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #bfbfbf;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-photo:hover {
+            background-color: rgba(150, 0, 255, 0.2);
+            border-color: #9600ff;
+            color: #9600ff;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #9600ff;
+            box-shadow: 0 0 0 2px rgba(150, 0, 255, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        .interest-input-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .add-interest-btn {
+            background-color: #9600ff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #bfbfbf;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #9600ff;
+        }
+
+        .save-btn {
+            background-color: #9600ff;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .save-btn:hover {
+            background-color: #7d00d1;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 2rem 3%;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-sections {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-stats {
+                justify-content: center;
+            }
+
+            nav ul {
+                display: none;
+            }
+        }
+
+        .icon-btn {
+            color: white;
+            font-size: 1.3rem;
+            margin-right: 1rem;
+            text-decoration: none;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.2);
+            color: #9600ff;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .notification-btn,
+        .messages-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .notification-btn:hover,
+        .messages-btn:hover {
+            background: rgba(150, 0, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .messages-btn:hover {
+            background: rgba(150, 0, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-position: top center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .profile-avatar:hover {
+            border-color: #9600ff;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.4);
+        }
+
+        /* Profile Dropdown Menu */
+        .profile-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px 0;
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(150, 0, 255, 0.2);
+            color: #9600ff;
+        }
+
+        .dropdown-item .icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 5px 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">Trip<span>Sync</span></div>
+        <nav class="nav-links">
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/find-buddy">Find Buddies</a></li>
+                <li><a href="/find-trips">Find Trips</a></li>
+                <li><a href="/host">Host a Trip</a></li>
+            </ul>
+        </nav>
+        <div class="user-profile">
+            <button class="notification-btn">🔔</button>
+            <button class="messages-btn" onclick="window.location.href='/messages'">💬</button>
+            <div class="profile-avatar" id="profile-avatar"></div>
+            <div class="profile-dropdown" id="profile-dropdown">
+                <a href="/profile" class="dropdown-item">
+                    <span class="icon">👤</span>
+                    <span>My Profile</span>
+                </a>
+                <a href="/settings" class="dropdown-item">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="/help" class="dropdown-item">
+                    <span class="icon">❓</span>
+                    <span>Help & Support</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="/user/signout" class="dropdown-item">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-picture">
+                <img src="{{ user['image'] }}" alt="Profile Picture" class="profile-pic" id="profileImage">
+
+                {% if session['user']['_id'] == user['_id'] %}
+                <button class="edit-pic-btn" onclick="changeProfilePicture()">📷</button>
+                {% endif %}
+            </div>
+            <div class="profile-info">
+                <div class="profile-name">
+                    <span id="displayName">{{ user['first_name'] }} {{ user['last_name'] }}</span>
+                    {% if session['user']['_id'] == user['_id'] %}
+                    <button class="edit-btn" onclick="openEditModal()">Edit Profile</button>
+                    {% endif %}
+                </div>
+                <div class="profile-location">
+                    <span>📍</span>
+                    <span id="displayLocation">{{ user['city'] }}, {{ user['country'] }}</span>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Countries Visited</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Travel Buddies</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.9</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Sections -->
+        <div class="profile-sections">
+            <!-- About Section -->
+            <div class="profile-section">
+                <div class="section-header">
+                    <h3 class="section-title">About Me</h3>
+                    {% if session['user']['_id'] == user['_id'] %}
+                    <button class="edit-btn" onclick="openAboutModal()">Edit</button>
+                    {% endif %}
+
+                </div>
+                <p class="about-text" id="aboutText">
+                    Passionate traveler and adventure seeker! I love exploring new cultures, trying local cuisines, and
+                    meeting fellow travelers. I believe the best journeys are shared with great company. Always up for
+                    spontaneous adventures and off-the-beaten-path destinations.
+                </p>
+                <div class="travel-style" id="travelStyle">🎒 {{ user['travel_style'] }}</div>
+            </div>
+
+            <!-- Interests Section -->
+            <div class="profile-section">
+                <div class="section-header">
+                    <h3 class="section-title">Interests</h3>
+                    {% if session['user']['_id'] == user['_id'] %}
+                    <button class="edit-btn" onclick="openInterestsModal()">Edit</button>
+                    {% endif %}
+                </div>
+                <div class="interests-grid" id="interestsGrid">
+                    {% for interest in user['interests'] %}
+                    <span class="interest-tag">{{interest}}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Travel Preferences -->
+            <div class="profile-section">
+                <div class="section-header">
+                    <h3 class="section-title">Travel Preferences</h3>
+                    {% if session['user']['_id'] == user['_id'] %}
+                    <button class="edit-btn" onclick="openPreferencesModal()">Edit</button>
+                    {% endif %}
+                </div>
+                <div class="preference-item">
+                    <span>Budget Range</span>
+                    <span class="preference-value" id="budgetRange">$50-100/day</span>
+                </div>
+                <div class="preference-item">
+                    <span>Accommodation</span>
+                    <span class="preference-value" id="accommodation">Hostels & Hotels</span>
+                </div>
+                <div class="preference-item">
+                    <span>Group Size</span>
+                    <span class="preference-value" id="groupSize">2-4 people</span>
+                </div>
+                <div class="preference-item">
+                    <span>Languages</span>
+                    <span class="preference-value" id="languages">English, Spanish</span>
+                </div>
+            </div>
+
+            <!-- Upcoming Trips -->
+            <div class="profile-section">
+                <div class="section-header">
+                    <h3 class="section-title">Upcoming Trips</h3>
+                    {% if session['user']['_id'] == user['_id'] %}
+                    <button class="edit-btn" onclick="openTripsModal()">Add Trip</button>
+                    {% endif %}
+                </div>
+                <div id="upcomingTrips">
+                    <div class="upcoming-trip">
+                        {% if session['user']['_id'] == user['_id'] %}
+                        <button class="trip-remove" onclick="removeTrip(this)">×</button>
+                        {% endif %}
+                        <div class="trip-destination">🗾 Japan Adventure</div>
+                        <div class="trip-dates">March 15 - April 2, 2025</div>
+                        <div class="trip-details">Looking for 1-2 companions for exploring Tokyo, Kyoto, and Osaka.
+                            Perfect for culture enthusiasts!</div>
+                    </div>
+                    <div class="upcoming-trip">
+                        {% if session['user']['_id'] == user['_id'] %}
+                        <button class="trip-remove" onclick="removeTrip(this)">×</button>
+                        {% endif %}
+                        <div class="trip-destination">🏔️ Nepal Trekking</div>
+                        <div class="trip-dates">May 10 - May 25, 2025</div>
+                        <div class="trip-details">Everest Base Camp trek - seeking experienced hikers for this
+                            incredible journey.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Travel Photos -->
+            <div class="profile-section">
+                <div class="section-header">
+                    <h3 class="section-title">Travel Photos</h3>
+                    {% if session['user']['_id'] == user['_id'] %}
+                    <button class="edit-btn" onclick="openPhotosModal()">Manage</button>
+                    {% endif %}
+                </div>
+                <div class="photo-grid" id="photoGrid">
+                    <div class="photo-item">
+                        {% if session['user']['_id'] == user['_id'] %}
+                        <button class="photo-remove" onclick="removePhoto(this)">×</button>
+                        {% endif %}
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=150&h=150&fit=crop"
+                            alt="Travel Photo">
+                    </div>
+                    <div class="photo-item">
+                        {% if session['user']['_id'] == user['_id'] %}
+                        <button class="photo-remove" onclick="removePhoto(this)">×</button>
+                        {% endif %}
+                        <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=150&h=150&fit=crop"
+                            alt="Travel Photo">
+                    </div>
+                    <div class="photo-item">
+                        {% if session['user']['_id'] == user['_id'] %}
+                        <button class="photo-remove" onclick="removePhoto(this)">×</button>
+                        {% endif %}
+                        <img src="https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=150&h=150&fit=crop"
+                            alt="Travel Photo">
+                    </div>
+                    <div class="photo-item">
+                        {% if session['user']['_id'] == user['_id'] %}
+                        <button class="photo-remove" onclick="removePhoto(this)">×</button>
+                        {% endif %}
+                        <img src="https://images.unsplash.com/photo-1539650116574-75c0c6d73289?w=150&h=150&fit=crop"
+                            alt="Travel Photo">
+                    </div>
+                    <div class="photo-item">
+                        {% if session['user']['_id'] == user['_id'] %}
+                        <button class="photo-remove" onclick="removePhoto(this)">×</button>
+                        {% endif %}
+                        <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=150&h=150&fit=crop"
+                            alt="Travel Photo">
+                    </div>
+                    {% if session['user']['_id'] == user['_id'] %}
+                    <div class="photo-item add-photo" onclick="addPhoto()">+</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="profile-section">
+                <div class="section-header">
+                    <h3 class="section-title">Reviews from Travel Buddies</h3>
+                </div>
+                <div style="color: #bfbfbf; margin-bottom: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b60c1555?w=40&h=40&fit=crop&crop=face"
+                            style="width: 40px; height: 40px; border-radius: 50%;" alt="Reviewer">
+                        <div>
+                            <div style="color: white; font-weight: 500;">Sarah Chen</div>
+                            <div style="color: #f1c40f;">★★★★★</div>
+                            <div style="font-size: 0.9rem;">"Alex was an amazing travel companion in Thailand! Great
+                                planning skills and so much fun to be around."</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face"
+                            style="width: 40px; height: 40px; border-radius: 50%;" alt="Reviewer">
+                        <div>
+                            <div style="color: white; font-weight: 500;">Mike Rodriguez</div>
+                            <div style="color: #f1c40f;">★★★★★</div>
+                            <div style="font-size: 0.9rem;">"Excellent hiking partner in Peru. Very reliable and always
+                                positive attitude!"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Profile</h3>
+                <button class="close-btn" onclick="closeModal('editModal')">&times;</button>
+            </div>
+            <form onsubmit="saveProfile(event)">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="editName" value="Alex Johnson">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    <input type="text" class="form-input" id="editLocation" value="San Francisco, CA">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Travel Style</label>
+                    <select class="form-input form-select" id="editTravelStyle">
+                        <option value="🎒 Adventure Seeker" selected>Adventure Seeker</option>
+                        <option value="🏖️ Relaxation Lover">Relaxation Lover</option>
+                        <option value="🏛️ Culture Enthusiast">Culture Enthusiast</option>
+                        <option value="💰 Budget Traveler">Budget Traveler</option>
+                        <option value="💎 Luxury Traveler">Luxury Traveler</option>
+                    </select>
+                </div>
+                <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit About Modal -->
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit About Me</h3>
+                <button class="close-btn" onclick="closeModal('aboutModal')">&times;</button>
+            </div>
+            <form onsubmit="saveAbout(event)">
+                <div class="form-group">
+                    <label class="form-label">About Me</label>
+                    <textarea class="form-input form-textarea"
+                        id="editAbout">Passionate traveler and adventure seeker! I love exploring new cultures, trying local cuisines, and meeting fellow travelers. I believe the best journeys are shared with great company. Always up for spontaneous adventures and off-the-beaten-path destinations.</textarea>
+                </div>
+                <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Interests Modal -->
+    <div id="interestsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Interests</h3>
+                <button class="close-btn" onclick="closeModal('interestsModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Current Interests</label>
+                <div class="interests-grid" id="editInterestsGrid">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Add New Interest</label>
+                <div class="interest-input-container">
+                    <input type="text" class="form-input" id="newInterest" placeholder="Enter interest">
+                    <button type="button" class="add-interest-btn" onclick="addInterest()">Add</button>
+                </div>
+            </div>
+            <button type="button" class="save-btn" onclick="saveInterests()">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- Edit Preferences Modal -->
+    <div id="preferencesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Travel Preferences</h3>
+                <button class="close-btn" onclick="closeModal('preferencesModal')">&times;</button>
+            </div>
+            <form onsubmit="savePreferences(event)">
+                <div class="form-group">
+                    <label class="form-label">Budget Range</label>
+                    <select class="form-input form-select" id="editBudget">
+                        <option value="$25-50/day">$25-50/day</option>
+                        <option value="$50-100/day" selected>$50-100/day</option>
+                        <option value="$100-200/day">$100-200/day</option>
+                        <option value="$200+/day">$200+/day</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Accommodation</label>
+                    <select class="form-input form-select" id="editAccommodation">
+                        <option value="Hostels">Hostels</option>
+                        <option value="Hostels & Hotels" selected>Hostels & Hotels</option>
+                        <option value="Hotels">Hotels</option>
+                        <option value="Luxury Hotels">Luxury Hotels</option>
+                        <option value="Airbnb">Airbnb</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Group Size</label>
+                    <select class="form-input form-select" id="editGroupSize">
+                        <option value="Solo">Solo</option>
+                        <option value="2-4 people" selected>2-4 people</option>
+                        <option value="5-8 people">5-8 people</option>
+                        <option value="Large groups">Large groups</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Languages</label>
+                    <input type="text" class="form-input" id="editLanguages" value="English, Spanish">
+                </div>
+                <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Trip Modal -->
+    <div id="tripsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Trip</h3>
+                <button class="close-btn" onclick="closeModal('tripsModal')">&times;</button>
+            </div>
+            <form onsubmit="addTrip(event)">
+                <div class="form-group">
+                    <label class="form-label">Destination</label>
+                    <input type="text" class="form-input" id="tripDestination" placeholder="e.g., Paris, France"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" class="form-input" id="tripStartDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">End Date</label>
+                    <input type="date" class="form-input" id="tripEndDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input form-textarea" id="tripDescription"
+                        placeholder="Tell others about your trip plans..."></textarea>
+                </div>
+                <button type="submit" class="save-btn">Add Trip</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Photo Management Modal -->
+    <div id="photosModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Manage Travel Photos</h3>
+                <button class="close-btn" onclick="closeModal('photosModal')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Add New Photo</label>
+                <input type="file" class="form-input" id="photoUpload" accept="image/*" multiple>
+                <div style="color: #bfbfbf; font-size: 0.9rem; margin-top: 0.5rem;">
+                    Select up to 5 travel photos to showcase your adventures
+                </div>
+            </div>
+            <button type="button" class="save-btn" onclick="uploadPhotos()">Upload Photos</button>
+        </div>
+    </div>
+
+    <script>
+        // Profile dropdown functionality
+        const profileAvatar = document.getElementById('profile-avatar');
+        const profileDropdown = document.getElementById('profile-dropdown');
+
+        // Set initial avatar
+        profileAvatar.style.backgroundImage = "url('{{ session['user']['image'] }}')";
+
+        profileAvatar.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function () {
+            profileDropdown.classList.remove('show');
+        });
+
+        // Modal functions
+        function openEditModal() {
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function openAboutModal() {
+            document.getElementById('aboutModal').style.display = 'block';
+        }
+
+        function openInterestsModal() {
+            document.getElementById('interestsModal').style.display = 'block';
+            populateEditInterests();
+        }
+
+        function openPreferencesModal() {
+            document.getElementById('preferencesModal').style.display = 'block';
+        }
+
+        function openTripsModal() {
+            document.getElementById('tripsModal').style.display = 'block';
+        }
+
+        function openPhotosModal() {
+            document.getElementById('photosModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Profile saving functions
+        async function saveProfile(event) {
+            event.preventDefault();
+            const name = document.getElementById('editName').value;
+            const location = document.getElementById('editLocation').value;
+            const travelStyle = document.getElementById('editTravelStyle').value;
+
+            const [firstName, lastName] = name.split(" ");
+
+            const res = await fetch("/user/update-profile", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    location,
+                    travel_style: travelStyle
+                })
+            });
+
+            const result = await res.json();
+            if (res.ok) {
+                document.getElementById('displayName').textContent = name;
+                document.getElementById('displayLocation').textContent = location;
+                document.getElementById('travelStyle').textContent = travelStyle;
+                closeModal('editModal');
+                showNotification('Profile updated successfully!');
+            } else {
+                alert(result.error);
+            }
+        }
+
+
+        async function saveAbout(event) {
+            event.preventDefault();
+            const about = document.getElementById('editAbout').value;
+
+            const res = await fetch("/user/update-about", {
+                about: about
+            })
+
+            document.getElementById('aboutText').textContent = about;
+            closeModal('aboutModal');
+            showNotification('About section updated!');
+        }
+
+        function savePreferences(event) {
+            event.preventDefault();
+            const budget = document.getElementById('editBudget').value;
+            const accommodation = document.getElementById('editAccommodation').value;
+            const groupSize = document.getElementById('editGroupSize').value;
+            const languages = document.getElementById('editLanguages').value;
+
+            document.getElementById('budgetRange').textContent = budget;
+            document.getElementById('accommodation').textContent = accommodation;
+            document.getElementById('groupSize').textContent = groupSize;
+            document.getElementById('languages').textContent = languages;
+
+            closeModal('preferencesModal');
+            showNotification('Preferences updated!');
+        }
+
+        // Interests management
+        let currentInterests = ['Photography', 'Hiking', 'Local Food', 'Museums', 'Nightlife', 'Beach', 'Architecture', 'History'];
+
+        function populateEditInterests() {
+            const grid = document.getElementById('editInterestsGrid');
+            grid.innerHTML = '';
+            currentInterests.forEach(interest => {
+                const tag = document.createElement('span');
+                tag.className = 'interest-tag removable';
+                tag.textContent = interest;
+                tag.addEventListener('click', () => removeInterest(interest));
+                grid.appendChild(tag);
+            });
+        }
+
+        function addInterest() {
+            const input = document.getElementById('newInterest');
+            const interest = input.value.trim();
+            if (interest && !currentInterests.includes(interest)) {
+                currentInterests.push(interest);
+                populateEditInterests();
+                input.value = '';
+            }
+        }
+
+        function removeInterest(interest) {
+            currentInterests = currentInterests.filter(i => i !== interest);
+            populateEditInterests();
+        }
+
+        function saveInterests() {
+            const grid = document.getElementById('interestsGrid');
+            grid.innerHTML = '';
+            currentInterests.forEach(interest => {
+                const tag = document.createElement('span');
+                tag.className = 'interest-tag';
+                tag.textContent = interest;
+                grid.appendChild(tag);
+            });
+            closeModal('interestsModal');
+            showNotification('Interests updated!');
+        }
+
+        // Trip management
+        function addTrip(event) {
+            event.preventDefault();
+            const destination = document.getElementById('tripDestination').value;
+            const startDate = document.getElementById('tripStartDate').value;
+            const endDate = document.getElementById('tripEndDate').value;
+            const description = document.getElementById('tripDescription').value;
+
+            const tripContainer = document.getElementById('upcomingTrips');
+            const tripDiv = document.createElement('div');
+            tripDiv.className = 'upcoming-trip';
+            tripDiv.innerHTML = `
+                <button class="trip-remove" onclick="removeTrip(this)">×</button>
+                <div class="trip-destination">🌍 ${destination}</div>
+                <div class="trip-dates">${formatDate(startDate)} - ${formatDate(endDate)}</div>
+                <div class="trip-details">${description}</div>
+            `;
+            tripContainer.appendChild(tripDiv);
+
+            closeModal('tripsModal');
+            event.target.reset();
+            showNotification('Trip added successfully!');
+        }
+
+        function removeTrip(button) {
+            button.parentElement.remove();
+            showNotification('Trip removed!');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        // Photo management
+        function addPhoto() {
+            document.getElementById('photoUpload').click();
+        }
+
+        function removePhoto(button) {
+            button.parentElement.remove();
+            showNotification('Photo removed!');
+        }
+
+        function uploadPhotos() {
+            const fileInput = document.getElementById('photoUpload');
+            const files = fileInput.files;
+
+            if (files.length > 0) {
+                // In a real app, you would upload these files to a server
+                // For demo purposes, we'll just show a success message
+                showNotification(`${files.length} photo(s) uploaded successfully!`);
+                closeModal('photosModal');
+                fileInput.value = '';
+            }
+        }
+
+        // Profile picture change
+        function changeProfilePicture() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        document.getElementById('profileImage').src = e.target.result;
+                        profileAvatar.style.backgroundImage = `url(${e.target.result})`;
+                        showNotification('Profile picture updated!');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Notification system
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(135deg, #9600ff, #7d00d1);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Add CSS animations for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Handle Enter key for adding interests
+        document.getElementById('newInterest').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                addInterest();
+            }
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function (event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

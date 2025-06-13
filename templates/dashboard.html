@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripSync Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            min-height: 100vh;
+            padding-top: 80px;
+            /* Space for fixed header */
+        }
+
+        /* Header styles */
+        header {
+            background-color: #000000;
+            color: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: #9600ff;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        nav ul li a:hover {
+            color: #9600ff;
+            background-color: rgba(150, 0, 255, 0.1);
+        }
+
+        /* Enhanced Navigation Buttons */
+        .navigation-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .navigation-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid transparent;
+        }
+
+        .navigation-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .navigation-btn:hover::before {
+            left: 100%;
+        }
+
+        .navigation-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(150, 0, 255, 0.5);
+            border-color: rgba(255, 255, 255, 0.3);
+            background: linear-gradient(45deg, #778beb, #8759b3);
+        }
+
+        .navigation-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        /* Pulsing animation for extra attention */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 4px 15px rgba(150, 0, 255, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 4px 20px rgba(150, 0, 255, 0.6);
+            }
+
+            100% {
+                box-shadow: 0 4px 15px rgba(150, 0, 255, 0.3);
+            }
+        }
+
+        .navigation-btn:nth-child(1) {
+            animation: pulse 2s infinite;
+            animation-delay: 0s;
+        }
+
+        .navigation-btn:nth-child(2) {
+            animation: pulse 2s infinite;
+            animation-delay: 0.3s;
+        }
+
+        .navigation-btn:nth-child(3) {
+            animation: pulse 2s infinite;
+            animation-delay: 0.6s;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .notification-btn,
+        .messages-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .notification-btn:hover,
+        .messages-btn:hover {
+            background: rgba(150, 0, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        /* Enhanced Messages Button with gradient background
+        .messages-btn {
+            background: linear-gradient(45deg, #9600ff, #ff006e);
+            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.3);
+        } */
+
+        .messages-btn:hover {
+            background: rgba(150, 0, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-position: center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .profile-avatar:hover {
+            border-color: #9600ff;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.4);
+        }
+
+        /* Profile Dropdown Menu */
+        .profile-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px 0;
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(150, 0, 255, 0.2);
+            color: #9600ff;
+        }
+
+        .dropdown-item .icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 5px 0;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 30px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #9600ff, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Section Styling */
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .view-all-btn {
+            background: #9600ff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .view-all-btn:hover {
+            background: #7a00cc;
+        }
+
+        /* Upcoming Trips */
+        .trip-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .trip-image {
+            width: 100%;
+            height: 160px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .trip-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+        }
+
+        .trip-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .trip-dates {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .trip-companions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .companion-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #9600ff;
+            background-position: top center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .show-more-btn {
+            background: rgba(150, 0, 255, 0.8);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .show-more-btn:hover {
+            background: #9600ff;
+        }
+
+        /* Explore Trips */
+        /* .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        } */
+
+        .explore-card {
+            min-width: 250px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .explore-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .explore-image {
+            width: 100%;
+            height: 120px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .explore-info {
+            padding: 15px;
+        }
+
+        .explore-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .explore-price {
+            color: #9600ff;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .explore-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .stars {
+            color: #ffd700;
+        }
+
+        .rating-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+        }
+
+        .view-details-btn {
+            background: #9600ff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .view-details-btn:hover {
+            background: #7a00cc;
+        }
+
+        /* Done Trips */
+        .done-trip {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .done-trip:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .done-trip-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #9600ff, #ff6b9d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .done-trip-info {
+            flex: 1;
+        }
+
+        .done-trip-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .done-trip-details {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        /* Enhanced Trip Action Buttons */
+        .trip-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .trip-action-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            background: linear-gradient(45deg, #9600ff, #ff006e);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(150, 0, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .trip-action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .trip-action-btn:hover::before {
+            left: 100%;
+        }
+
+        .trip-action-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+            background: linear-gradient(45deg, #a000ff, #ff1177);
+        }
+
+        .trip-action-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        /* Different colors for different actions */
+        .trip-action-btn.companions {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .trip-action-btn.companions:hover {
+            background: linear-gradient(45deg, #778beb, #8759b3);
+        }
+
+        .trip-action-btn.chatroom {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .trip-action-btn.chatroom:hover {
+            background: linear-gradient(45deg, #778beb, #8759b3);
+        }
+
+        .trip-action-btn.settings {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .trip-action-btn.settings:hover {
+            background: linear-gradient(45deg, #778beb, #8759b3);
+        }
+
+        .trip-action-btn.requests {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .trip-action-btn.requests:hover {
+            background: linear-gradient(45deg, #778beb, #8759b3);
+        }
+
+        .done-trip-stats {
+            text-align: right;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .navigation-buttons {
+                gap: 0.5rem;
+            }
+
+            .navigation-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul li {
+                margin-left: 1rem;
+            }
+
+            .navigation-buttons {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 24px;
+                cursor: pointer;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 3%;
+            }
+
+            .main-content {
+                padding: 20px 3%;
+            }
+
+            .explore-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .trip-actions {
+                gap: 8px;
+            }
+
+            .trip-action-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+        }
+
+        /* Mobile menu styles */
+        .mobile-menu-btn {
+            display: none;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            z-index: 999;
+        }
+
+        .mobile-menu.show {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: color 0.3s;
+        }
+
+        .mobile-menu a:hover {
+            color: #9600ff;
+        }
+
+        @media (max-width: 1024px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        .section div[style*="overflow-y: auto"]::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .section div[style*="overflow-y: auto"]::-webkit-scrollbar-thumb {
+            background-color: #9600ff;
+            border-radius: 10px;
+        }
+
+        .section div[style*="overflow-y: auto"]::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .horizontal-scroll-wrapper {
+            overflow-x: auto;
+            padding-bottom: 15px;
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        .horizontal-scroll-wrapper::-webkit-scrollbar { display: none; /* Chrome, Safari and Opera */ }
+        .explore-grid {
+            padding-top: 5px;
+            display: flex; /* Changed from grid to flex */
+            flex-wrap: nowrap; /* Prevents wrapping */
+            gap: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">Trip<span>Sync</span></div>
+        <div class="navigation-buttons">
+            <a href="/find-buddy" class="navigation-btn">Find Travel Buddies</a>
+            <a href="/find-trips" class="navigation-btn">Find Trips</a>
+            <a href="/host" class="navigation-btn">Host a Trip</a>
+        </div>
+        <div class="user-profile">
+            <button class="notification-btn">🔔</button>
+            <button class="messages-btn" onclick="window.location.href='/messages'">💬</button>
+            <div class="profile-avatar" id="profile-avatar"></div>
+            <div class="profile-dropdown" id="profile-dropdown">
+                <a href="/{{ session['user']['_id'] }}" class="dropdown-item">
+                    <span class="icon">👤</span>
+                    <span>My Profile</span>
+                </a>
+                <a href="/settings" class="dropdown-item">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="/help" class="dropdown-item">
+                    <span class="icon">❓</span>
+                    <span>Help & Support</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="/user/signout" class="dropdown-item">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/messages">Messages</a>
+        <a href="/locations">Locations</a>
+        <a href="/community">Community</a>
+        <a href="/schedule">Schedule</a>
+        <a href="/help">Help</a>
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <a href="/find-buddy">Find Travel Buddies</a>
+            <a href="/find-trips">Find Trips</a>
+            <a href="/host">Host a Trip</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">Welcome Back!</h1>
+            <p class="welcome-subtitle">Ready for your next adventure? Let's explore what's waiting for you.</p>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Upcoming Trips -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Upcoming trips</h2>
+                </div>
+
+                <div style="max-height: 350px; overflow-y: auto; padding-right: 10px;">
+
+
+                    {% for trip in joinedTrips %}
+                    <div class="trip-card">
+                        <div class="trip-image" id="trip-image" style="background-image: url('{{ trip.image }}');">
+                            <div class="trip-overlay">
+                                <div class="trip-title">{{ trip.title }}</div>
+                                <div class="trip-dates">{{ trip.startDate }} to {{ trip.endDate }}</div>
+                                <div class="trip-companions">
+                                    {% for user in trip.joinedUsers %}
+                                    <div class="companion-avatar"
+                                        style="background-image: url('{{joinedUsers[user]}}');">
+                                    </div>
+                                    {% else %}
+                                    No Companions Yet
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
+                        <p>No Upcoming Trips</p>
+                        <button class="show-more-btn" onclick="window.location.href = '/find-trips'">Find Trips</button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Your Trips -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Your Trips</h2>
+                </div>
+
+                <div style="max-height: 350px; overflow-y: auto; padding-right: 10px;">
+
+                    {% for trip in hostedTrips %}
+                    <div class="done-trip">
+                        <div class="done-trip-avatar">T</div>
+                        <div class="done-trip-info">
+                            <div class="done-trip-name">{{ trip.title }}</div>
+                            <div class="done-trip-details">{{ trip.startDate }} • {{ trip.endDate }}</div>
+                            <div class="trip-actions">
+                                <a href="/trip/{{trip._id}}/companions" class="trip-action-btn companions">👥 Companions</a>
+                                <a href="#" class="trip-action-btn chatroom">💬 Chatroom</a>
+                                <a href="#" class="trip-action-btn settings">⚙️ Settings</a>
+                                <a href="/trip/{{trip._id}}/requests" class="trip-action-btn requests">📋 Requests</a>
+                            </div>
+                        </div>
+                        <div class="done-trip-stats">{{ trip.endDate - trip.startDate }}</div>
+                    </div>
+                    {% else %}
+                    <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
+                        <p>No trips hosted yet</p>
+                        <button class="show-more-btn" onclick="window.location.href = '/host'">Host a Trip</button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Trip Recommendations Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Top Trip Recommendations</h2>
+            </div>
+            <div class="horizontal-scroll-wrapper">
+                <div class="explore-grid" id="trip-recommendations-container">
+                    <!-- Trip cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Buddy Recommendations Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Top Buddy Recommendations</h2>
+            </div>
+            <div class="horizontal-scroll-wrapper">
+                <div class="explore-grid" id="buddy-recommendations-container">
+                    <!-- Buddy cards will be dynamically inserted here -->
+                     
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Set profile avatar background
+            const profileAvatar = document.getElementById('profile-avatar');
+            const profileDropdown = document.getElementById('profile-dropdown');
+
+            // Profile avatar background (uncomment when session data is available)
+            profileAvatar.style.backgroundImage = "url({{ session['user']['image'] }})";
+
+            // Profile dropdown functionality
+            profileAvatar.addEventListener('mouseenter', function () {
+                profileDropdown.classList.add('show');
+            });
+
+            document.querySelector('.user-profile').addEventListener('mouseleave', function () {
+                profileDropdown.classList.remove('show');
+            });
+
+            // Keep dropdown open when hovering over it
+            profileDropdown.addEventListener('mouseenter', function () {
+                profileDropdown.classList.add('show');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function (event) {
+                if (!event.target.closest('.user-profile')) {
+                    profileDropdown.classList.remove('show');
+                }
+            });
+
+            // Mobile menu functionality
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuBtn.addEventListener('click', function () {
+                mobileMenu.classList.toggle('show');
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function (event) {
+                if (!event.target.closest('.mobile-menu') && !event.target.closest('.mobile-menu-btn')) {
+                    mobileMenu.classList.remove('show');
+                }
+            });
+
+            fetchAndRenderTrips(`/api/recommend_trips`);
+        });
+
+        async function fetchAndRenderTrips(endpoint, payload = null) {
+            const res = await fetch(endpoint, {
+                method: payload ? 'POST' : 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                body: payload ? JSON.stringify(payload) : null
+            });
+
+            const trips = await res.json();
+            renderTrips(trips);
+        }
+
+        function renderTrips(trips) {
+            const container = document.getElementById("trip-recommendations-container");
+            container.innerHTML = "";
+
+            trips.forEach(trip => {
+                console.log(trip)
+                const card = document.createElement("div");
+                card.className = "explore-card";
+
+                card.innerHTML = `
+                    <div class="explore-image" style="background-image: url('${trip.image}');"></div>
+                    <div class="explore-info">
+                        <div class="explore-title">${trip.title}</div>
+                        <div class="explore-price">${trip.specificLocation}, ${trip.destination}</div>
+                        <div class="explore-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-text">4.5/5</span>
+                        </div>
+                        <button class="view-details-btn" onclick="window.location.href = '/trip/${trip._id}';">View details</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+    </script>
+</body>
+
+</html>

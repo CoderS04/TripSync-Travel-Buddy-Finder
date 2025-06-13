@@ -1,0 +1,12 @@
+{% for req in trip.joinRequests %}
+    <div>
+        User: {{ req.userId }} <br>
+        ID Proof: <a href="{{ req.idProofPath }}" target="_blank">View</a> <br>
+        Status: {{ req.status }}
+        {% if req.status == "pending" %}
+            <form method="POST" action="/trip/{{ trip._id }}/approve/{{ req.userId }}">
+                <button type="submit">Approve</button>
+            </form>
+        {% endif %}
+    </div>
+{% endfor %}

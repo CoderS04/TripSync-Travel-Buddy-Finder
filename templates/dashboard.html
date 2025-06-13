@@ -780,7 +780,7 @@
         </div>
         <div class="user-profile">
             <button class="notification-btn">🔔</button>
-            <button class="messages-btn" onclick="window.location.href='/messages'">💬</button>
+            <button class="messages-btn" onclick="window.location.href='/chat/'">💬</button>
             <div class="profile-avatar" id="profile-avatar"></div>
             <div class="profile-dropdown" id="profile-dropdown">
                 <a href="/{{ session['user']['_id'] }}" class="dropdown-item">
@@ -810,7 +810,7 @@
         <a href="/">Home</a>
         <a href="/dashboard">Dashboard</a>
         <a href="/analytics">Analytics</a>
-        <a href="/messages">Messages</a>
+        <a href="/chat/">Messages</a>
         <a href="/locations">Locations</a>
         <a href="/community">Community</a>
         <a href="/schedule">Schedule</a>
@@ -884,7 +884,7 @@
                             <div class="done-trip-details">{{ trip.startDate }} • {{ trip.endDate }}</div>
                             <div class="trip-actions">
                                 <a href="/trip/{{trip._id}}/companions" class="trip-action-btn companions">👥 Companions</a>
-                                <a href="#" class="trip-action-btn chatroom">💬 Chatroom</a>
+                                <a href="/chat/{{trip._id}}" class="trip-action-btn chatroom">💬 Chatroom</a>
                                 <a href="#" class="trip-action-btn settings">⚙️ Settings</a>
                                 <a href="/trip/{{trip._id}}/requests" class="trip-action-btn requests">📋 Requests</a>
                             </div>

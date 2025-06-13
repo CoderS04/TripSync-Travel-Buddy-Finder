@@ -79,6 +79,7 @@ class User:
             "interests": interests,
             "agreed_to_terms": True,
             "isOnline": False,
+            "connections": [],
             "completedTrips": [],
             "joinedTrips": []
         }
@@ -186,7 +187,7 @@ class User:
         return jsonify({"success": True})
     
     def updateBio(self, data):
-        user_id = session['user']['id']
+        user_id = session['user']['_id']
 
         update = {
             "bio": data.get("bio", "")

@@ -32,3 +32,11 @@ def update_profile():
 
     data = request.json
     return User().updateProfile(data)
+
+@user_bp.route('/update-about', methods=['POST'])
+def update_about():
+    if 'user' not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    data = request.json
+    return User().updateBio(data)

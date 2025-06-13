@@ -767,10 +767,12 @@
                 ).join('')}
                     </div>
                     <div class="buddy-rating">⭐ ${buddy.avgRating} • ${buddy.ratingCount} Ratings</div>
+
                     <div class="buddy-actions">
                         <button class="connect-btn" onclick="connectWithBuddy('${buddy._id}')">Connect</button>
                         <button class="view-profile-btn" onclick="viewBuddyProfile('${buddy._id}')">View Profile</button>
                     </div>
+
                 `;
                 container.appendChild(card);
             });
@@ -856,7 +858,7 @@
         }
 
         function viewBuddyProfile(buddyId) {
-            alert(`Opening profile for ${buddyId}!\n\nIn a real app, this would:\n• Navigate to detailed profile page\n• Show travel history\n• Display reviews and ratings\n• Show mutual connections`);
+            window.location.href = "/${buddyId}";
         }
 
         // Search on Enter key press

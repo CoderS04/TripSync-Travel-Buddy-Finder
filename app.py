@@ -1,6 +1,9 @@
 from flask import Flask, render_template, session, redirect
 from functools import wraps
 
+# import eventlet
+# eventlet.monkey_patch()
+
 from extensions import db, mail
 
 app = Flask(__name__)
@@ -14,6 +17,12 @@ app.register_blueprint(trip_bp)
 
 from backend.apis.routes import api_bp
 app.register_blueprint(api_bp)
+
+# from backend.chat.chat_socket import socketio
+# socketio.init_app(app)
+
+# from backend.chat.routes import chat_bp
+# app.register_blueprint(chat_bp)
 
 # Upload configuration
 app.config['UPLOAD_FOLDER_TRIPS'] = 'static/uploads/trips/'
@@ -36,7 +45,7 @@ def login_required(f):
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
-            return redirect('/')
+            return redirect('/login')
     
     return wrap
 
@@ -76,8 +85,6 @@ def dashboard():
 
             users[userId] = user_image
 
-    print(users)
-
     return render_template("dashboard.html", hostedTrips=hostedTrips, joinedTrips= joinedTrips, joinedUsers = users)
 
 @app.route('/find-trips')
@@ -99,7 +106,14 @@ def userProfile(userId):
     if user:
         return render_template('profile.html', user = user)
     else:
-        return redirect('/')
+        return redirect('/login')
+
+@app.before_request
+def set_user_session():
+    if 'user' in session:
+        session['user_id'] = session['user']['_id']
+        session['first_name'] = session['user']['first_name']
 
 if __name__ == '__main__':
     app.run(debug=True)
+    # socketio.run(app, debug=True)

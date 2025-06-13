@@ -349,6 +349,12 @@
             color: white;
         }
 
+        .sort-dropdown select option {
+            background-color: #1a1a1a;
+            color: white;
+        }
+
+
         /* Trip cards */
         .trips-grid {
             display: grid;
@@ -707,7 +713,7 @@
         {% if session['logged_in'] %}
         <button class="filter-btn apply-filter" onclick="fetchAndRenderTrips(`/api/recommend_trips`)">Recommend
             Trips</button>
-        
+
         {% endif %}
 
         <!-- Results Section -->
@@ -730,7 +736,7 @@
 
             <!-- Trip Cards -->
             <div class="trips-grid" id="trips-container">
-                
+
             </div>
         </section>
     </main>

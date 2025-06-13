@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,14 +12,12 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
             background-color: #000000;
             color: #333;
             line-height: 1.6;
             min-height: 100vh;
         }
-
         /* Header styles matching homepage */
         header {
             background-color: #000000;
@@ -35,7 +32,6 @@
             z-index: 100;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
-
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
@@ -82,7 +78,6 @@
             font-weight: bold;
             cursor: pointer;
         }
-
         /* Main content */
         .main-content {
             margin-top: 80px;
@@ -91,7 +86,6 @@
             margin-left: auto;
             margin-right: auto;
         }
-
         .profile-header {
             background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
             border-radius: 15px;
@@ -114,7 +108,6 @@
             object-fit: cover;
             border: 4px solid #9600ff;
         }
-
         .edit-pic-btn {
             position: absolute;
             bottom: 0;
@@ -140,7 +133,6 @@
             flex: 1;
             color: white;
         }
-
         .profile-name {
             font-size: 2rem;
             margin-bottom: 0.5rem;
@@ -148,7 +140,6 @@
             align-items: center;
             gap: 1rem;
         }
-
         .edit-btn {
             background-color: transparent;
             border: 2px solid #9600ff;
@@ -159,12 +150,10 @@
             font-size: 0.9rem;
             transition: all 0.3s;
         }
-
         .edit-btn:hover {
             background-color: #9600ff;
             color: white;
         }
-
         .profile-location {
             color: #bfbfbf;
             margin-bottom: 1rem;
@@ -172,7 +161,6 @@
             align-items: center;
             gap: 0.5rem;
         }
-
         .profile-stats {
             display: flex;
             gap: 2rem;
@@ -187,51 +175,46 @@
             font-weight: bold;
             color: #9600ff;
         }
-
         .stat-label {
             color: #bfbfbf;
             font-size: 0.9rem;
         }
-
         /* Profile sections */
         .profile-sections {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2rem;
         }
-
         .profile-section {
             background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
             border-radius: 15px;
             padding: 2rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
-
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
         }
-
         .section-title {
             color: white;
             font-size: 1.3rem;
             font-weight: bold;
         }
-
+        
         .about-text {
             color: #bfbfbf;
             line-height: 1.8;
             margin-bottom: 1rem;
         }
-
+        
         .interests-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
         }
-
+        
         .interest-tag {
             background-color: rgba(150, 0, 255, 0.2);
             color: #9600ff;
@@ -259,7 +242,6 @@
             font-size: 12px;
             cursor: pointer;
         }
-
         .travel-style {
             background-color: rgba(52, 152, 219, 0.2);
             color: #3498db;
@@ -269,7 +251,6 @@
             margin-bottom: 1rem;
             border: 1px solid rgba(52, 152, 219, 0.3);
         }
-
         .preference-item {
             display: flex;
             justify-content: space-between;
@@ -287,7 +268,6 @@
             color: white;
             font-weight: 500;
         }
-
         .upcoming-trip {
             background: linear-gradient(135deg, rgba(150, 0, 255, 0.1), rgba(150, 0, 255, 0.05));
             border: 1px solid rgba(150, 0, 255, 0.3);
@@ -315,30 +295,25 @@
         .upcoming-trip:hover .trip-remove {
             display: block;
         }
-
         .trip-destination {
             color: white;
             font-size: 1.1rem;
             font-weight: bold;
             margin-bottom: 0.5rem;
         }
-
         .trip-dates {
             color: #9600ff;
             margin-bottom: 0.5rem;
         }
-
         .trip-details {
             color: #bfbfbf;
             font-size: 0.9rem;
         }
-
         .photo-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 0.5rem;
         }
-
         .photo-item {
             aspect-ratio: 1;
             border-radius: 8px;
@@ -347,7 +322,6 @@
             cursor: pointer;
             transition: transform 0.3s;
         }
-
         .photo-item:hover {
             transform: scale(1.05);
         }
@@ -370,13 +344,11 @@
             font-size: 12px;
             display: none;
         }
-
         .photo-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
         .add-photo {
             background-color: rgba(255, 255, 255, 0.1);
             border: 2px dashed rgba(255, 255, 255, 0.3);
@@ -388,25 +360,21 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-
         .add-photo:hover {
             background-color: rgba(150, 0, 255, 0.2);
             border-color: #9600ff;
             color: #9600ff;
         }
-
         /* Form styles */
         .form-group {
             margin-bottom: 1rem;
         }
-
         .form-label {
             display: block;
             color: white;
             margin-bottom: 0.5rem;
             font-weight: 500;
         }
-
         .form-input {
             width: 100%;
             padding: 0.8rem;
@@ -416,18 +384,15 @@
             color: white;
             font-size: 1rem;
         }
-
         .form-input:focus {
             outline: none;
             border-color: #9600ff;
             box-shadow: 0 0 0 2px rgba(150, 0, 255, 0.2);
         }
-
         .form-textarea {
             min-height: 100px;
             resize: vertical;
         }
-
         .form-select {
             appearance: none;
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
@@ -451,7 +416,6 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
         /* Modal styles */
         .modal {
             display: none;
@@ -463,7 +427,6 @@
             background-color: rgba(0, 0, 0, 0.8);
             z-index: 1000;
         }
-
         .modal-content {
             background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
             margin: 5% auto;
@@ -474,20 +437,17 @@
             max-height: 80vh;
             overflow-y: auto;
         }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
         }
-
         .modal-title {
             color: white;
             font-size: 1.5rem;
             font-weight: bold;
         }
-
         .close-btn {
             background: none;
             border: none;
@@ -523,7 +483,6 @@
             .main-content {
                 padding: 2rem 3%;
             }
-
             .profile-header {
                 flex-direction: column;
                 text-align: center;
@@ -1210,12 +1169,10 @@
             const accommodation = document.getElementById('editAccommodation').value;
             const groupSize = document.getElementById('editGroupSize').value;
             const languages = document.getElementById('editLanguages').value;
-
             document.getElementById('budgetRange').textContent = budget;
             document.getElementById('accommodation').textContent = accommodation;
             document.getElementById('groupSize').textContent = groupSize;
             document.getElementById('languages').textContent = languages;
-
             closeModal('preferencesModal');
             showNotification('Preferences updated!');
         }
@@ -1270,7 +1227,6 @@
             const startDate = document.getElementById('tripStartDate').value;
             const endDate = document.getElementById('tripEndDate').value;
             const description = document.getElementById('tripDescription').value;
-
             const tripContainer = document.getElementById('upcomingTrips');
             const tripDiv = document.createElement('div');
             tripDiv.className = 'upcoming-trip';
@@ -1281,7 +1237,6 @@
                 <div class="trip-details">${description}</div>
             `;
             tripContainer.appendChild(tripDiv);
-
             closeModal('tripsModal');
             event.target.reset();
             showNotification('Trip added successfully!');
@@ -1314,7 +1269,6 @@
         function uploadPhotos() {
             const fileInput = document.getElementById('photoUpload');
             const files = fileInput.files;
-
             if (files.length > 0) {
                 // In a real app, you would upload these files to a server
                 // For demo purposes, we'll just show a success message
@@ -1361,7 +1315,6 @@
             `;
             notification.textContent = message;
             document.body.appendChild(notification);
-
             setTimeout(() => {
                 notification.style.animation = 'slideOut 0.3s ease forwards';
                 setTimeout(() => notification.remove(), 300);
@@ -1395,5 +1348,4 @@
         });
     </script>
 </body>
-
 </html>

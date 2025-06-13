@@ -378,7 +378,7 @@
         <!-- Page Header -->
         <div class="page-header-section">
             <!-- This data would be dynamically loaded -->
-            <h1 class="page-title">Companions for "Exploring the Amalfi Coast"</h1>
+            <h1 class="page-title">Companions for "{{ trip.title }}"</h1>
             <p class="page-subtitle">Your travel squad for this adventure.</p>
         </div>
 
@@ -395,7 +395,7 @@
             const profileDropdown = document.getElementById('profile-dropdown');
             
             // This would be replaced with actual user session data
-            profileAvatar.style.backgroundImage = "url('https://i.pravatar.cc/150?u=a042581f4e29026704d')"; 
+            profileAvatar.style.backgroundImage = "url({{session['user']['image']}})"; 
             
             profileAvatar.addEventListener('mouseenter', () => profileDropdown.classList.add('show'));
             document.querySelector('.user-profile').addEventListener('mouseleave', () => profileDropdown.classList.remove('show'));
@@ -425,44 +425,8 @@
             // In a real application, you would fetch this data from an API:
             // e.g., const response = await fetch('/api/trip/{{trip._id}}/companions');
             // const companions = await response.json();
-            const companions = [
-                {
-                    name: 'Elena Rodriguez',
-                    location: 'Madrid, Spain',
-                    avatar: 'https://i.pravatar.cc/150?u=elena',
-                    bio: 'Passionate photographer and foodie. Can\'t wait to capture the beauty of the coast and try all the local pasta!'
-                },
-                {
-                    name: 'Ben Carter',
-                    location: 'London, UK',
-                    avatar: 'https://i.pravatar.cc/150?u=ben',
-                    bio: 'History buff and avid hiker. I\'m excited to explore the ancient ruins and scenic trails. I make a mean cup of tea.'
-                },
-                {
-                    name: 'Aya Tanaka',
-                    location: 'Tokyo, Japan',
-                    avatar: 'https://i.pravatar.cc/150?u=aya',
-                    bio: 'I love sketching and learning new languages. Looking forward to relaxing on the beach and practicing my Italian.'
-                },
-                {
-                    name: 'Marcus Chen',
-                    location: 'Sydney, Australia',
-                    avatar: 'https://i.pravatar.cc/150?u=marcus',
-                    bio: 'Adventurer at heart. I\'m up for anything from boat trips to cliff diving. Let\'s make some unforgettable memories!'
-                },
-                {
-                    name: 'Chloe Dubois',
-                    location: 'Paris, France',
-                    avatar: 'https://i.pravatar.cc/150?u=chloe',
-                    bio: 'Bookworm and wine enthusiast. My goal is to find the perfect spot with a view to read and sip on local wine.'
-                },
-                 {
-                    name: 'Liam O\'Connell',
-                    location: 'Dublin, Ireland',
-                    avatar: 'https://i.pravatar.cc/150?u=liam',
-                    bio: 'Musician and storyteller. I always bring my travel guitar. Hoping to find inspiration in the Italian sunsets.'
-                }
-            ];
+            const companions = {{ companions | tojson }};
+            console.log(companions);
 
             const container = document.getElementById('companions-grid-container');
             container.innerHTML = ''; // Clear existing content
@@ -472,10 +436,10 @@
                 card.className = 'companion-card';
 
                 card.innerHTML = `
-                    <div class="companion-avatar" style="background-image: url('${companion.avatar}')"></div>
-                    <div class="companion-name">${companion.name}</div>
-                    <div class="companion-location">${companion.location}</div>
-                    <p class="companion-bio">${companion.bio}</p>
+                    <div class="companion-avatar" style="background-image: url('${companion.image}')"></div>
+                    <div class="companion-name">${companion.first_name} ${companion.last_name}</div>
+                    <div class="companion-location">${companion.city}, ${companion.country}</div>
+                    <p class="companion-bio">Bio</p>
                     <div class="companion-actions">
                         <a href="#" class="companion-btn profile-btn">View Profile</a>
                         <a href="#" class="companion-btn message-btn">Message</a>

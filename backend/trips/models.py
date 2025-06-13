@@ -5,7 +5,7 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 import os
 
-from backend.tripFunctions import hybrid_recommend,search_trips
+from backend.tripFunctions import hybrid_recommend,search_trips,recommend_buddies,search_buddies
 
 from extensions import db
 
@@ -118,9 +118,6 @@ class Trip:
         userId = session['user']['_id']
         recommended = hybrid_recommend(userId)
         results = []
-
-        for trip in recommended:
-            print(trip)
 
         for trip in recommended:
             print(trip[0]["_id"], trip[1])

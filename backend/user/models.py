@@ -22,6 +22,7 @@ class User:
         del user['password']
         session['logged_in'] = True
         session['user'] = user
+        db.users.update_one({'_id': user['_id']}, {'$set': {'isOnline': True}})
         return jsonify(user), 200
 
     def signup(self):
@@ -75,7 +76,10 @@ class User:
             "image": f"/{upload_path}",
             "travel_style": travel_style,
             "interests": interests,
-            "agreed_to_terms": True
+            "agreed_to_terms": True,
+            "isOnline": False,
+            "completedTrips": [],
+            "joinedTrips": []
         }
 
         otp = str(randint(100000, 999999))
@@ -156,10 +160,11 @@ class User:
         user = users.find_one({ "email":request.form.get('email') })
 
         if user and pbkdf2_sha256.verify(request.form.get('password'), user['password']):
-                return self.start_session(user)
+            return self.start_session(user)
 
         return jsonify({ "error":"Invalid Login Credentials!" }), 401
 
     def signout(self):
+        db.users.update_one({'_id': session['user']['_id']}, {'$set': {'isOnline': False}})
         session.clear()
         return redirect('/')

@@ -9,11 +9,22 @@ def recommend_trips():
     if 'logged_in' in session:
         return Trip().findTrip()
     else:
-        return redirect('/')
+        return redirect('/find-trips')
     
-@api_bp.route('/search_trips', methods=['POST', 'GET'])
+@api_bp.route('/search_trips', methods = ['POST', 'GET'])
 def search_trips():
     return Trip().searchTrips()
+
+@api_bp.route('/recommend_buddies', methods = ['POST', 'GET'])
+def recommend_buddies():
+    if 'logged_in' in session:
+        return API().recommendBuddies()
+    else:
+        return redirect('/find-buddies')
+
+@api_bp.route('/search_buddies', methods = ['POST', 'GET'])
+def search_buddies():
+    return API().searchBuddies()
 
 @api_bp.route('/review', methods = ['POST'])
 def submit_review():

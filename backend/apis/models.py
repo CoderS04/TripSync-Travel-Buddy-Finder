@@ -4,6 +4,7 @@ import uuid
 import datetime
 
 from extensions import db
+from backend.tripFunctions import recommend_buddies, search_buddies
 
 class API():
 
@@ -37,3 +38,42 @@ class API():
 
         result = list(db.reviews.aggregate(pipeline))
         return result[0] if result else {"averageRating": 0, "ratingCount": 0}
+    
+    def recommendBuddies(self):
+        userId = session['user']['_id']
+        recommended = recommend_buddies(userId)
+        results = []
+
+        for user in recommended:
+            ratingData = self.getRatingSummary(user['_id'])
+            averageRating = round(ratingData["averageRating"], 1),
+            ratingCount=ratingData["ratingCount"]
+            user['avgRating'] = averageRating
+            user['ratingCount'] = ratingCount
+            print("\n",user,"\n")
+            results.append(user)
+        
+        print(results)
+        
+        return jsonify(results)
+    
+    def searchBuddies(self):
+        data = request.json
+        print(data)
+        search = search_buddies(data)
+
+        print(search)
+
+        results = []
+
+        for user in search:
+            ratingData = self.getRatingSummary(user['_id'])
+            averageRating = round(ratingData["averageRating"], 1),
+            ratingCount=ratingData["ratingCount"]
+            user['avgRating'] = averageRating
+            user['ratingCount'] = ratingCount
+            print("\n",user,"\n")
+            results.append(user)
+        
+        return jsonify(results)
+

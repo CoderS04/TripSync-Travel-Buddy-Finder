@@ -420,13 +420,14 @@
         }
 
         /* Explore Trips */
-        .explore-grid {
+        /* .explore-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
-        }
+        } */
 
         .explore-card {
+            min-width: 250px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 16px;
             overflow: hidden;
@@ -760,6 +761,7 @@
         }
         .horizontal-scroll-wrapper::-webkit-scrollbar { display: none; /* Chrome, Safari and Opera */ }
         .explore-grid {
+            padding-top: 5px;
             display: flex; /* Changed from grid to flex */
             flex-wrap: nowrap; /* Prevents wrapping */
             gap: 15px;
@@ -881,7 +883,7 @@
                             <div class="done-trip-name">{{ trip.title }}</div>
                             <div class="done-trip-details">{{ trip.startDate }} • {{ trip.endDate }}</div>
                             <div class="trip-actions">
-                                <a href="#" class="trip-action-btn companions">👥 Companions</a>
+                                <a href="/trip/{{trip._id}}/companions" class="trip-action-btn companions">👥 Companions</a>
                                 <a href="#" class="trip-action-btn chatroom">💬 Chatroom</a>
                                 <a href="#" class="trip-action-btn settings">⚙️ Settings</a>
                                 <a href="/trip/{{trip._id}}/requests" class="trip-action-btn requests">📋 Requests</a>
@@ -985,7 +987,7 @@
         }
 
         function renderTrips(trips) {
-            const container = document.getElementById("explore-container");
+            const container = document.getElementById("trip-recommendations-container");
             container.innerHTML = "";
 
             trips.forEach(trip => {

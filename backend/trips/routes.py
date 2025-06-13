@@ -85,3 +85,18 @@ def reject_join_request(trip_id, user_id):
         return redirect(f"/trip/{trip_id}/requests")
     else:
         return redirect('/')
+    
+@trip_bp.route("/<trip_id>/companions")
+def tripCompanions(trip_id):
+    if 'logged_in' in session:
+        trip = Trip().getTripById(trip_id)
+        if session['user']['_id'] != trip["hostID"]:
+            return "Unauthorized", 403
+        
+        companions = []
+        for user in trip['joinedUsers']:
+            companions.append(Trip().getUserById(user))
+        
+        print(companions)
+
+        return render_template('tripCompanions.html', trip = trip, companions=companions)

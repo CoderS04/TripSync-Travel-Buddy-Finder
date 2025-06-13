@@ -43,15 +43,24 @@ def login_required(f):
 
 @app.route('/')
 def home():
+    if 'logged_in' in session:
+        return redirect('/dashboard')
+    
     return render_template('home.html')
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    if not 'logged_in' in session:
+        return render_template('login.html')
+    
+    return redirect('/dashboard')
 
 @app.route('/signup')
 def signup():
-    return render_template('signup.html')
+    if not 'logged_in' in session:
+        return render_template('signup.html')
+    
+    return redirect('/dashboard')
 
 @app.route('/dashboard')
 @login_required

@@ -113,31 +113,34 @@
             margin-bottom: 2rem;
         }
 
-        /* Search and Filter section - Compact */
+        /* Enhanced Search and Filter section */
         .search-filter-section {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(150, 0, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 20px;
+            padding: 2rem;
             margin-bottom: 2rem;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(150, 0, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(150, 0, 255, 0.1);
         }
 
         .search-bar {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
             align-items: center;
         }
 
         .search-input {
             flex: 1;
-            padding: 0.8rem 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 25px;
-            background-color: rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            background-color: rgba(255, 255, 255, 0.05);
             color: white;
             font-size: 1rem;
-            transition: border-color 0.3s, background-color 0.3s;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .search-input::placeholder {
@@ -147,22 +150,140 @@
         .search-input:focus {
             outline: none;
             border-color: #9600ff;
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(150, 0, 255, 0.3);
         }
 
         .search-btn {
-            padding: 0.8rem 2rem;
+            padding: 1rem 2rem;
             border: none;
-            border-radius: 25px;
-            background-color: #9600ff;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #9600ff, #7a00cc);
             color: white;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.4);
         }
 
         .search-btn:hover {
-            background-color: #7a00cc;
+            background: linear-gradient(135deg, #7a00cc, #5c0099);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(150, 0, 255, 0.6);
+        }
+
+        /* Filter Options Styling */
+        .filter-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .filter-group > label:first-child {
+            color: #9600ff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-group label {
+            color: #bfbfbf;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-group label:hover {
+            color: white;
+        }
+
+        .filter-group input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            background-color: transparent;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .filter-group input[type="radio"]:checked {
+            border-color: #9600ff;
+            background-color: #9600ff;
+        }
+
+        .filter-group input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: white;
+        }
+
+        .filter-group input[type="text"] {
+            padding: 0.8rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group input[type="text"]::placeholder {
+            color: #888;
+        }
+
+        .filter-group input[type="text"]:focus {
+            outline: none;
+            border-color: #9600ff;
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(150, 0, 255, 0.2);
+        }
+
+        .filter-group select {
+            padding: 0.8rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: #9600ff;
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(150, 0, 255, 0.2);
+        }
+
+        .filter-group select option {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 0.5rem;
         }
 
         .quick-filters {
@@ -170,45 +291,94 @@
             gap: 1rem;
             flex-wrap: wrap;
             align-items: center;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.02);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .filter-label {
-            color: #bfbfbf;
-            font-size: 0.9rem;
+            color: #9600ff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 0.5rem;
         }
 
         .quick-filter {
-            padding: 0.5rem 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            background-color: rgba(255, 255, 255, 0.1);
+            padding: 0.6rem 1.2rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            background-color: rgba(255, 255, 255, 0.05);
             color: white;
             font-size: 0.9rem;
-            transition: all 0.3s;
+            font-weight: 500;
+            transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-filter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .quick-filter:hover::before {
+            left: 100%;
         }
 
         .quick-filter:hover,
         .quick-filter.active {
             border-color: #9600ff;
-            background-color: rgba(150, 0, 255, 0.2);
+            background: linear-gradient(135deg, rgba(150, 0, 255, 0.2), rgba(150, 0, 255, 0.1));
+            color: #9600ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(150, 0, 255, 0.3);
         }
 
         .recommend-btn {
-            background-color: #9600ff;
+            background: linear-gradient(135deg, #9600ff, #7a00cc);
             color: white;
-            padding: 0.8rem 2rem;
+            padding: 1rem 2.5rem;
             border: none;
-            border-radius: 25px;
+            border-radius: 30px;
             font-weight: bold;
+            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             margin-bottom: 2rem;
+            box-shadow: 0 6px 20px rgba(150, 0, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recommend-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .recommend-btn:hover::before {
+            left: 100%;
         }
 
         .recommend-btn:hover {
-            background-color: #7a00cc;
-            transform: scale(1.05);
+            background: linear-gradient(135deg, #7a00cc, #5c0099);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(150, 0, 255, 0.6);
         }
 
         /* Results section */
@@ -390,8 +560,17 @@
                 font-size: 2rem;
             }
 
+            .search-filter-section {
+                padding: 1.5rem;
+            }
+
             .search-bar {
                 flex-direction: column;
+            }
+
+            .filter-options {
+                grid-template-columns: 1fr;
+                gap: 1rem;
             }
 
             .quick-filters {
@@ -445,14 +624,47 @@
                     placeholder="Search by name, location, or interests...">
                 <button class="search-btn" onclick="searchBuddies()">🔍 Search</button>
             </div>
+
+            <div class="filter-options">
+                <div class="filter-group">
+                    <label>Gender:</label>
+                    <label><input type="radio" name="gender" value="" checked> All</label>
+                    <label><input type="radio" name="gender" value="male"> Male</label>
+                    <label><input type="radio" name="gender" value="female"> Female</label>
+                    <label><input type="radio" name="gender" value="other"> Other</label>
+                </div>
+
+                <div class="filter-group">
+                    <label for="country">Country:</label>
+                    <input type="text" id="country" placeholder="Enter country">
+                </div>
+
+                <div class="filter-group">
+                    <label for="travel-style">Travel Style:</label>
+                    <select id="travel-style">
+                        <option value="">All</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="relaxation">Relaxation</option>
+                        <option value="cultural">Cultural</option>
+                        <option value="budget">Budget Travel</option>
+                        <option value="luxury">Luxury</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="quick-filters">
                 <span class="filter-label">Quick filters:</span>
-                <div class="quick-filter" data-filter="adventure" onclick="toggleFilter(this)">Adventure</div>
-                <div class="quick-filter" data-filter="culture" onclick="toggleFilter(this)">Cultural</div>
-                <div class="quick-filter" data-filter="relaxation" onclick="toggleFilter(this)">Relaxation</div>
-                <div class="quick-filter" data-filter="budget" onclick="toggleFilter(this)">Budget Travel</div>
-                <div class="quick-filter" data-filter="luxury" onclick="toggleFilter(this)">Luxury</div>
-                <div class="quick-filter" data-filter="backpacking" onclick="toggleFilter(this)">Backpacking</div>
+                <div class="quick-filter" data-filter="hiking" onclick="toggleFilter(this)">Hiking</div>
+                <div class="quick-filter" data-filter="beaches" onclick="toggleFilter(this)">Beach</div>
+                <div class="quick-filter" data-filter="cities" onclick="toggleFilter(this)">Cities</div>
+                <div class="quick-filter" data-filter="food" onclick="toggleFilter(this)">Food</div>
+                <div class="quick-filter" data-filter="photography" onclick="toggleFilter(this)">Photography</div>
+                <div class="quick-filter" data-filter="art" onclick="toggleFilter(this)">Art</div>
+                <div class="quick-filter" data-filter="nightlife" onclick="toggleFilter(this)">Nightlife</div>
+                <div class="quick-filter" data-filter="shopping" onclick="toggleFilter(this)">Shopping</div>
+                <div class="quick-filter" data-filter="wildlife" onclick="toggleFilter(this)">Wildlife</div>
+                <div class="quick-filter" data-filter="museums" onclick="toggleFilter(this)">Museums</div>
+                <div class="quick-filter" data-filter="adventure-sports" onclick="toggleFilter(this)">Adventure Sports</div>
             </div>
         </section>
 
@@ -478,7 +690,7 @@
 
             <!-- Buddy Cards -->
             <div class="buddies-grid" id="buddies-container">
-                <!-- Buddy Card 1 -->
+
                 <div class="buddy-card" data-style="adventure" data-location="nepal">
                     <div class="buddy-avatar-container">
                         <div class="buddy-avatar" style="background-image: url('/api/placeholder/80/80');">MR</div>
@@ -495,148 +707,6 @@
                     <div class="buddy-actions">
                         <button class="connect-btn" onclick="connectWithBuddy('mike-roberts')">Connect</button>
                         <button class="view-profile-btn" onclick="viewBuddyProfile('mike-roberts')">View
-                            Profile</button>
-                    </div>
-                </div>
-
-                <!-- Buddy Card 2 -->
-                <div class="buddy-card" data-style="culture" data-location="europe">
-                    <div class="buddy-avatar-container">
-                        <div class="buddy-avatar" style="background-image: url('/api/placeholder/80/80');">SC</div>
-                    </div>
-                    <div class="buddy-name">Sophie Chen</div>
-                    <div class="buddy-location">📍 Paris, France</div>
-                    <div class="buddy-tags">
-                        <span class="buddy-tag">Cultural</span>
-                        <span class="buddy-tag">Art</span>
-                        <span class="buddy-tag">Museums</span>
-                    </div>
-                    <div class="buddy-rating">⭐ 4.8 • 32 trips</div>
-                    <div class="buddy-actions">
-                        <button class="connect-btn" onclick="connectWithBuddy('sophie-chen')">Connect</button>
-                        <button class="view-profile-btn" onclick="viewBuddyProfile('sophie-chen')">View Profile</button>
-                    </div>
-                </div>
-
-                <!-- Buddy Card 3 -->
-                <div class="buddy-card" data-style="adventure" data-location="africa">
-                    <div class="buddy-avatar-container">
-                        <div class="buddy-avatar" style="background-image: url('/api/placeholder/80/80');">DJ</div>
-                        <div class="online-status"></div>
-                    </div>
-                    <div class="buddy-name">David Johnson</div>
-                    <div class="buddy-location">📍 Cape Town, South Africa</div>
-                    <div class="buddy-tags">
-                        <span class="buddy-tag">Safari</span>
-                        <span class="buddy-tag">Wildlife</span>
-                        <span class="buddy-tag">Adventure</span>
-                    </div>
-                    <div class="buddy-rating">⭐ 5.0 • 28 trips</div>
-                    <div class="buddy-actions">
-                        <button class="connect-btn" onclick="connectWithBuddy('david-johnson')">Connect</button>
-                        <button class="view-profile-btn" onclick="viewBuddyProfile('david-johnson')">View
-                            Profile</button>
-                    </div>
-                </div>
-
-                <!-- Buddy Card 4 -->
-                <div class="buddy-card" data-style="relaxation" data-location="asia">
-                    <div class="buddy-avatar-container">
-                        <div class="buddy-avatar" style="background-image: url('/api/placeholder/80/80');">LM</div>
-                        <div class="online-status"></div>
-                    </div>
-                    <div class="buddy-name">Lisa Martinez</div>
-                    <div class="buddy-location">📍 Bali, Indonesia</div>
-                    <div class="buddy-tags">
-                        <span class="buddy-tag">Wellness</span>
-                        <span class="buddy-tag">Yoga</span>
-                        <span class="buddy-tag">Beach</span>
-                    </div>
-                    <div class="buddy-rating">⭐ 4.7 • 41 trips</div>
-                    <div class="buddy-actions">
-                        <button class="connect-btn" onclick="connectWithBuddy('lisa-martinez')">Connect</button>
-                        <button class="view-profile-btn" onclick="viewBuddyProfile('lisa-martinez')">View
-                            Profile</button>
-                    </div>
-                </div>
-
-                <!-- Buddy Card 5 -->
-                <div class="buddy-card" data-style="backpacking" data-location="south-america">
-                    <div class="buddy-avatar-container">
-                        <div class="buddy-avatar" style="background-image: url('/api/placeholder/80/80');">AR</div>
-                    </div>
-                    <div class="buddy-name">Alex Rodriguez</div>
-                    <div class="buddy-location">📍 Lima, Peru</div>
-                    <div class="buddy-tags">
-                        <span class="buddy-tag">Backpacking</span>
-                        <span class="buddy-tag">Budget Travel</span>
-                        <span class="buddy-tag">Hostels</span>
-                    </div>
-                    <div class="buddy-rating">⭐ 4.9 • 35 trips</div>
-                    <div class="buddy-actions">
-                        <button class="connect-btn" onclick="connectWithBuddy('alex-rodriguez')">Connect</button>
-                        <button class="view-profile-btn" onclick="viewBuddyProfile('alex-rodriguez')">View
-                            Profile</button>
-                    </div>
-                </div>
-
-                <!-- Buddy Card 6 -->
-                <div class="buddy-card" data-style="adventure" data-location="oceania">
-                    <div class="buddy-avatar-container">
-                        <div class="buddy-avatar" style="background-image: url('/api/placeholder/80/80');">JW</div>
-                        <div class="online-status"></div>
-                    </div>
-                    <div class="buddy-name">James Wilson</div>
-                    <div class="buddy-location">📍 Sydney, Australia</div>
-                    <div class="buddy-tags">
-                        <span class="buddy-tag">Road Trips</span>
-                        <span class="buddy-tag">Surfing</span>
-                        <span class="buddy-tag">Outdoors</span>
-                    </div>
-                    <div class="buddy-rating">⭐ 4.6 • 22 trips</div>
-                    <div class="buddy-actions">
-                        <button class="connect-btn" onclick="connectWithBuddy('james-wilson')">Connect</button>
-                        <button class="view-profile-btn" onclick="viewBuddyProfile('james-wilson')">View
-                            Profile</button>
-                    </div>
-                </div>
-
-                <!-- Additional Buddy Cards -->
-                <div class="buddy-card" data-style="luxury" data-location="europe">
-                    <div class="buddy-avatar-container">
-                        <div class="buddy-avatar" style="background-image: url('/api/placeholder/80/80');">EM</div>
-                    </div>
-                    <div class="buddy-name">Emma Mitchell</div>
-                    <div class="buddy-location">📍 London, UK</div>
-                    <div class="buddy-tags">
-                        <span class="buddy-tag">Luxury</span>
-                        <span class="buddy-tag">Fine Dining</span>
-                        <span class="buddy-tag">Spas</span>
-                    </div>
-                    <div class="buddy-rating">⭐ 4.8 • 19 trips</div>
-                    <div class="buddy-actions">
-                        <button class="connect-btn" onclick="connectWithBuddy('emma-mitchell')">Connect</button>
-                        <button class="view-profile-btn" onclick="viewBuddyProfile('emma-mitchell')">View
-                            Profile</button>
-                    </div>
-                </div>
-
-                <div class="buddy-card" data-style="culture" data-location="asia">
-                    <div class="buddy-avatar-container">
-                        <div class="buddy-avatar" style="background-image: url('/api/placeholder/80/80');">KT</div>
-                        <div class="online-status"></div>
-                    </div>
-                    <div class="buddy-name">Kenji Tanaka</div>
-                    <div class="buddy-location">📍 Tokyo, Japan</div>
-                    <div class="buddy-tags">
-                        <span class="buddy-tag">Culture</span>
-                        <span class="buddy-tag">Food</span>
-                        <span class="buddy-tag">History</span>
-                    </div>
-                    <div class="buddy-rating">⭐ 4.9 • 26 trips</div>
-                    <div class="buddy-actions">
-                        <button class="connect-btn" onclick="connectWithBuddy('kenji-tanaka')">Connect</button>
-                        <button class="view-profile-btn" onclick="viewBuddyProfile('kenji-tanaka')">View
                             Profile</button>
                     </div>
                 </div>
@@ -678,62 +748,47 @@
                 card.dataset.style = buddy.travelPreferences?.travelStyle || 'adventure';
                 card.dataset.location = buddy.location || 'unknown';
 
-                const initials = buddy.name ? buddy.name.split(' ').map(n => n[0]).join('') : 'TB';
-                const isOnline = Math.random() > 0.5; // Random online status for demo
+                const initials = buddy.first_name[0] + buddy.last_name[0]
 
                 card.innerHTML = `
                     <div class="buddy-avatar-container">
-                        <div class="buddy-avatar" style="background-image: url('${buddy.profileImage || '/api/placeholder/80/80'}');">${initials}</div>
-                        ${isOnline ? '<div class="online-status"></div>' : ''}
+                        <div class="buddy-avatar" style="background-image: url('${buddy.image}');"></div>
+                        ${buddy.isOnline ? '<div class="online-status"></div>' : ''}
                     </div>
-                    <div class="buddy-name">${buddy.name || 'Travel Buddy'}</div>
-                    <div class="buddy-location">📍 ${buddy.location || 'Location Unknown'}</div>
+                    <div class="buddy-name">${buddy.first_name} ${buddy.last_name}</div>
+                    <div class="buddy-location">📍 ${buddy.city} ${buddy.country}</div>
                     <div class="buddy-tags">
-                        ${(buddy.interests || ['Travel', 'Adventure']).slice(0, 3).map(interest =>
+                        ${(buddy.interests).slice(0, 3).map(interest =>
                     `<span class="buddy-tag">${interest}</span>`
                 ).join('')}
                     </div>
-                    <div class="buddy-rating">⭐ ${buddy.rating || '4.5'} • ${buddy.tripCount || '15'} trips</div>
+                    <div class="buddy-rating">⭐ ${buddy.avgRating} • ${buddy.ratingCount} Ratings</div>
                     <div class="buddy-actions">
-                        <button class="connect-btn" onclick="connectWithBuddy('${buddy._id || buddy.name}')">Connect</button>
-                        <button class="view-profile-btn" onclick="viewBuddyProfile('${buddy._id || buddy.name}')">View Profile</button>
+                        <button class="connect-btn" onclick="connectWithBuddy('${buddy._id}')">Connect</button>
+                        <button class="view-profile-btn" onclick="viewBuddyProfile('${buddy._id}')">View Profile</button>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function searchBuddies() {
-            const searchTerm = document.getElementById('buddy-search').value.toLowerCase();
-            const buddyCards = document.querySelectorAll('.buddy-card');
-            let visibleCount = 0;
+        async function searchBuddies() {
+            const keyword = document.getElementById("buddy-search").value;
+            const gender = document.querySelector('input[name="gender"]:checked')?.value || "";
+            const country = document.getElementById("country").value;
+            const travelStyle = document.getElementById("travel-style").value;
 
-            buddyCards.forEach(card => {
-                const name = card.querySelector('.buddy-name').textContent.toLowerCase();
-                const location = card.querySelector('.buddy-location').textContent.toLowerCase();
-                const tags = Array.from(card.querySelectorAll('.buddy-tag')).map(tag => tag.textContent.toLowerCase());
+            const payload = {
+                keyword,
+                gender,
+                country,
+                travelStyle,
+                interests: activeFilters // from your quick-filter UI
+            };
 
-                const matchesSearch = !searchTerm ||
-                    name.includes(searchTerm) ||
-                    location.includes(searchTerm) ||
-                    tags.some(tag => tag.includes(searchTerm));
-
-                const matchesFilters = activeFilters.length === 0 ||
-                    activeFilters.some(filter =>
-                        card.dataset.style === filter ||
-                        tags.some(tag => tag.includes(filter))
-                    );
-
-                if (matchesSearch && matchesFilters) {
-                    card.style.display = 'block';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            document.getElementById('results-count').textContent = visibleCount;
+            fetchAndRenderBuddies('/api/search_buddies', payload);
         }
+
 
         function toggleFilter(filterElement) {
             const filter = filterElement.dataset.filter;
@@ -746,7 +801,7 @@
                 filterElement.classList.add('active');
             }
 
-            searchBuddies(); // Apply the filter
+            // searchBuddies(); // Apply the filter
         }
 
         function sortBuddies() {

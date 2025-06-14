@@ -1,0 +1,165 @@
+<!-- templates/chatroom.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>TripSync Chat</title>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+
+    <style>
+        .bubble {
+            max-width: 70%;
+            margin: 5px;
+            padding: 8px 12px;
+            border-radius: 16px;
+            display: inline-block;
+            clear: both;
+        }
+
+        .sent {
+            background-color: #dcf8c6;
+            float: right;
+            text-align: right;
+        }
+
+        .received {
+            background-color: #f1f0f0;
+            float: left;
+            text-align: left;
+        }
+
+        .bubble small {
+            display: block;
+            font-size: 0.75em;
+            color: #888;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <h2 id="chat-title">Welcome to TripSync Chat</h2>
+    <h4>User: {{ user['first_name'] }}</h4>
+
+    <div style="display: flex;">
+        <div style="flex: 1;">
+            <div id="chat-box" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc;"></div>
+            <input type="text" id="msg-input">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+
+        <div style="width: 250px; background: #1a1a1a; color: white; padding: 10px;">
+            <h3>💬 Chats</h3>
+            <div><strong>Trips</strong></div>
+            <div id="trip-list"></div>
+            <hr>
+            <div><strong>Connections</strong></div>
+            <div id="buddy-list"></div>
+        </div>
+    </div>
+
+    <script>
+
+        const chatBox = document.getElementById('chat-box');
+
+
+        const socket = io();
+        const userId = "{{ session['user']['_id'] }}";
+        let currentRoom = null;
+
+        function loadChat(room, title) {
+            if (currentRoom) {
+                socket.emit('leave', { room: currentRoom });
+            }
+
+            currentRoom = room;
+            document.getElementById('chat-title').innerText = title;
+            document.getElementById('chat-box').innerHTML = '';
+
+            socket.emit('join', { room });
+
+            fetch(`/chat/history/${room}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(msg => {
+                        const isSelf = msg.senderId === userId;
+                        renderMessage(msg, isSelf);
+                    });
+                });
+        }
+
+
+        function renderMessage(msg, isSelf = false) {
+            const line = document.createElement('div');
+            line.className = `bubble ${isSelf ? "sent" : "received"}`;
+            line.innerHTML = `<strong>${msg.senderName || msg.senderId}</strong><br>${msg.message}<br><small>${msg.timestamp || ""}</small>`;
+            chatBox.appendChild(line);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+
+        function sendMessage() {
+            const input = document.getElementById('msg-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const payload = {
+                room: currentRoom,
+                message: msg,
+                type: currentRoom.startsWith("trip_") ? "group" : "private"
+            };
+
+            if (payload.type === "private") {
+                const parts = currentRoom.split("_");
+                payload.receiverId = parts[0] === userId ? parts[1] : parts[0];
+            } else {
+                payload.tripId = currentRoom.replace('trip_', '');
+            }
+
+            socket.emit('send_message', payload);
+            input.value = '';
+        }
+
+        socket.on('receive_message', (data) => {
+            const isSelf = data.senderId === userId;
+            renderMessage(data, isSelf);
+        });
+
+
+        socket.on('connect', () => {
+            // Don't join any room by default
+        });
+
+        // Load trips and connections
+        fetch('/user/trips')
+            .then(res => res.json())
+            .then(trips => {
+                const list = document.getElementById('trip-list');
+                trips.forEach(trip => {
+                    const div = document.createElement('div');
+                    div.textContent = trip.title;
+                    div.style.cursor = 'pointer';
+                    div.style.padding = '5px';
+                    div.onclick = () => loadChat("trip_" + trip._id, "Chatroom: " + trip.title);
+                    list.appendChild(div);
+                });
+            });
+
+        fetch('/user/connections')
+            .then(res => res.json())
+            .then(buddies => {
+                const list = document.getElementById('buddy-list');
+                buddies.forEach(buddy => {
+                    const div = document.createElement('div');
+                    div.textContent = buddy.user.first_name + " " + buddy.user.last_name;
+                    div.style.cursor = 'pointer';
+                    div.style.padding = '5px';
+                    div.onclick = () => loadChat([userId, buddy.user._id].sort().join("_"), "Chat with " + div.textContent);
+                    list.appendChild(div);
+                });
+            });
+    </script>
+</body>
+
+</html>

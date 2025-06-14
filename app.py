@@ -1,10 +1,15 @@
 from flask import Flask, render_template, session, redirect
 from functools import wraps
 
+from dotenv import load_dotenv
+import os
+
 from extensions import db, mail, socketio
 
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = b's\x8d\xf2Wh\x90\xdd\x9bQ%\xb2\xa1\x95\xa4\xd1;'
+app.secret_key = os.getenv('SECRET_KEY')
 
 from backend.user.routes import user_bp
 app.register_blueprint(user_bp)
@@ -32,8 +37,8 @@ app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB max
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'tripsync2025@gmail.com'
-app.config['MAIL_PASSWORD'] = 'impf cazu kmkv wkjq'  # Use App Password from Gmail
+app.config['MAIL_USERNAME'] = os.getenv('GMAIL_USER')
+app.config['MAIL_PASSWORD'] = os.getenv('GMAIL_PASSWORD')  # Use App Password from Gmail
 app.config['MAIL_DEFAULT_SENDER'] = 'tripsync2025@gmail.com'
 mail.init_app(app)
 

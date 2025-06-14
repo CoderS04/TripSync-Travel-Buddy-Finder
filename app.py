@@ -1,10 +1,7 @@
 from flask import Flask, render_template, session, redirect
 from functools import wraps
 
-# import eventlet
-# eventlet.monkey_patch()
-
-from extensions import db, mail
+from extensions import db, mail, socketio
 
 app = Flask(__name__)
 app.secret_key = b's\x8d\xf2Wh\x90\xdd\x9bQ%\xb2\xa1\x95\xa4\xd1;'
@@ -18,11 +15,12 @@ app.register_blueprint(trip_bp)
 from backend.apis.routes import api_bp
 app.register_blueprint(api_bp)
 
-# from backend.chat.chat_socket import socketio
-# socketio.init_app(app)
+from backend.chat.routes import chat_bp
+app.register_blueprint(chat_bp)
 
-# from backend.chat.routes import chat_bp
-# app.register_blueprint(chat_bp)
+socketio.init_app(app)
+from flask_cors import CORS
+CORS(app)
 
 # Upload configuration
 app.config['UPLOAD_FOLDER_TRIPS'] = 'static/uploads/trips/'
@@ -101,12 +99,13 @@ def findBuddy():
     return render_template('findBuddy.html')
 
 @app.route('/<userId>')
+@login_required
 def userProfile(userId):
     user = db.users.find_one({'_id': userId})
     if user:
         return render_template('profile.html', user = user)
     else:
-        return redirect('/login')
+        return redirect('/')
 
 @app.before_request
 def set_user_session():
@@ -115,5 +114,5 @@ def set_user_session():
         session['first_name'] = session['user']['first_name']
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    # socketio.run(app, debug=True)
+    # app.run(debug=True)
+    socketio.run(app, debug=True)

@@ -93,6 +93,117 @@
             background-color: #7a00cc;
         }
 
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .notification-btn,
+        .messages-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .notification-btn:hover,
+        .messages-btn:hover {
+            background: rgba(150, 0, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .messages-btn:hover {
+            background: rgba(150, 0, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-position: top center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .profile-avatar:hover {
+            border-color: #9600ff;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(150, 0, 255, 0.4);
+        }
+
+        /* Profile Dropdown Menu */
+        .profile-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px 0;
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(150, 0, 255, 0.2);
+            color: #9600ff;
+        }
+
+        .dropdown-item .icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 5px 0;
+        }
+
         /* Main content */
         main {
             margin-top: 80px;
@@ -459,6 +570,8 @@
             font-weight: bold;
         }
 
+        
+
         .buddy-name {
             color: white;
             font-size: 1.2rem;
@@ -518,20 +631,50 @@
             transform: scale(1.05);
         }
 
+        /* Add this to your existing CSS, for example, after the .connect-btn styles */
+
+        .connect-btn.sent {
+            background: linear-gradient(45deg, #57606f, #747d8c);
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .connect-btn.sent:hover {
+            background: linear-gradient(45deg, #57606f, #747d8c);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Optional: Add a style for the view profile button for consistency */
+        .buddy-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
         .view-profile-btn {
-            background-color: transparent;
-            color: #9600ff;
-            padding: 0.6rem 1.2rem;
-            border: 2px solid #9600ff;
-            border-radius: 20px;
-            font-weight: bold;
+            flex-grow: 1;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 20px;
+            border-radius: 25px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9rem;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .view-profile-btn:hover {
-            background-color: rgba(150, 0, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #9600ff;
+        }
+
+        .connect-btn {
+            flex-grow: 1;
         }
 
         .online-status {
@@ -604,6 +747,70 @@
 
 <body>
     <!-- Header -->
+    
+    {% if session['logged_in'] %}
+
+    <!-- Header -->
+    <header>
+        <div class="logo">Trip<span>Sync</span></div>
+        <nav class="nav-links">
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/find-buddy">Find Buddies</a></li>
+                <li><a href="/find-trips">Find Trips</a></li>
+                <li><a href="#messages">Messages</a></li>
+            </ul>
+        </nav>
+        <div class="user-profile">
+            <button class="notification-btn">🔔</button>
+            <button class="messages-btn" onclick="window.location.href='/messages'">💬</button>
+            <div class="profile-avatar" id="profile-avatar"></div>
+            <div class="profile-dropdown" id="profile-dropdown">
+                <a href="/profile" class="dropdown-item">
+                    <span class="icon">👤</span>
+                    <span>My Profile</span>
+                </a>
+                <a href="/settings" class="dropdown-item">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="/help" class="dropdown-item">
+                    <span class="icon">❓</span>
+                    <span>Help & Support</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="/user/signout" class="dropdown-item">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // Profile dropdown functionality
+        const profileAvatar = document.getElementById('profile-avatar');
+        const profileDropdown = document.getElementById('profile-dropdown');
+
+        // Set initial avatar
+        profileAvatar.style.backgroundImage = "url('{{ session['user']['image'] }}')";
+
+        profileAvatar.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function () {
+            profileDropdown.classList.remove('show');
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            applyFilters();
+        });
+
+    </script>
+    {% else %}
+    
     <header>
         <div class="logo">Trip<span>Sync</span></div>
         <nav class="nav-links">
@@ -620,6 +827,8 @@
             <a href="/signup" class="signup">Sign Up</a>
         </div>
     </header>
+
+        {% endif %}
 
     <main>
         <h1 class="page-title">Find Your Perfect Travel Buddy</h1>
@@ -750,41 +959,126 @@
             }
         }
 
+        // --- REPLACE your existing renderBuddies function with this one ---
         function renderBuddies(buddies) {
-            const container = document.getElementById("buddies-container");
+            const container = document.getElementById("buddies-container")
             container.innerHTML = "";
-            document.getElementById("results-count").textContent = buddies.length;
+
+            if (!buddies || buddies.length === 0) {
+                container.innerHTML = `<div class="no-items-message" style="width: 100%;"><p>No buddy recommendations found at the moment.</p></div>`;
+                return;
+            }
+
+            document.getElementById('results-count').textContent = buddies.length
 
             buddies.forEach(buddy => {
+                const interestTags = buddy.interests.map(interest =>
+                    `<span class="interest-tag">${interest}</span>`
+                ).join('');
+
                 const card = document.createElement("div");
                 card.className = "buddy-card";
-                card.dataset.style = buddy.travelPreferences?.travelStyle || 'adventure';
-                card.dataset.location = buddy.location || 'unknown';
-
-                const initials = buddy.first_name[0] + buddy.last_name[0]
+                // Add a data attribute to the card itself for easy selection
+                card.dataset.buddyId = buddy._id;
 
                 card.innerHTML = `
-                    <div class="buddy-avatar-container">
-                        <div class="buddy-avatar" style="background-image: url('${buddy.image}');"></div>
-                        ${buddy.isOnline ? '<div class="online-status"></div>' : ''}
-                    </div>
-                    <div class="buddy-name">${buddy.first_name} ${buddy.last_name}</div>
-                    <div class="buddy-location">📍 ${buddy.city} ${buddy.country}</div>
-                    <div class="buddy-tags">
-                        ${(buddy.interests).slice(0, 3).map(interest =>
-                    `<span class="buddy-tag">${interest}</span>`
-                ).join('')}
-                    </div>
-                    <div class="buddy-rating">⭐ ${buddy.avgRating} • ${buddy.ratingCount} Ratings</div>
+            <div class="buddy-header">
+                <div class="buddy-avatar" style="background-image: url('${buddy.image}');">
+                    <div class="buddy-status"></div>
+                </div>
+            </div>
+            <div class="buddy-info">
+                <div class="buddy-name">${buddy.first_name} ${buddy.last_name}</div>
+                <div class="buddy-location">
+                    <span>📍</span>
+                    <span>${buddy.city}, ${buddy.country}</span>
+                </div>
+                <div class="buddy-interests">
+                    <div class="interests-label">Interests</div>
+                    <div class="interests-tags">${interestTags}</div>
+                </div>
+                <div class="buddy-rating">
+                    <span class="buddy-stars">★</span>
+                    <span class="buddy-rating-text">${buddy.avgRating} (${buddy.ratingCount} reviews)</span>
+                </div>
+                
+                <div class="buddy-actions">
+                    <button class="connect-btn">Connect</button>
+                    <button class="view-profile-btn">View Profile</button>
+                </div>
+            </div>
+        `;
+                if (buddy.isOnline) {
+                    card.querySelector('.buddy-avatar').innerHTML = '<div class="online-status"></div>';
+                }
+                // Add event listeners after creating the element (better practice than inline onclick)
+                card.querySelector('.connect-btn').addEventListener('click', (event) => {
+                    connectWithBuddy(buddy._id, event);
+                });
 
-                    <div class="buddy-actions">
-                        <button class="connect-btn" onclick="connectWithBuddy('${buddy._id}')">Connect</button>
-                        <button class="view-profile-btn" onclick="viewBuddyProfile('${buddy._id}')">View Profile</button>
-                    </div>
+                card.querySelector('.view-profile-btn').addEventListener('click', (event) => {
+                    viewBuddyProfile(buddy._id, event);
+                });
 
-                `;
+                // Add click event listener to the card itself for profile navigation
+                card.addEventListener('click', (event) => {
+                    // Only navigate if the click was not on one of the action buttons
+                    if (!event.target.closest('.buddy-actions')) {
+                        window.location.href = `/${buddy._id}`;
+                    }
+                });
+
                 container.appendChild(card);
             });
+        }
+
+
+        // --- ADD these new functions to your <script> tag ---
+
+        function viewBuddyProfile(buddyId, event) {
+            // Stop the event from bubbling up to the card's main click listener
+            event.stopPropagation();
+            window.location.href = `/${buddyId}`;
+        }
+
+        async function connectWithBuddy(buddyId, event) {
+            // Stop the event from bubbling up to the card's main click listener
+            event.stopPropagation();
+
+            const button = event.target;
+            // Disable button immediately to prevent multiple clicks
+            button.disabled = true;
+
+            try {
+                const response = await fetch('/user/connections/send_request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ recipient_id: buddyId })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Update button style and text on success
+                    button.textContent = 'Request Sent';
+                    button.classList.add('sent');
+                    // The button is already disabled, so no further action is needed to prevent clicks
+                } else {
+                    // If request failed (e.g., already connected), alert the user and re-enable the button
+                    alert(`Could not send request: ${result.error}`);
+                    if (result.error === 'Request already sent.' || result.error === 'You are already connected.') {
+                        button.textContent = 'Request Sent';
+                        button.classList.add('sent');
+                    } else {
+                        button.disabled = false; // Re-enable for other types of errors
+                    }
+                }
+            } catch (error) {
+                console.error('Connection request failed:', error);
+                alert('An unexpected error occurred. Please try again.');
+                // Re-enable button on network error
+                button.disabled = false;
+            }
         }
 
         async function searchBuddies() {
@@ -860,14 +1154,6 @@
                     container.appendChild(card);
                 }
             });
-        }
-
-        function connectWithBuddy(buddyId) {
-            alert(`Connection request sent to ${buddyId}!\n\nIn a real app, this would:\n• Send a connection request notification\n• Add to your pending connections\n• Start a chat conversation`);
-        }
-
-        function viewBuddyProfile(buddyId) {
-            window.location.href = "/${buddyId}";
         }
 
         // Search on Enter key press

@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 import os
 
 from backend.tripFunctions import hybrid_recommend,search_trips,recommend_buddies,search_buddies
+from backend.apis.models import API
 
 from extensions import db
 
@@ -120,13 +121,18 @@ class Trip:
         results = []
 
         for trip in recommended:
-            print(trip[0]["_id"], trip[1])
             r = self.getTripById(trip[0]["_id"])
             host = self.getUserById(r["hostID"])
 
             host_name = f"{host.get('first_name', '')} {host.get('last_name', '')}"
             
+            ratingData = API().getRatingSummary(host.get('_id',''))
+            host_avgRating = round(ratingData["averageRating"], 1)
+            host_ratingCount = ratingData["ratingCount"]
+
             r["hostName"] = host_name
+            r["hostAvgRating"] = host_avgRating
+            r["hostRatingCount"] = host_ratingCount
 
             results.append(r)
 
@@ -143,9 +149,15 @@ class Trip:
 
             host_name = f"{host.get('first_name', '')} {host.get('last_name', '')}"
             host_image = host.get('image', '')
+
+            ratingData = API().getRatingSummary(host.get('_id',''))
+            host_avgRating = round(ratingData["averageRating"], 1)
+            host_ratingCount = ratingData["ratingCount"]
             
             trip["hostName"] = host_name
             trip["hostImage"] = host_image
+            trip["hostAvgRating"] = host_avgRating
+            trip["hostRatingCount"] = host_ratingCount
 
             results.append(trip)
 

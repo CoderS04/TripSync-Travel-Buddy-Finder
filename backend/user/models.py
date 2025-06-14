@@ -80,6 +80,7 @@ class User:
             "agreed_to_terms": True,
             "isOnline": False,
             "connections": [],
+            "connectionRequests": [],
             "completedTrips": [],
             "joinedTrips": []
         }
@@ -170,6 +171,16 @@ class User:
         db.users.update_one({'_id': session['user']['_id']}, {'$set': {'isOnline': False}})
         session.clear()
         return redirect('/')
+    
+    def sendConnectionRequest(self, buddyId):
+        users = db["users"]
+        if buddyId not in session['user']['connections']:
+            if users.update_one({"_id":buddyId}, {"$addToSet": {"connectionRequests": session['user']['_id']}}):
+                return jsonify("Connection requst sent!"), 200
+        else:
+            return jsonify("Already connected!"), 200
+        
+        return jsonify("Something went wrong!"), 501
     
     def updateProfile(self, data):
         user_id = session['user']['_id']

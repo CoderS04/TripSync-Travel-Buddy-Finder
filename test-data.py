@@ -83,37 +83,25 @@ def create_trips(n, host_ids):
         trips.append(trip)
     db.trips.insert_many(trips)
 
-# def create_ratings(n, user_ids, trip_ids):
-#     ratings = []
-#     for _ in range(n):
-#         rating = {
-#             "_id": uuid.uuid4().hex,
-#             "reviewerId": random.choice(user_ids),
-#             "tripId": random.choice(trip_ids),
-#             "rating": round(random.uniform(2.5, 5.0), 1)
-#         }
-#         ratings.append(rating)
-#     db.reviews.insert_many(ratings)
-
-# def create_reviews(n, user_ids, trip_ids, host_ids):
-#     reviews = []
-#     for _ in range(n):
-#         review = {
-#             "_id": uuid.uuid4().hex,
-#             "tripId": random.choice(trip_ids),
-#             "hostId": random.choice(host_ids),
-#             "reviewerId": random.choice(user_ids),
-#             "rating": round(random.uniform(3.0, 5.0), 1),
-#             "comment": fake.sentence(),
-#             "timestamp": datetime.now()
-#         }
-#         reviews.append(review)
-#     db.reviews.insert_many(reviews)
+def create_reviews(n, user_ids, trip_ids, host_ids):
+    reviews = []
+    for _ in range(n):
+        review = {
+            "_id": uuid.uuid4().hex,
+            "tripId": random.choice(trip_ids),
+            "hostId": random.choice(host_ids),
+            "reviewerId": random.choice(user_ids),
+            "rating": round(random.uniform(3.0, 5.0), 1),
+            "comment": fake.sentence(),
+            "timestamp": datetime.now()
+        }
+        reviews.append(review)
+    db.reviews.insert_many(reviews)
 
 # Run
-create_users(500)
+# create_users(500)
 user_ids = [u["_id"] for u in db.users.find({}, {"_id": 1})]
-create_trips(200, host_ids=random.sample(user_ids, 100))
+# create_trips(200, host_ids=random.sample(user_ids, 100))
 trip_ids = [t["_id"] for t in db.trips.find({}, {"_id": 1})]
-# create_ratings(1000, user_ids, trip_ids)
-# create_reviews(400, user_ids, trip_ids, host_ids=user_ids)
+
+create_reviews(400, user_ids, trip_ids, host_ids=user_ids)

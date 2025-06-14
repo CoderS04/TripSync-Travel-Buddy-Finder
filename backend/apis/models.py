@@ -1,5 +1,7 @@
 from flask import Flask, session, jsonify, request
 import uuid
+import math
+
 
 import datetime
 
@@ -50,16 +52,27 @@ class API():
             ratingCount=ratingData["ratingCount"]
             user['avgRating'] = averageRating
             user['ratingCount'] = ratingCount
-            print("\n",user,"\n")
             results.append(user)
         
-        print(results)
-        
-        return jsonify(results)
+        def clean_data_for_json(data):
+            if isinstance(data, dict):
+                return {key: clean_data_for_json(value) for key, value in data.items()}
+            elif isinstance(data, list):
+                return [clean_data_for_json(item) for item in data]
+            elif isinstance(data, float) and (math.isnan(data) or math.isinf(data)):
+                return None
+            elif data == '' or data is None:
+                return None
+            else:
+                return data
+
+        # Before returning JSON:
+        cleaned_buddies = clean_data_for_json(results)
+        return jsonify(cleaned_buddies)
+        # return jsonify(results)
     
     def searchBuddies(self):
         data = request.json
-        print(data)
         search = search_buddies(data)
 
         print(search)
@@ -72,7 +85,6 @@ class API():
             ratingCount=ratingData["ratingCount"]
             user['avgRating'] = averageRating
             user['ratingCount'] = ratingCount
-            print("\n",user,"\n")
             results.append(user)
         
         return jsonify(results)

@@ -630,6 +630,112 @@
             margin-top: 10px;
         }
 
+        /* --- START: NEW STYLES FOR CONNECTIONS SECTION --- */
+
+        .subsection-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .connection-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .connection-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .connection-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .connection-info {
+            flex-grow: 1;
+        }
+
+        .connection-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+        .connection-meta {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .connection-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .connection-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .connection-btn.accept {
+            background: linear-gradient(45deg, #26de81, #2bcbba);
+            color: white;
+        }
+
+        .connection-btn.accept:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(38, 222, 129, 0.3);
+        }
+
+        .connection-btn.reject {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .connection-btn.reject:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .connection-btn.message {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .connection-btn.message:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .no-items-message {
+            text-align: center;
+            padding: 30px 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* --- END: NEW STYLES FOR CONNECTIONS SECTION --- */
+
         /* Responsive */
         @media (max-width: 1200px) {
             .navigation-buttons {
@@ -698,6 +804,16 @@
                 padding: 6px 12px;
                 font-size: 11px;
             }
+
+            .connection-item {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .connection-actions {
+                justify-content: center;
+            }
         }
 
         /* Mobile menu styles */
@@ -756,15 +872,221 @@
         .horizontal-scroll-wrapper {
             overflow-x: auto;
             padding-bottom: 15px;
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
         }
-        .horizontal-scroll-wrapper::-webkit-scrollbar { display: none; /* Chrome, Safari and Opera */ }
+
+        .horizontal-scroll-wrapper::-webkit-scrollbar {
+            display: none;
+            /* Chrome, Safari and Opera */
+        }
+
         .explore-grid {
             padding-top: 5px;
-            display: flex; /* Changed from grid to flex */
-            flex-wrap: nowrap; /* Prevents wrapping */
+            display: flex;
+            /* Changed from grid to flex */
+            flex-wrap: nowrap;
+            /* Prevents wrapping */
             gap: 15px;
+        }
+
+        /* Buddy Cards Styling */
+        .buddy-card {
+            min-width: 280px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .buddy-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(150, 0, 255, 0.2);
+        }
+
+        .buddy-header {
+            position: relative;
+            height: 120px;
+            background: linear-gradient(45deg, #9600ff, #ff006e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .buddy-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .buddy-status {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 16px;
+            height: 16px;
+            background: #00ff88;
+            border-radius: 50%;
+            border: 2px solid white;
+            z-index: 3;
+        }
+
+        .buddy-info {
+            padding: 20px;
+        }
+
+        .buddy-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .buddy-location {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .buddy-interests {
+            margin-bottom: 15px;
+        }
+
+        .interests-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .interests-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .interest-tag {
+            background: rgba(150, 0, 255, 0.2);
+            color: #9600ff;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            border: 1px solid rgba(150, 0, 255, 0.3);
+        }
+
+        .buddy-rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .buddy-stars {
+            color: #ffd700;
+            font-size: 14px;
+        }
+
+        .buddy-rating-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+        }
+
+        .buddy-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 16px;
+            font-weight: 600;
+            color: #9600ff;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .connect-btn {
+            background: linear-gradient(45deg, #9600ff, #ff006e);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .connect-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .connect-btn:hover::before {
+            left: 100%;
+        }
+
+        .connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(150, 0, 255, 0.4);
+            background: linear-gradient(45deg, #a000ff, #ff1177);
+        }
+
+        .connect-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .connect-btn.sent {
+            background: linear-gradient(45deg, #57606f, #747d8c);
+            cursor: not-allowed;
+        }
+
+        .connect-btn.sent:hover {
+            background: linear-gradient(45deg, #57606f, #747d8c);
+            transform: none;
+            box-shadow: none;
         }
     </style>
 </head>
@@ -860,7 +1182,7 @@
                         </div>
                     </div>
                     {% else %}
-                    <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
+                    <div class="no-items-message">
                         <p>No Upcoming Trips</p>
                         <button class="show-more-btn" onclick="window.location.href = '/find-trips'">Find Trips</button>
                     </div>
@@ -883,8 +1205,9 @@
                             <div class="done-trip-name">{{ trip.title }}</div>
                             <div class="done-trip-details">{{ trip.startDate }} • {{ trip.endDate }}</div>
                             <div class="trip-actions">
-                                <a href="/trip/{{trip._id}}/companions" class="trip-action-btn companions">👥 Companions</a>
-                                <a href="/chat/{{trip._id}}" class="trip-action-btn chatroom">💬 Chatroom</a>
+                                <a href="/trip/{{trip._id}}/companions" class="trip-action-btn companions">👥
+                                    Companions</a>
+                                <a href="/chat/trip/{{trip._id}}" class="trip-action-btn chatroom">💬 Chatroom</a>
                                 <a href="#" class="trip-action-btn settings">⚙️ Settings</a>
                                 <a href="/trip/{{trip._id}}/requests" class="trip-action-btn requests">📋 Requests</a>
                             </div>
@@ -892,7 +1215,7 @@
                         <div class="done-trip-stats">{{ trip.endDate - trip.startDate }}</div>
                     </div>
                     {% else %}
-                    <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
+                    <div class="no-items-message">
                         <p>No trips hosted yet</p>
                         <button class="show-more-btn" onclick="window.location.href = '/host'">Host a Trip</button>
                     </div>
@@ -900,6 +1223,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- --- START: NEW CONNECTIONS & REQUESTS SECTION --- -->
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Connections & Requests</h2>
+            </div>
+
+            <!-- Pending Requests -->
+            <h3 class="subsection-title">Pending Requests</h3>
+            <div id="pending-requests-container" style="max-height: 250px; overflow-y: auto; padding-right: 10px;">
+                <!-- JS will populate this section -->
+                <div class="no-items-message">
+                    <p>Loading requests...</p>
+                </div>
+            </div>
+
+            <div class="dropdown-divider" style="margin: 25px 0;"></div>
+
+            <!-- My Connections -->
+            <h3 class="subsection-title">My Connections</h3>
+            <div id="my-connections-container" style="max-height: 250px; overflow-y: auto; padding-right: 10px;">
+                <!-- JS will populate this section -->
+                <div class="no-items-message">
+                    <p>Loading connections...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- --- END: NEW CONNECTIONS & REQUESTS SECTION --- -->
 
         <!-- Top Trip Recommendations Section -->
         <div class="section">
@@ -921,7 +1274,6 @@
             <div class="horizontal-scroll-wrapper">
                 <div class="explore-grid" id="buddy-recommendations-container">
                     <!-- Buddy cards will be dynamically inserted here -->
-                     
                 </div>
             </div>
         </div>
@@ -973,7 +1325,144 @@
             });
 
             fetchAndRenderTrips(`/api/recommend_trips`);
+            fetchAndRenderBuddies(`/api/recommend_buddies`);
+
+            fetchAndRenderConnectionRequests();
+            fetchAndRenderConnections();
         });
+
+
+        async function fetchAndRenderConnectionRequests() {
+            try {
+                const res = await fetch('/user/connection_requests');
+                if (!res.ok) throw new Error('Failed to fetch requests');
+                const requests = await res.json();
+                renderConnectionRequests(requests);
+            } catch (error) {
+                console.error("Error fetching connection requests:", error);
+                const container = document.getElementById("pending-requests-container");
+                container.innerHTML = `<div class="no-items-message"><p>Could not load requests.</p></div>`;
+            }
+        }
+
+        async function fetchAndRenderConnections() {
+            try {
+                const res = await fetch('/user/connections');
+                if (!res.ok) throw new Error('Failed to fetch connections');
+                const connections = await res.json();
+                renderConnections(connections);
+            } catch (error) {
+                console.error("Error fetching connections:", error);
+                const container = document.getElementById("my-connections-container");
+                container.innerHTML = `<div class="no-items-message"><p>Could not load connections.</p></div>`;
+            }
+        }
+
+        function renderConnectionRequests(requests) {
+            const container = document.getElementById("pending-requests-container");
+            container.innerHTML = ""; // Clear previous content
+
+            if (!requests || requests.length === 0) {
+                container.innerHTML = `<div class="no-items-message"><p>No new connection requests.</p></div>`;
+                return;
+            }
+
+            requests.forEach(request => {
+                const item = document.createElement('div');
+                item.className = 'connection-item';
+                item.dataset.requestId = request._id; // Add data attribute to find this element later
+
+                item.innerHTML = `
+            <div class="connection-avatar" style="background-image: url('${request.image}');"></div>
+            <div class="connection-info">
+                <div class="connection-name">${request.first_name} ${request.last_name}</div>
+                <div class="connection-meta">Wants to connect with you.</div>
+            </div>
+            <div class="connection-actions">
+                <button class="connection-btn accept">Accept</button>
+                <button class="connection-btn reject">Decline</button>
+            </div>
+        `;
+                item.querySelector('.connection-avatar').addEventListener('click', () => window.location.href = `/${request._id}`)
+                // Add event listeners for the new buttons
+                item.querySelector('.accept').addEventListener('click', () => handleConnectionResponse(request._id, 'accept'));
+                item.querySelector('.reject').addEventListener('click', () => handleConnectionResponse(request._id, 'reject'));
+
+                container.appendChild(item);
+            });
+        }
+
+        function renderConnections(connections) {
+            const container = document.getElementById("my-connections-container");
+            container.innerHTML = ""; // Clear previous content
+
+            if (!connections || connections.length === 0) {
+                container.innerHTML = `
+            <div class="no-items-message">
+                <p>You haven't made any connections yet.</p>
+                <button class="show-more-btn" style="margin-top:15px;" onclick="window.location.href = '/find-buddy'">Find Buddies</button>
+            </div>
+        `;
+                return;
+            }
+
+            connections.forEach(connection => {
+                const item = document.createElement('div');
+                item.className = 'connection-item';
+                item.innerHTML = `
+            <div class="connection-avatar" style="background-image: url('${connection.user.image}');"></div>
+            <div class="connection-info">
+                <div class="connection-name">${connection.user.first_name} ${connection.user.last_name}</div>
+                <div class="connection-meta">Connected on ${connection.date}</div>
+            </div>
+            <div class="connection-actions">
+                <button class="connection-btn message" onclick="window.location.href='/chat/private/${connection.user._id}'">Message</button>
+            </div>
+        `;
+                item.querySelector('.connection-avatar').addEventListener('click', () => window.location.href = `/${connection.user._id}`)
+                container.appendChild(item);
+            });
+        }
+
+        async function handleConnectionResponse(requester_id, action) {
+            try {
+                const res = await fetch('/user/connections/respond', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ requester_id, action })
+                });
+
+                const result = await res.json();
+
+                if (result.success) {
+                    // Remove the request item from the UI for immediate feedback
+                    const requestItem = document.querySelector(`.connection-item[data-request-id='${requester_id}']`);
+                    if (requestItem) {
+                        requestItem.style.transition = 'opacity 0.5s ease';
+                        requestItem.style.opacity = '0';
+                        setTimeout(() => {
+                            requestItem.remove();
+                            // Check if the container is now empty
+                            const container = document.getElementById("pending-requests-container");
+                            if (container.children.length === 0) {
+                                container.innerHTML = `<div class="no-items-message"><p>No new connection requests.</p></div>`;
+                            }
+                        }, 500);
+                    }
+
+                    // If accepted, refresh the connections list to show the new buddy
+                    if (action === 'accept') {
+                        fetchAndRenderConnections();
+                    }
+                } else {
+                    alert('An error occurred: ' + result.error);
+                }
+            } catch (error) {
+                console.error("Error responding to connection request:", error);
+                alert('A network error occurred. Please try again.');
+            }
+        }
+
 
         async function fetchAndRenderTrips(endpoint, payload = null) {
             const res = await fetch(endpoint, {
@@ -986,9 +1475,26 @@
             renderTrips(trips);
         }
 
+        async function fetchAndRenderBuddies(endpoint, payload = null) {
+            const res = await fetch(endpoint, {
+                method: payload ? 'POST' : 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                body: payload ? JSON.stringify(payload) : null
+            });
+
+            const buddies = await res.json();
+            console.log(buddies)
+            renderBuddies(buddies);
+        }
+
         function renderTrips(trips) {
             const container = document.getElementById("trip-recommendations-container");
             container.innerHTML = "";
+
+            if (!trips || trips.length === 0) {
+                container.innerHTML = `<div class="no-items-message" style="width: 100%;"><p>No trip recommendations found at the moment.</p></div>`;
+                return;
+            }
 
             trips.forEach(trip => {
                 console.log(trip)
@@ -1010,6 +1516,136 @@
                 container.appendChild(card);
             });
         }
+
+        function renderBuddies(buddies) {
+            const container = document.getElementById("buddy-recommendations-container")
+            container.innerHTML = "";
+
+            if (!buddies || buddies.length === 0) {
+                container.innerHTML = `<div class="no-items-message" style="width: 100%;"><p>No buddy recommendations found at the moment.</p></div>`;
+                return;
+            }
+
+            buddies.forEach(buddy => {
+
+                const interestTags = buddy.interests.map(interest =>
+                    `<span class="interest-tag">${interest}</span>`
+                ).join('');
+
+                const card = document.createElement("div");
+                card.className = "buddy-card";
+
+                card.innerHTML = `
+                    <div class="buddy-header">
+                        <div class="buddy-avatar"
+                            style="background-image: url('${buddy.image}');">
+                            <div class="buddy-status"></div>
+                        </div>
+                    </div>
+                    <div class="buddy-info">
+                        <div class="buddy-name">${buddy.first_name} ${buddy.last_name}</div>
+                        <div class="buddy-location">
+                            <span>📍</span>
+                            <span>${buddy.city}, ${buddy.country}</span>
+                        </div>
+
+                        <div class="buddy-interests">
+                            <div class="interests-label">Interests</div>
+                            <div class="interests-tags">
+                                ${interestTags}
+                            </div>
+                        </div>
+
+                        <div class="buddy-rating">
+                            <span class="buddy-stars">★</span>
+                            <span class="buddy-rating-text">${buddy.avgRating} (${buddy.ratingCount} reviews)</span>
+                        </div>
+
+                        <button class="connect-btn" data-buddy-id="${buddy._id}">Connect</button>
+                    </div>
+                `;
+
+                // Add click event listener to redirect to buddy profile
+                card.addEventListener('click', (e) => {
+                    // Prevent redirection if user clicks on the Connect button
+                    if (e.target.classList.contains('connect-btn')) {
+                        return;
+                    }
+                    // Redirect to buddy profile page
+                    window.location.href = `/${buddy._id}`;
+                });
+
+                // Add a click listener to the entire card for profile navigation
+                card.addEventListener('click', (e) => {
+                    // Only navigate if the user did NOT click the connect button
+                    if (!e.target.classList.contains('connect-btn')) {
+                        window.location.href = `/${buddy._id}`;
+                    }
+                });
+
+                // Add a specific click listener for the connect button
+                const connectButton = card.querySelector('.connect-btn');
+                connectButton.addEventListener('click', (event) => {
+                    // Get the buddy ID from the button's data attribute
+                    const buddyId = event.target.dataset.buddyId;
+                    sendConnectionRequest(buddyId, event.target); // Pass the button element itself
+                });
+
+
+                container.appendChild(card);
+            });
+        }
+
+
+        async function sendConnectionRequest(buddyId, buttonElement) {
+            // Disable the button immediately to prevent multiple clicks
+            buttonElement.disabled = true;
+            buttonElement.textContent = 'Sending...';
+
+            try {
+                // Send the request to your backend API endpoint
+                const response = await fetch('/user/connections/send_request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        recipient_id: buddyId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // On success, permanently change the button's state
+                    buttonElement.textContent = 'Request Sent';
+                    buttonElement.classList.add('sent');
+                    // The button remains disabled
+                } else {
+                    // Handle specific errors from the backend
+                    alert(`Could not send request: ${result.error || 'Unknown error'}`);
+
+                    // If the error indicates the request already exists, update the UI accordingly
+                    if (response.status === 409) { // 409 Conflict
+                        buttonElement.textContent = 'Request Sent';
+                        buttonElement.classList.add('sent');
+                    } else {
+                        // For other errors, revert the button to its original state
+                        buttonElement.disabled = false;
+                        buttonElement.textContent = 'Connect';
+                    }
+                }
+            } catch (error) {
+                // Handle network or unexpected errors
+                console.error('Failed to send connection request:', error);
+                alert('An error occurred. Please check your connection and try again.');
+
+                // Revert the button on failure
+                buttonElement.disabled = false;
+                buttonElement.textContent = 'Connect';
+            }
+        }
+
     </script>
 </body>
 

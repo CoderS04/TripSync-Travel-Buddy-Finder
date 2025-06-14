@@ -832,48 +832,51 @@
                             <p>🔐 Please login to submit a review</p>
                         </div>
                         {% endif %}
+                    </div>
+                </div>
 
-                        <!-- Join Request Modal (Replace the existing modal section) -->
-                        {% if session['logged_in'] %}
-                        {% if host._id != session['user']['_id'] %}
-                        <!-- Action section -->
-                        <div class="action-section">
-                            <button class="join-btn" onclick="openJoinModal()">🎒 Request to Join Adventure</button>
-                            <div id="join-msg"></div>
-                        </div>
+            </div>
+            <!-- Join Request Modal (Replace the existing modal section) -->
+            {% if session['logged_in'] %}
+            {% if host._id != session['user']['_id'] %}
+            <!-- Action section -->
+            <div class="action-section">
+                <button class="join-btn" onclick="openJoinModal()">🎒 Request to Join Adventure</button>
+                <div id="join-msg"></div>
+            </div>
 
-                        <!-- Enhanced Join Modal -->
-                        <div id="join-modal" style="display:none;">
-                            <form id="join-request-form" enctype="multipart/form-data">
-                                <button type="button" class="modal-close" onclick="closeJoinModal()">&times;</button>
+            <!-- Enhanced Join Modal -->
+            <div id="join-modal" style="display:none;">
+                <form id="join-request-form" enctype="multipart/form-data">
+                    <button type="button" class="modal-close" onclick="closeJoinModal()">&times;</button>
 
-                                <label>Upload Identity Proof</label>
-                                <p style="color: #888; font-size: 0.9rem; margin-bottom: 1rem; text-align: center;">
-                                    Please upload a valid ID (PDF, JPG, or PNG format)
-                                </p>
+                    <label>Upload Identity Proof</label>
+                    <p style="color: #888; font-size: 0.9rem; margin-bottom: 1rem; text-align: center;">
+                        Please upload a valid ID (PDF, JPG, or PNG format)
+                    </p>
 
-                                <div class="file-upload-wrapper">
-                                    <input type="file" name="idProof" id="idProof" accept=".pdf, .jpg, .jpeg, .png"
-                                        required>
-                                    <label for="idProof" class="file-upload-label">
-                                        <span id="file-name">Choose your ID document</span>
-                                    </label>
-                                </div>
+                    <div class="file-upload-wrapper">
+                        <input type="file" name="idProof" id="idProof" accept=".pdf, .jpg, .jpeg, .png" required>
+                        <label for="idProof" class="file-upload-label">
+                            <span id="file-name">Choose your ID document</span>
+                        </label>
+                    </div>
 
-                                <input type="hidden" name="tripId" value="{{ trip._id }}">
-                                <button type="submit">Submit Join Request</button>
-                            </form>
-                        </div>
-                        {% else %}
-                        <div class="host-badge">
-                            <p>🏆 You are hosting this amazing trip!</p>
-                        </div>
-                        {% endif %}
-                        {% else %}
-                        <div class="login-prompt">
-                            <p>🔐 Please <a href="/login" style="color: #9600ff;">login</a> to join this trip</p>
-                        </div>
-                        {% endif %}
+                    <input type="hidden" name="tripId" value="{{ trip._id }}">
+                    <button type="submit">Submit Join Request</button>
+                </form>
+            </div>
+            {% else %}
+            <div class="host-badge">
+                <p>🏆 You are hosting this amazing trip!</p>
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="login-prompt">
+                <p>🔐 Please <a href="/login" style="color: #9600ff;">login</a> to join this trip</p>
+            </div>
+            {% endif %}
+        </div>
     </main>
 
     <script>

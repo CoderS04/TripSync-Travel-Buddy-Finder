@@ -546,6 +546,10 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .buddy-card:hover {
@@ -559,7 +563,7 @@
             border-radius: 50%;
             background-size: cover;
             background-position: center;
-            margin: 0 auto 1rem;
+            margin-bottom: 1rem;
             border: 3px solid #9600ff;
             background-color: #9600ff;
             display: flex;
@@ -570,7 +574,7 @@
             font-weight: bold;
         }
 
-        
+
 
         .buddy-name {
             color: white;
@@ -747,7 +751,7 @@
 
 <body>
     <!-- Header -->
-    
+
     {% if session['logged_in'] %}
 
     <!-- Header -->
@@ -763,10 +767,10 @@
         </nav>
         <div class="user-profile">
             <button class="notification-btn">🔔</button>
-            <button class="messages-btn" onclick="window.location.href='/messages'">💬</button>
+            <button class="messages-btn" onclick="window.location.href='/chat/'">💬</button>
             <div class="profile-avatar" id="profile-avatar"></div>
             <div class="profile-dropdown" id="profile-dropdown">
-                <a href="/profile" class="dropdown-item">
+                <a href="/{{session['user']['_id']}}" class="dropdown-item">
                     <span class="icon">👤</span>
                     <span>My Profile</span>
                 </a>
@@ -795,22 +799,23 @@
         // Set initial avatar
         profileAvatar.style.backgroundImage = "url('{{ session['user']['image'] }}')";
 
-        profileAvatar.addEventListener('click', function (e) {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('show');
+        // Profile dropdown functionality
+        profileAvatar.addEventListener('mouseenter', function () {
+            profileDropdown.classList.add('show');
         });
 
-        document.addEventListener('click', function () {
+        document.querySelector('.user-profile').addEventListener('mouseleave', function () {
             profileDropdown.classList.remove('show');
         });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            applyFilters();
+        // Keep dropdown open when hovering over it
+        profileDropdown.addEventListener('mouseenter', function () {
+            profileDropdown.classList.add('show');
         });
 
     </script>
     {% else %}
-    
+
     <header>
         <div class="logo">Trip<span>Sync</span></div>
         <nav class="nav-links">
@@ -828,7 +833,7 @@
         </div>
     </header>
 
-        {% endif %}
+    {% endif %}
 
     <main>
         <h1 class="page-title">Find Your Perfect Travel Buddy</h1>
@@ -914,18 +919,23 @@
             <div class="buddies-grid" id="buddies-container">
 
                 <div class="buddy-card" data-style="adventure" data-location="nepal">
-                    <div class="buddy-avatar-container">
-                        <div class="buddy-avatar" style="background-image: url('/api/placeholder/80/80');">MR</div>
-                        <div class="online-status"></div>
+                    <div>
+
+                        <div class="buddy-avatar-container">
+                            <div class="buddy-avatar" style="background-image: url('/api/placeholder/80/80');">MR</div>
+                            <div class="online-status"></div>
+                        </div>
+                        <div class="buddy-name">Mike Roberts</div>
+                        <div class="buddy-location">📍 Denver, Colorado</div>
                     </div>
-                    <div class="buddy-name">Mike Roberts</div>
-                    <div class="buddy-location">📍 Denver, Colorado</div>
-                    <div class="buddy-tags">
-                        <span class="buddy-tag">Adventure</span>
-                        <span class="buddy-tag">Hiking</span>
-                        <span class="buddy-tag">Photography</span>
+                    <div>
+                        <div class="buddy-tags">
+                            <span class="buddy-tag">Adventure</span>
+                            <span class="buddy-tag">Hiking</span>
+                            <span class="buddy-tag">Photography</span>
+                        </div>
+                        <div class="buddy-rating">⭐ 4.9 • 47 trips</div>
                     </div>
-                    <div class="buddy-rating">⭐ 4.9 • 47 trips</div>
                     <div class="buddy-actions">
                         <button class="connect-btn" onclick="connectWithBuddy('mike-roberts')">Connect</button>
                         <button class="view-profile-btn" onclick="viewBuddyProfile('mike-roberts')">View
@@ -973,7 +983,7 @@
 
             buddies.forEach(buddy => {
                 const interestTags = buddy.interests.map(interest =>
-                    `<span class="interest-tag">${interest}</span>`
+                    `<span class="buddy-tag">${interest}</span>`
                 ).join('');
 
                 const card = document.createElement("div");
@@ -982,34 +992,35 @@
                 card.dataset.buddyId = buddy._id;
 
                 card.innerHTML = `
-            <div class="buddy-header">
-                <div class="buddy-avatar" style="background-image: url('${buddy.image}');">
-                    <div class="buddy-status"></div>
+                <div>
+                    <div class="buddy-avatar-container">
+                        <div class="buddy-avatar" style="background-image: url('${buddy.image}');"></div>
+                    </div>
+            
+                    <div class="buddy-name">${buddy.first_name} ${buddy.last_name}</div>
+                    <div class="buddy-location">
+                        <span>📍</span>
+                        <span>${buddy.city}, ${buddy.country}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="buddy-info">
-                <div class="buddy-name">${buddy.first_name} ${buddy.last_name}</div>
-                <div class="buddy-location">
-                    <span>📍</span>
-                    <span>${buddy.city}, ${buddy.country}</span>
-                </div>
-                <div class="buddy-interests">
-                    <div class="interests-label">Interests</div>
-                    <div class="interests-tags">${interestTags}</div>
-                </div>
-                <div class="buddy-rating">
-                    <span class="buddy-stars">★</span>
-                    <span class="buddy-rating-text">${buddy.avgRating} (${buddy.ratingCount} reviews)</span>
-                </div>
-                
+                <div>
+                    <div class="buddy-interests">
+                        <div class="buddy-tags">${interestTags}</div>
+                    </div>
+                    <div class="buddy-rating">
+                        <span class="buddy-stars">★</span>
+                        <span class="buddy-rating-text">${buddy.avgRating} (${buddy.ratingCount} reviews)</span>
+                    </div>
+                </div>    
                 <div class="buddy-actions">
                     <button class="connect-btn">Connect</button>
                     <button class="view-profile-btn">View Profile</button>
                 </div>
-            </div>
-        `;
+                `;
                 if (buddy.isOnline) {
-                    card.querySelector('.buddy-avatar').innerHTML = '<div class="online-status"></div>';
+                    const div = document.createElement("div");
+                    div.className = 'online-status'
+                    card.querySelector('.buddy-avatar-container').appendChild(div);
                 }
                 // Add event listeners after creating the element (better practice than inline onclick)
                 card.querySelector('.connect-btn').addEventListener('click', (event) => {
@@ -1020,14 +1031,6 @@
                     viewBuddyProfile(buddy._id, event);
                 });
 
-                // Add click event listener to the card itself for profile navigation
-                card.addEventListener('click', (event) => {
-                    // Only navigate if the click was not on one of the action buttons
-                    if (!event.target.closest('.buddy-actions')) {
-                        window.location.href = `/${buddy._id}`;
-                    }
-                });
-
                 container.appendChild(card);
             });
         }
@@ -1036,14 +1039,10 @@
         // --- ADD these new functions to your <script> tag ---
 
         function viewBuddyProfile(buddyId, event) {
-            // Stop the event from bubbling up to the card's main click listener
-            event.stopPropagation();
             window.location.href = `/${buddyId}`;
         }
 
         async function connectWithBuddy(buddyId, event) {
-            // Stop the event from bubbling up to the card's main click listener
-            event.stopPropagation();
 
             const button = event.target;
             // Disable button immediately to prevent multiple clicks

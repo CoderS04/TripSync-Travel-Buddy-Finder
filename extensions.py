@@ -11,5 +11,7 @@ mail = Mail()
 
 socketio = SocketIO(cors_allowed_origins="*")
 
+print(os.getenv('MONGODB_URI'))
 client = pymongo.MongoClient(os.getenv('MONGODB_URI'))
+# client = pymongo.MongoClient('mongodb://localhost:27017/')
 db = client['tripsync_db']

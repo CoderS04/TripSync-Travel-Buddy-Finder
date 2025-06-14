@@ -75,8 +75,6 @@ class API():
         data = request.json
         search = search_buddies(data)
 
-        print(search)
-
         results = []
 
         for user in search:

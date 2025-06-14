@@ -161,10 +161,7 @@ def search_buddies(data):
         query["interests"] = {"$in": interests}
 
     # Run initial MongoDB query
-    print("Mongo query:", query)
     users = list(db.users.find(query))
-
-    print(f"Found {len(users)} users matching filters")
 
     # Now apply keyword search (client-side filter)
     if keyword:
@@ -182,6 +179,5 @@ def search_buddies(data):
             )
 
         users = [user for user in users if matches_keyword(user)]
-        print(f"Filtered down to {len(users)} users after keyword match")
 
     return users

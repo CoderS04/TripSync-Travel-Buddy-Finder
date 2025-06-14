@@ -27,7 +27,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: fixed;
+            /* position: fixed; */
             width: 100%;
             z-index: 100;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -206,7 +206,7 @@
         /* Main container */
         .main-container {
             display: flex;
-            height: calc(100vh - 80px);
+            height: calc(100vh - 75px);
         }
 
         /* Sidebar */
@@ -258,6 +258,7 @@
         }
 
         .chat-item {
+            position: relative;
             padding: 0.8rem;
             margin-bottom: 0.5rem;
             border-radius: 10px;
@@ -357,6 +358,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -518,7 +520,7 @@
             }
 
             .chat-area {
-                height: calc(100vh - 280px);
+                height: calc(100vh - 30px);
             }
         }
 
@@ -548,15 +550,25 @@
         }
 
         @keyframes typing {
-            0%, 20% { opacity: 0.2; }
-            50% { opacity: 1; }
-            100% { opacity: 0.2; }
+
+            0%,
+            20% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.2;
+            }
         }
     </style>
 </head>
 
 <body>
-    
+
     <!-- Header -->
     <header>
         <div class="logo">Trip<span>Sync</span></div>
@@ -570,10 +582,10 @@
         </nav>
         <div class="user-profile">
             <button class="notification-btn">🔔</button>
-            <button class="messages-btn" onclick="window.location.href='/messages'">💬</button>
+            <button class="messages-btn" onclick="window.location.href='/chat/'">💬</button>
             <div class="profile-avatar" id="profile-avatar"></div>
             <div class="profile-dropdown" id="profile-dropdown">
-                <a href="/profile" class="dropdown-item">
+                <a href="/{{session['user']['_id']}}" class="dropdown-item">
                     <span class="icon">👤</span>
                     <span>My Profile</span>
                 </a>
@@ -602,17 +614,18 @@
         // Set initial avatar
         profileAvatar.style.backgroundImage = "url('{{ session['user']['image'] }}')";
 
-        profileAvatar.addEventListener('click', function (e) {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('show');
+        // Profile dropdown functionality
+        profileAvatar.addEventListener('mouseenter', function () {
+            profileDropdown.classList.add('show');
         });
 
-        document.addEventListener('click', function () {
+        document.querySelector('.user-profile').addEventListener('mouseleave', function () {
             profileDropdown.classList.remove('show');
         });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            applyFilters();
+        // Keep dropdown open when hovering over it
+        profileDropdown.addEventListener('mouseenter', function () {
+            profileDropdown.classList.add('show');
         });
 
     </script>
@@ -625,7 +638,7 @@
                 <div class="sidebar-title">💬 Your Conversations</div>
                 <div style="color: #bbb; font-size: 0.9rem;">Stay connected with your travel community</div>
             </div>
-            
+
             <div class="sidebar-content">
                 <div class="section">
                     <div class="section-title">
@@ -633,7 +646,7 @@
                     </div>
                     <div id="trip-list"></div>
                 </div>
-                
+
                 <div class="section">
                     <div class="section-title">
                         👥 Travel Buddies
@@ -657,15 +670,11 @@
             </div>
 
             <div class="messages-container" id="chat-box" style="display: none;"></div>
-            
+
             <div class="message-input-area" id="input-area" style="display: none;">
                 <div class="input-container">
-                    <textarea 
-                        class="message-input" 
-                        id="msg-input" 
-                        placeholder="Type your message..."
-                        rows="1"
-                    ></textarea>
+                    <textarea class="message-input" id="msg-input" placeholder="Type your message..."
+                        rows="1"></textarea>
                     <button class="send-button" onclick="sendMessage()">
                         ➤
                     </button>
@@ -685,14 +694,16 @@
         const userId = "{{ session['user']['_id'] }}";
         let currentRoom = null;
 
+
+
         // Auto-resize textarea
-        msgInput.addEventListener('input', function() {
+        msgInput.addEventListener('input', function () {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
 
         // Send message on Enter (but allow Shift+Enter for new lines)
-        msgInput.addEventListener('keydown', function(e) {
+        msgInput.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
@@ -710,6 +721,7 @@
             if (currentRoom) {
                 socket.emit('leave', { room: currentRoom });
             }
+
 
             currentRoom = room;
             document.getElementById('chat-title').innerText = title;
@@ -739,16 +751,16 @@
         function renderMessage(msg, isSelf = false) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `bubble ${isSelf ? "sent" : "received"}`;
-            
+
             const senderName = isSelf ? 'You' : (msg.senderName || msg.senderId);
-            const timestamp = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
-            
+            const timestamp = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+
             messageDiv.innerHTML = `
                 <strong>${senderName}</strong>
                 <div class="message-text">${msg.message}</div>
                 <small>${timestamp}</small>
             `;
-            
+
             chatBox.appendChild(messageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
@@ -813,13 +825,26 @@
                     div.innerHTML = `
                         <div class="chat-item-name">👤 ${fullName}</div>
                         <div class="chat-item-preview">Direct message</div>
-                        <div class="online-indicator"></div>
                     `;
                     div.onclick = () => loadChat([userId, buddy.user._id].sort().join("_"), fullName, "Travel Buddy");
+                    if (buddy.user.isOnline) {
+                        const indicator = document.createElement("div");
+                        indicator.className = 'online-indicator';
+                        div.appendChild(indicator);
+                    }
                     list.appendChild(div);
                 });
             })
             .catch(err => console.error('Error loading connections:', err));
+
+        if ("{{ chat.room }}" != 'null') {
+            currentRoom = "{{ chat.room }}";
+            console.log("currentRoom received from backend: ", currentRoom, "... Loading chat...");
+            const title = "{{ chat.title }}";
+            const subtitle = "{{ chat.subtitle }}";
+            loadChat(currentRoom, title, subtitle);
+        }
+
     </script>
 </body>
 

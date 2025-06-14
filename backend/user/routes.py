@@ -13,11 +13,9 @@ def signup():
 @user_bp.route("/verify-otp", methods=["GET", "POST"])
 def verify_otp():
     if request.method == "POST":
-        print("trying to verify otp")
         input_otp = request.form.get("otp")
         return User().verifyOTP(input_otp)
 
-    print("trying to render template verify-otp.html")
     return render_template("verify-otp.html")
 
 @user_bp.route('/login', methods = ['POST'])
@@ -128,7 +126,7 @@ def get_connections():
         # Fetch full user details for each connection
         connected_users = list(db.users.find(
             {"_id": {"$in": connection_user_ids}},
-            {"first_name": 1, "last_name": 1, "image": 1}
+            {"first_name": 1, "last_name": 1, "image": 1, "isOnline": 1}
         ))
         
         # Create a map for easy lookup
@@ -144,7 +142,8 @@ def get_connections():
                         "_id": str(user_info['_id']),
                         "first_name": user_info.get('first_name'),
                         "last_name": user_info.get('last_name'),
-                        "image": user_info.get('image')
+                        "image": user_info.get('image'),
+                        "isOnline": user_info.get('isOnline')
                     },
                     "date": conn['date'].strftime('%b %d, %Y') # Format date nicely
                 })

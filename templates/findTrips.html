@@ -567,10 +567,10 @@
         </nav>
         <div class="user-profile">
             <button class="notification-btn">🔔</button>
-            <button class="messages-btn" onclick="window.location.href='/messages'">💬</button>
+            <button class="messages-btn" onclick="window.location.href='/chat/'">💬</button>
             <div class="profile-avatar" id="profile-avatar"></div>
             <div class="profile-dropdown" id="profile-dropdown">
-                <a href="/profile" class="dropdown-item">
+                <a href="/{{session['user']['_id']}}" class="dropdown-item">
                     <span class="icon">👤</span>
                     <span>My Profile</span>
                 </a>
@@ -599,17 +599,18 @@
         // Set initial avatar
         profileAvatar.style.backgroundImage = "url('{{ session['user']['image'] }}')";
 
-        profileAvatar.addEventListener('click', function (e) {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('show');
+        // Profile dropdown functionality
+        profileAvatar.addEventListener('mouseenter', function () {
+            profileDropdown.classList.add('show');
         });
 
-        document.addEventListener('click', function () {
+        document.querySelector('.user-profile').addEventListener('mouseleave', function () {
             profileDropdown.classList.remove('show');
         });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            applyFilters();
+        // Keep dropdown open when hovering over it
+        profileDropdown.addEventListener('mouseenter', function () {
+            profileDropdown.classList.add('show');
         });
 
     </script>

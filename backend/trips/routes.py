@@ -93,10 +93,8 @@ def tripCompanions(trip_id):
         if session['user']['_id'] != trip["hostID"]:
             return "Unauthorized", 403
         
-        companions = []
+        companions=[]
         for user in trip['joinedUsers']:
             companions.append(Trip().getUserById(user))
-        
-        print(companions)
 
         return render_template('tripCompanions.html', trip = trip, companions=companions)

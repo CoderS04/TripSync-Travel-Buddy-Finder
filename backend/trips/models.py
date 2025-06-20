@@ -167,6 +167,20 @@ class Trip:
         user_id = session['user']['_id']
         file = request.files.get("idProof")
 
+        existing = db.trips.find_one({
+            "_id": tripId,
+            "joinRequests": {
+                "$elemMatch": {
+                    "userId": user_id,
+                    "status": {"$in": ["pending", "approved"]}
+                }
+            }
+        })
+
+        if existing:
+            return jsonify({"message": "You already have a pending or approved request."}), 400
+
+
         if not file:
             return jsonify({"error": "No ID proof uploaded"}), 400
 
@@ -182,12 +196,20 @@ class Trip:
             "requestedOn": datetime.now()
         }
 
+        # Remove any previous request from the same user
         db.trips.update_one(
             {"_id": tripId},
-            {"$addToSet": {"joinRequests": request_entry}}
+            {"$pull": {"joinRequests": {"userId": user_id}}}
+        )
+
+        # Add the new request
+        db.trips.update_one(
+            {"_id": tripId},
+            {"$push": {"joinRequests": request_entry}}
         )
 
         return jsonify({"message": "Join request submitted. Awaiting host approval."})
+
 
     def approveRequest(self, tripId, userId):
         db.trips.update_one(

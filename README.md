@@ -1,4 +1,3 @@
-# TripSync-Travel-Buddy-Finder
 # TripSync - Travel Buddy Finder
 
 TripSync is a full-stack Flask travel companion platform for hosting trips, finding compatible travel partners, exchanging join requests, and chatting in real time.

@@ -23,7 +23,7 @@ TripSync is a full-stack Flask travel companion platform for hosting trips, find
 | Authentication | Flask sessions, Passlib/PBKDF2-SHA256 |
 | Email | Flask-Mail with Gmail SMTP |
 | Recommendations | pandas, NumPy, scikit-learn |
-| Production Server | Gunicorn with eventlet |
+| Production Server | Gunicorn with threading workers |
 
 ## Project Structure
 
@@ -93,9 +93,9 @@ Open `http://localhost:5000`. The health check is available at `http://localhost
 2. In Render, create a **Web Service** and connect the repository.
 3. Use this runtime configuration:
    - Build command: `pip install -r requirements.txt`
-   - Start command: `gunicorn --worker-class eventlet -w 1 app:app`
+   - Start command: `gunicorn --worker-class gthread --workers 1 --threads 10 app:app`
    - Health check path: `/health`
-   - Python version: `3.13`
+   - Python version: `3.11`
 4. Add these environment variables in the Render dashboard:
 
 | Variable | Value |
@@ -118,7 +118,7 @@ https://your-service.onrender.com/health
 Use the same environment variables and start command:
 
 ```bash
-gunicorn --worker-class eventlet -w 1 app:app
+gunicorn --worker-class gthread --workers 1 --threads 10 app:app
 ```
 
 Set the platform port automatically; the app reads `PORT` when run directly and Gunicorn manages it in production.
@@ -130,7 +130,7 @@ Set the platform port automatically; the app reads `PORT` when run directly and 
 - Gmail requires an App Password; ordinary account passwords will not work reliably.
 - Uploaded images and ID proofs are stored in `static/uploads/`. Platform local disks are commonly ephemeral. Use an object store such as Cloudinary or AWS S3 with persistent URLs for a durable production deployment.
 - Use HTTPS and a restrictive CORS policy before any public release.
-- Run only one eventlet worker for this Socket.IO configuration unless a shared Socket.IO message queue is configured.
+- Run one Gunicorn worker with multiple threads for this Socket.IO configuration unless a shared Socket.IO message queue is configured.
 - The repository's existing local `.env` is excluded by `.gitignore` and should not be pushed.
 
 ## Verification Checklist

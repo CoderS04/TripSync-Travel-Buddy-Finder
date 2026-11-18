@@ -2,15 +2,12 @@ bidict==0.23.1
 blinker==1.9.0
 click==8.2.0
 dnspython==2.7.0
-eventlet==0.40.0
 Faker==37.4.0
 Flask==3.1.1
 flask-cors==6.0.1
 Flask-Mail==0.10.0
 Flask-SocketIO==5.5.1
-greenlet==3.2.3
-gunicorn[eventlet]==23.0.0
-eventlet==0.40.0
+gunicorn==23.0.0
 h11==0.16.0
 itsdangerous==2.2.0
 Jinja2==3.1.6

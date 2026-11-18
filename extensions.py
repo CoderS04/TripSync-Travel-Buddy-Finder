@@ -11,7 +11,9 @@ mail = Mail()
 
 socketio = SocketIO(cors_allowed_origins="*")
 
-print(os.getenv('MONGODB_URI'))
-client = pymongo.MongoClient(os.getenv('MONGODB_URI'))
-# client = pymongo.MongoClient('mongodb://localhost:27017/')
+mongo_uri = os.getenv('MONGODB_URI')
+if not mongo_uri:
+    raise RuntimeError("MONGODB_URI is not configured")
+
+client = pymongo.MongoClient(mongo_uri)
 db = client['tripsync_db']

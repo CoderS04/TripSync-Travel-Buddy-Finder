@@ -10,6 +10,8 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
+if not app.secret_key:
+    raise RuntimeError("SECRET_KEY is not configured")
 
 from backend.user.routes import user_bp
 app.register_blueprint(user_bp)
@@ -59,6 +61,10 @@ def home():
         return redirect('/dashboard')
     
     return render_template('home.html')
+
+@app.route('/health')
+def health():
+    return {'status': 'ok'}, 200
 
 @app.route('/login')
 def login():
@@ -119,5 +125,4 @@ def set_user_session():
         session['first_name'] = session['user']['first_name']
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    socketio.run(app, debug=True)
+    socketio.run(app, host='0.0.0.0', port=int(os.getenv('PORT', '5000')), debug=os.getenv('FLASK_DEBUG', '0') == '1')
